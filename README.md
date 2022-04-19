@@ -1,6 +1,26 @@
 ## Form Flow Starter App ##
 
-This is a standard Spring Boot application that uses Form Flow Builder tools as a library.
+This is a standard Spring Boot application that uses Form Flow Builder tools as a library. It
+contains an example of a simple, generic application for public benefits. An applicant can input
+their personal information, upload supporting documents, and receive a confirmation email with a
+filled-in application PDF.
+
+The example application can be viewed [here](https://example.com).
+
+This code includes a form flow generated using this tool, a method for filling out an example PDF,
+and sending a confirmation email. The content of the example flow is defined in both English and 
+Spanish.
+
+Out-of-the-box, integration with the following third-party services are available:
+
+- Google Analytics
+- Mixpanel
+- Optimizely
+- Intercom
+- Google Ads
+- Facebook Ads
+
+These are configurable in `application.yaml`.
 
 ## Form Flow Concepts ##
 
