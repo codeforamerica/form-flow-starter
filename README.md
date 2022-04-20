@@ -1,4 +1,4 @@
-## Form Flow Starter App ##
+# Form Flow Starter App #
 
 This is a standard Spring Boot application that uses Form Flow Builder tools as a library. It
 contains an example of a simple, generic application for public benefits. An applicant can input
@@ -80,7 +80,44 @@ end
 
 ## Defining Screens ##
 
-Screens are defined as HTML using the Thymeleaf templating engine.
+Screens are defined as HTML using the Thymeleaf templating engine. Building block components are
+provided to quickly build pages using Thymeleaf fragments.
+
+Components provided include:
+
+<!--- 
+Open Ended Questions: 
+- How does this work with definiting input fields? 
+-- Should input YAML definitions include values and validations? What about conditions?
+- How does this work with conditional logic?
+- What components do we really need? Where do we draw the line of this is
+a useful component to have vs this could just be written as HTML? 
+- How do we handle follow ups on inputs?
+--->
+
+
+__Form Components__
+- Form
+- TextInput
+- TextAreaInput
+- DateInput
+- NumberInput
+- RadioInput
+- CheckBoxInput
+- SelectInput
+- YesOrNoInput
+- MoneyInput
+- PhoneInput
+- SsnInput
+- FormSubmitButton
+
+__Page Layout Components__
+- CardPage
+- PageHeader
+- PageHeaderSubtext
+- Accordion
+- Reveal
+
 
 ## Defining Conditions ##
 
