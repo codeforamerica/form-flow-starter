@@ -1,17 +1,20 @@
 # Form Flow Starter App #
 
-This is a standard Spring Boot application that uses Form Flow Builder tools as a library. It
-contains an example of a simple, generic application for public benefits. An applicant can input
-their personal information, upload supporting documents, and receive a confirmation email with a
-filled-in application PDF.
+This is a standard Spring Boot application that uses Form Flow Builder tools as a library. It can
+be customized to meet any needs of a web app, and is meant to be built upon.
+
+It contains examples code for a simple, generic application for public benefits. An applicant can
+input their personal information, upload supporting documents, receive a confirmation text message, 
+and receive a confirmation email with a filled-in application PDF. The example flow is content is in
+both English and Spanish.
 
 The example application can be viewed [here](https://example.com).
 
-This code includes a form flow generated using this tool, a method for filling out an example PDF,
-and sending a confirmation email. The content of the example flow is defined in both English and 
-Spanish.
+To power the form flow logic this app depends on the `form-flows` Java library. That library is
+included in `build.gradle` along with all other dependencies. The codebase for the `form-flows`
+package is [open-source](https://example.com).
 
-Out-of-the-box, integration with the following third-party services are available:
+Out-of-the-box, integrations can be set up with the following third-party services:
 
 - Google Analytics
 - Mixpanel
@@ -22,6 +25,9 @@ Out-of-the-box, integration with the following third-party services are availabl
 
 These are configurable in `application.yaml`.
 
+The documentation that follows describes the main concepts needed to set up a new form flow and
+accompanying features like PDF generation or confirmation text messages and emails.
+
 ## Form Flow Concepts ##
 
 * Flows
@@ -30,9 +36,17 @@ These are configurable in `application.yaml`.
 * Conditions
 
 Flows are the top-level construct. A flow has many inputs to receive user data (e.g. first name, zip
-code, email). A flow also has many screens, which can be made up of one or more inputs. A flow has
-a ordering of screens, and can use conditions to skip screens. Conditions can also be used on
-individual screens to show or hide content.
+code, email, uploads). A flow also has many screens. Each screen can be made up of one or more
+inputs. A flow has an ordering of screens, and can use defined conditions to skip screens. 
+Conditions can also be used on individual screens to show or hide content.
+
+```mermaid
+classDiagram
+    class Flow
+    Flow <|-- Input
+    Flow <|-- Screen
+    Input <|--|> Screen
+```
 
 ## Defining A Flow ##
 
@@ -68,13 +82,16 @@ apply:
     validation: REQUIRED
 ```
 
-```java
+Java class brainstorm:
 
-class ApplyInputs
-  TextInput firstName;
-  EmailInput email;
-  PhoneInput phone;
-end
+```java
+class ApplyModel extends FlowModel {
+  public TextInput firstName;
+  public EmailInput email;
+  public PhoneInput phone;
+  
+  firstName -> {validation.REQUIRED}
+}
 
 ```
 
@@ -118,6 +135,26 @@ __Page Layout Components__
 - Accordion
 - Reveal
 
+
+React brainstorm:
+
+```jsx
+<FormCard>
+  <CardHeader>${tell-us.header}</CardHeader>
+  <Form>
+    <TextInput name="applicantFirstName"
+               helpText="${legally-as-it-appears}"
+               label="${what-is-your-first-name}"/>
+
+    <TextInput name="applicantLastName"
+               helpText="${legally-as-it-appears}"
+               label="${what-is-your-last-name}"/>
+    
+    
+  </Form>
+</FormCard>
+
+```
 
 ## Defining Conditions ##
 
