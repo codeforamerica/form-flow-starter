@@ -41,58 +41,12 @@ inputs. A flow has an ordering of screens, and can use defined conditions to ski
 Conditions can also be used on individual screens to show or hide content.
 
 ```mermaid
-classDiagram
-    class Flow
-    Flow <|-- Input
-    Flow <|-- Screen
-    Input <|--|> Screen
-```
-
-## Defining A Flow ##
-
-Flows are defined in YAML, in `resources/flows`. An example is in `resources/flows/apply.yaml`. 
-It looks like this:
-
-```yaml
-apply:
-  - screen1
-  - screen2:
-    nextPages:
-      - screen3:
-          condition: showScreen3
-```
-
-```java
-public enum Conditions {
-  showScreen3 -> appliedForSnap && appliedForCcap,
-} 
-```
-
-## Defining Inputs ##
-
-Inputs are defined in YAML, in `resources/inputs`. An example is in `resources/inputs/apply.yaml`.
-
-```yaml
-apply:
-  - firstName
-    type: TEXT
-    validation: REQUIRED
-  - lastName
-    type: TEXT
-    validation: REQUIRED
-```
-
-Java class brainstorm:
-
-```java
-class ApplyModel extends FlowModel {
-  public TextInput firstName;
-  public EmailInput email;
-  public PhoneInput phone;
-  
-  firstName -> {validation.REQUIRED}
-}
-
+erDiagram      
+    Flow ||--|{ Screen : "ordered collection of"
+    Flow ||--o{ Input : "collection of"
+    Screen ||--o{ Input : displays
+    Input ||--o{ Validation : "validated by"
+    Input }|--o{ Condition: "determines"
 ```
 
 ## Defining Screens ##
@@ -122,10 +76,11 @@ __Form Components__
 - RadioInput
 - CheckBoxInput
 - SelectInput
-- YesOrNoInput
 - MoneyInput
 - PhoneInput
 - SsnInput
+- DocumentUploadInput
+- YesOrNoInput
 - FormSubmitButton
 
 __Page Layout Components__
@@ -135,6 +90,76 @@ __Page Layout Components__
 - Accordion
 - Reveal
 
+
+```html
+
+<TellUsAboutYourself
+  icon="smiley"
+  header="Tell Us about Yourself"
+  layout="card-form"
+  fields="[firstName, lastName]"
+>
+  <TextInput label="What's your first name?" field="firstName" />
+</TellUsAboutYourself>
+
+<th:block th:replace="'fragments/icons' :: smiley" />
+<th:block th:replace="'fragments/header' :: header('Tell Us About Yourself', 
+                                                   'Tell us some basic information.')" />
+
+<th:block th:replace="fragments/form :: form_start" />
+  <th:block th:replace="fragments/input :: textInput(flow.firstName)" />
+<th:block th:replace="fragments/form :: form_end" />
+
+---
+
+<main id="content" role="main" class="form-card">
+
+  <div th:replace="'fragments/icons' :: smiley"></div>
+  <h1 th:replace="'fragments/header' :: header('Tell Us About Yourself')"></h1>
+  
+  
+  <p id="page-header-help-message" th:text="Tell us some basic information."></p>
+  
+  
+  </div>
+  <th:block th:if="${pageNameContext != null}">
+    <div th:replace="${pageNameContext} :: ${pageNameContext}"></div>
+  </th:block>
+
+  <div class="grid__item spacing-below-60">
+    <!--Form page-->
+    <form id="page-form" th:if="${page.inputs != null && !page.inputs.isEmpty()}"
+          autocomplete="off"
+          method="post" th:action="@{${postTo}}">
+      <div th:each="input: ${page.inputs}">
+        <div
+            th:replace="'fragments/inputs/input-with-followups' :: input-with-followups(${input}, ${data})"></div>
+      </div>
+      <p th:if="${page.hasCardFooterTextKey()}" id="card-footer" class="spacing-below-60 spacing-above-minus-25"
+         th:text="#{${page.cardFooterTextKey}}"></p>
+      <button id="form-submit-button" th:if="${page.hasPrimaryButton}"
+              class="button button--primary"
+              type="submit"
+              th:text="#{${page.primaryButtonTextKey}}"></button>
+      <th:block th:if="${page.hasAlertBox()}">
+        <div th:replace="fragments/alertBox :: alertBox(${page})"></div>
+      </th:block>
+    </form>
+
+    <!--Static page-->
+    <div th:if="${page.inputs == null || page.inputs.isEmpty()}">
+      <a th:if="${page.hasPrimaryButton}" class="button button--primary"
+         th:href="'/pages/'+${pageName}+'/navigation?option=0'"
+         th:text="#{${page.primaryButtonTextKey}}"></a>
+    </div>
+    <a th:if="${page.hasSubtleLinkTextKey()}" class="link--subtle" id="subtle-link"
+       th:href="|/pages/${page.subtleLinkTargetPage}|"
+       th:text="#{${page.subtleLinkTextKey}}"></a>
+  </div>
+</main>
+
+
+```
 
 React brainstorm:
 
@@ -155,6 +180,55 @@ React brainstorm:
 </FormCard>
 
 ```
+
+
+## Defining Inputs ##
+
+Inputs are defined in YAML, in `resources/inputs`. An example is in `resources/inputs/apply.yaml`.
+
+```yaml
+apply:
+  - firstName
+    type: TEXT
+    validation: REQUIRED
+  - lastName
+    type: TEXT
+    validation: REQUIRED
+```
+
+Java class brainstorm:
+
+```java
+class ApplyModel extends FlowModel {
+  public TextInput firstName;
+  public EmailInput email;
+  public PhoneInput phone;
+  
+  firstName -> {validation.REQUIRED}
+}
+
+```
+
+## Defining A Flow ##
+
+Flows are defined in YAML, in `resources/flows`. An example is in `resources/flows/apply.yaml`.
+It looks like this:
+
+```yaml
+apply:
+  - screen1
+  - screen2:
+    nextPages:
+      - screen3:
+          condition: showScreen3
+```
+
+```java
+public enum Conditions {
+  showScreen3 -> appliedForSnap && appliedForCcap,
+} 
+```
+
 
 ## Defining Conditions ##
 
