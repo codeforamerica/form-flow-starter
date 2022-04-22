@@ -18,7 +18,16 @@
 <!--    <input type="text" name="last" />-->
 <!--  <th:block th:replace="fragments/form :: form_end"></th:block>-->
 
-<th:block th:replace="fragments/form :: formTest(//firstInput,//secondInput)">
+<h1>Yield test 🧪</h1>
+<p>Test to get all contents to be rendered inside the fragment.</p>
+<p>Using <code>th:ref="yield"</code> allows us to have a nice syntax</p>
+<th:block th:replace="fragments/form :: formTest(~{::yield})">
+  <th:block th:ref="yield">
+    <th:block th:replace="fragments/form :: firstInput" />
+    <th:block th:replace="fragments/form :: secondInput('Label 💜')" />
+    <p>This would be so cool if it works! 🚀</p>
+  </th:block>
 </th:block>
+
 </body>
 </html>
