@@ -13,9 +13,12 @@
 </head>
 <body>
 
-  <th:block th:replace="fragments/form :: form_start"></th:block>
-    <input type="text" name="first" />
-    <input type="text" name="last" />
-  <th:block th:replace="fragments/form :: form_end"></th:block>
+<!--  <th:block th:replace="fragments/form :: form_start"></th:block>-->
+<!--    <th:block th:replace="fragments/TextInput :: TextInput(${condition? #{messages.inputLabel} : #{messages.OtherInputLabel}}, #{input.help})" />-->
+<!--    <input type="text" name="last" />-->
+<!--  <th:block th:replace="fragments/form :: form_end"></th:block>-->
+
+<th:block th:replace="fragments/form :: formTest(//firstInput,//secondInput)">
+</th:block>
 </body>
 </html>
