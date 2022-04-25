@@ -1,0 +1,18 @@
+pageDefinitions:
+  - &index
+    name: index
+  - &firstPage
+    name: firstPage
+  - &secondPage
+    name: secondPage
+workflow:
+  index:
+    pageConfiguration: *index
+    nextPages:
+      - pageName: firstPage
+  firstPage:
+    pageConfiguration: *firstPage
+    nextPages:
+      - pageName: secondPage
+  secondPage:
+    pageConfiguration: *secondPage

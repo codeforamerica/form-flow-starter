@@ -1,0 +1,93 @@
+package org.codeforamerica.formflowstarter.pages.config;
+
+import lombok.Data;
+
+/**
+ * A page's PageConfiguration describes the content of the page to be rendered.
+ */
+@Data
+public class PageConfiguration {
+
+  /**
+   * Path of the webpage and usually where the pageData is stored in applicationData.
+   */
+  private String name;
+
+  /**
+   * List of inputs for the page. These may be readonly.
+   */
+//  private List<FormInput> inputs = List.of();
+
+  /**
+   * "title" component of the webpage.
+   */
+//  private Value pageTitle;
+
+  /**
+   * Webpage heading.
+   */
+//  private Value headerKey;
+
+  /**
+   * Webpage heading subtext.
+   */
+//  private Value headerHelpMessageKey;
+
+  /**
+   * Hyperlink at the bottom of the page used for navigation. Destination is set at {@link
+   * PageWorkflowConfiguration#getSubtleLinkTargetPage()}
+   *
+   * @see PageWorkflowConfiguration#getSubtleLinkTargetPage()
+   */
+//  private Value subtleLinkTextKey;
+
+  /**
+   * Subtle footer text at the bottom of card page used for additional information.
+   */
+//  private Value cardFooterTextKey;
+
+  /**
+   * Text for the (submit) button for the page form or page navigation. Defaults to "Continue". Only
+   * applicable if {@link #hasPrimaryButton} is {@code true}.
+   *
+   * @see #hasPrimaryButton
+   */
+//  private String primaryButtonTextKey = "general.continue";
+
+  /**
+   * boolean on whether to show the button (true) or not (false).
+   *
+   * @see #primaryButtonTextKey
+   */
+//  private Boolean hasPrimaryButton = true;
+
+  /**
+   * Additional content displayed at the top of the page card. Usually an image.
+   */
+//  private String contextFragment;
+
+  /**
+   * Warning or notice message for page.
+   */
+//  private AlertBox alertBox;
+
+//  public List<FormInput> getFlattenedInputs() {
+//    return this.inputs.stream()
+//        .flatMap(
+//            formInput -> Stream.concat(Stream.of(formInput), formInput.getFollowUps().stream()))
+//        .collect(Collectors.toList());
+//  }
+
+  /**
+   * Static pages use the same template format as form pages and requires an html page/fragment to
+   * be present even if it's empty.
+   *
+   * @return True - is a static page; False - otherwise
+   */
+
+  // TODO Figure out navigating between pages with inputs / without inputs without the need for this check
+  public boolean isStaticPage() {
+    return true;
+  }
+
+}
