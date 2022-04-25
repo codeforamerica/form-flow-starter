@@ -12,6 +12,10 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
 }
 
 repositories {
@@ -28,6 +32,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation("org.jetbrains:annotations:23.0.0")
 }
 
 tasks.named('test') {
