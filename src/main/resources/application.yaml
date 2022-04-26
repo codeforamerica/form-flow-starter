@@ -7,9 +7,12 @@ spring:
     store-type: jdbc
     jdbc:
       initialize-schema: always
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 25MB
-google_analytics: off
-google_analytics_id: CHANGEME
+#google_analytics: off
+#google_analytics_id: CHANGEME
