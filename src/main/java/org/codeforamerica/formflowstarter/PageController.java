@@ -35,17 +35,17 @@ public class PageController {
   }
 
   @GetMapping("/")
-  ModelAndView getRoot() {
-    return new ModelAndView(
-        "forward:/pages/index");
+  String getRoot() {
+    return "index";
   }
 
-  @GetMapping("/pages/{pageName}/navigation")
+  @GetMapping("/{flowName}/pages/{pageName}/navigation")
   RedirectView navigation(
+      @PathVariable String flowName,
       @PathVariable String pageName,
       @RequestParam(required = false, defaultValue = "0") Integer option
   ) {
-    PageWorkflowConfiguration currentPage = applicationConfiguration.getPageWorkflow(pageName);
+    PageWorkflowConfiguration currentPage = applicationConfiguration.getPageWorkflow(flowName, pageName);
     if (currentPage == null) {
       return new RedirectView("/error");
     }
@@ -53,27 +53,26 @@ public class PageController {
     NextPage nextPage = applicationData.getNextPageName(currentPage, option);
     // TODO Use this to set which flow we are in once we have multiple flows
     PageWorkflowConfiguration nextPageWorkflow = applicationConfiguration
-        .getPageWorkflow(nextPage.getPageName());
+        .getPageWorkflow(flowName, nextPage.getPageName());
 
-      return new RedirectView(String.format("/pages/%s", nextPage.getPageName()));
+      return new RedirectView(String.format("%s/pages/%s", flowName, nextPage.getPageName()));
   }
 
-  @GetMapping("/pages/{pageName}")
+  @GetMapping("/{flowName}/pages/{pageName}")
   ModelAndView getPage(
+      @PathVariable String flowName,
       @PathVariable String pageName,
-      @RequestParam(required = false, defaultValue = "") String iterationIndex,
-      @RequestParam(name = "utm_source", defaultValue = "", required = false) String utmSource,
       HttpServletResponse response,
       HttpSession httpSession,
       Locale locale
   ) {
 
-    var pageWorkflowConfig = applicationConfiguration.getPageWorkflow(pageName);
+    PageWorkflowConfiguration pageWorkflowConfig = applicationConfiguration.getPageWorkflow(flowName, pageName);
     if (pageWorkflowConfig == null) {
       return new ModelAndView("redirect:/error");
     }
     Map<String, Object> model = new HashMap<>();
     model.put("pageName", pageName);
-    return new ModelAndView(pageName, model);
+    return new ModelAndView("flow1/" + pageName, model);
   }
 }
