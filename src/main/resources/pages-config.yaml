@@ -1,13 +1,7 @@
 flow:
-  flow1:
-    firstPage:
-      nextPages:
-        - pageName: secondPage
-    secondPage:
-      nextPages:
-        - pageName: thirdPage
-  flow2:
-    firstPage:
-      nextPages:
-        - pageName: fancyPage
-    fancyPage:
+  firstPage:
+    nextPages:
+      - pageName: secondPage
+  secondPage:
+    nextPages:
+      - pageName: thirdPage
