@@ -29,11 +29,6 @@ public class PageController {
     this.applicationData = applicationData;
   }
 
-  @GetMapping("/page")
-  String getPage() {
-    return "page";
-  }
-
   @GetMapping("/")
   String getRoot() {
     return "index";

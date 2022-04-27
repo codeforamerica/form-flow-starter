@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html th:lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(text)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta th:if="${@environment.getProperty('demo')}" name="robots" content="noindex, nofollow">
+    <title th:text="${text}"></title>
     <link href="/honeycrisp.min.css" rel="preload" as="style" />
     <link href="/honeycrisp.min.css" rel="stylesheet"/>
     <link rel="preload" href="/honeycrisp.min.js" as="script">
