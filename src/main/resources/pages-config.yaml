@@ -1,18 +1,13 @@
-pageDefinitions:
-  - &index
-    name: index
-  - &firstPage
-    name: firstPage
-  - &secondPage
-    name: secondPage
-workflow:
-  index:
-    pageConfiguration: *index
-    nextPages:
-      - pageName: firstPage
-  firstPage:
-    pageConfiguration: *firstPage
-    nextPages:
-      - pageName: secondPage
-  secondPage:
-    pageConfiguration: *secondPage
+flow:
+  flow1:
+    firstPage:
+      nextPages:
+        - pageName: secondPage
+    secondPage:
+      nextPages:
+        - pageName: thirdPage
+  flow2:
+    firstPage:
+      nextPages:
+        - pageName: fancyPage
+    fancyPage:
