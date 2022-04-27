@@ -39,13 +39,12 @@ public class PageController {
     return "index";
   }
 
-  @GetMapping("/{flowName}/pages/{pageName}/navigation")
+  @GetMapping("/pages/{pageName}/navigation")
   RedirectView navigation(
-      @PathVariable String flowName,
       @PathVariable String pageName,
       @RequestParam(required = false, defaultValue = "0") Integer option
   ) {
-    PageWorkflowConfiguration currentPage = applicationConfiguration.getPageWorkflow(flowName, pageName);
+    PageWorkflowConfiguration currentPage = applicationConfiguration.getPageWorkflow(pageName);
     if (currentPage == null) {
       return new RedirectView("/error");
     }
@@ -53,26 +52,25 @@ public class PageController {
     NextPage nextPage = applicationData.getNextPageName(currentPage, option);
     // TODO Use this to set which flow we are in once we have multiple flows
     PageWorkflowConfiguration nextPageWorkflow = applicationConfiguration
-        .getPageWorkflow(flowName, nextPage.getPageName());
+        .getPageWorkflow(nextPage.getPageName());
 
-      return new RedirectView(String.format("%s/pages/%s", flowName, nextPage.getPageName()));
+      return new RedirectView(String.format("/pages/%s", nextPage.getPageName()));
   }
 
-  @GetMapping("/{flowName}/pages/{pageName}")
+  @GetMapping("/pages/{pageName}")
   ModelAndView getPage(
-      @PathVariable String flowName,
       @PathVariable String pageName,
       HttpServletResponse response,
       HttpSession httpSession,
       Locale locale
   ) {
 
-    PageWorkflowConfiguration pageWorkflowConfig = applicationConfiguration.getPageWorkflow(flowName, pageName);
+    PageWorkflowConfiguration pageWorkflowConfig = applicationConfiguration.getPageWorkflow(pageName);
     if (pageWorkflowConfig == null) {
       return new ModelAndView("redirect:/error");
     }
     Map<String, Object> model = new HashMap<>();
     model.put("pageName", pageName);
-    return new ModelAndView("flow1/" + pageName, model);
+    return new ModelAndView(pageName, model);
   }
 }
