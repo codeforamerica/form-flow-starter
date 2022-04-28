@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<footer th:fragment="footer" class="main-footer">
+  <div class="grid">
+    <div class="grid__item">
+      <div class="width-one-half grid__item">
+        <p class="font-white text--small spacing-below-25"
+           th:text="'The combined benefits application is a service designed by Code for America in partnership with Minnesota counties and tribal nations, on behalf of the people of Minnesota.'"></p>
+        <a class="capitalized footer__privacy-policy-link font-white text--small" target="_blank" rel="noopener noreferrer" href="/faq" th:text="'FAQ'"></a><br/>
+        <a class="capitalized footer__privacy-policy-link font-white text--small" target="_blank" rel="noopener noreferrer" href="/privacy" th:text="'Privacy Policy'"></a>
+      </div>
+      <div class="main-footer__cfa-logo grid__item">
+        <a href="https://www.codeforamerica.org"
+           class="illustration illustration--cfa-logo spacing-below-0"
+           th:text="'Code for America'"></a>
+      </div>
+    </div>
+  </div>
+</footer>
+</html>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html th:lang="${#locale.language}">
 <head th:replace="fragments/head :: head('Home page')"></head>
 <body>
-<p>This is our landing page</p>
-<a href="/pages/firstPage">Try our first flow!</a>
+  <p>This is our landing page</p>
+  <a href="/pages/firstPage">Try our first flow!</a>
 </body>
 </html>

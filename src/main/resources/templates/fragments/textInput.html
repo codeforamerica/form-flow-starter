@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="textInput">
+  <div class="form-card">
+    <label th:for="${input-name}"><strong th:text="${label}"></strong></label>
+    <p class="text--help"
+       th:if="${help-text != null}"
+       th:text="${help-text}"></p>
+    <input type="text" th:id="${input-name}">
+  </div>
+</th:block>
+</th:block>
+</html>
