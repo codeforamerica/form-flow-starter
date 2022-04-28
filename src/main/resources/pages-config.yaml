@@ -4,4 +4,7 @@ flow:
       - pageName: secondPage
   secondPage:
     nextPages:
-      - pageName: thirdPage
+      - pageName: cardPage
+  cardPage:
+      nextPages:
+        - pageName: next

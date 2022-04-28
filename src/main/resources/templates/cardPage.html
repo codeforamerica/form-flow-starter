@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" th:with="title = 'Card Page'">
+<head th:replace="fragments/head :: head(title)"></head>
+<body>
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <div th:replace="fragments/demoBanner :: demoBanner"></div>
+  <section class="slab">
+    <div class="grid">
+      <div th:replace="fragments/aboveCard :: aboveCard"></div>
+      <main id="content" role="main" class="card spacing-above-35">
+        <th:block th:replace="'fragments/icons' :: authorizedRepContextFragment" />
+        <th:block th:replace="'fragments/cardHeader' :: cardHeader(title=${title})" />
+
+
+<!--        <th:block th:if="${pageNameContext != null}">-->
+<!--          <div th:replace="${pageNameContext} :: ${pageNameContext}"></div>-->
+<!--        </th:block>-->
+        <div class="grid__item spacing-below-60">
+<!--          <form id="page-form" th:if="${page.inputs != null && !page.inputs.isEmpty()}"-->
+<!--                autocomplete="off"-->
+<!--                method="post" th:action="@{${postTo}}">-->
+<!--            <div th:each="input: ${page.inputs}">-->
+<!--              <div-->
+<!--                  th:replace="'fragments/inputs/input-with-followups' :: input-with-followups(${input}, ${data})"></div>-->
+<!--            </div>-->
+<!--            <p th:if="${page.hasCardFooterTextKey()}" id="card-footer"-->
+<!--               class="spacing-below-60 spacing-above-minus-25"-->
+<!--               th:text="#{${page.cardFooterTextKey}}"></p>-->
+<!--            <button id="form-submit-button" th:if="${page.hasPrimaryButton}"-->
+<!--                    class="button button&#45;&#45;primary"-->
+<!--                    type="submit"-->
+<!--                    th:text="#{${page.primaryButtonTextKey}}"></button>-->
+<!--            <th:block th:if="${page.hasAlertBox()}">-->
+<!--              <div th:replace="fragments/alertBox :: alertBox(${page})"></div>-->
+<!--            </th:block>-->
+<!--          </form>-->
+
+<!--          <a th:if="${page.hasSubtleLinkTextKey()}" class="link&#45;&#45;subtle" id="subtle-link"-->
+<!--             th:href="|/pages/${page.subtleLinkTargetPage}|"-->
+<!--             th:text="#{${page.subtleLinkTextKey}}"></a>-->
+        </div>
+      </main>
+    </div>
+  </section>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
