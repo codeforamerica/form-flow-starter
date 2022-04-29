@@ -196,14 +196,62 @@ apply:
     validation: REQUIRED
 ```
 
+
+---
+
+Brain storming
+
+```yaml
+apply:
+  - firstName
+    type: TEXT
+    validation: REQUIRED
+  - gender
+    type: RADIO
+    validation: REQUIRED
+    options:
+      - MALE
+      - FEMALE
+      - ELDRITCH_HORROR
+  - city
+    type:
+```
+
+```html
+<th:block th:replace="inputs :: text('Label', etc, ...)">
+```
+
+---
+
 Java class brainstorm:
 
 ```java
+
+interface Input {
+  
+  String value;
+  
+  boolean validate() {
+    return true;
+  }
+}
+
+class EmailInput implements Input {
+  
+  boolean validate() {
+    value.isEmailFormatted();  
+  }
+  
+}
+
 class ApplyModel extends FlowModel {
   public TextInput firstName;
   public EmailInput email;
   public PhoneInput phone;
   
+  
+  firstName.validate() -> {firstName.value.isPresent()}
+  // Do validation on fields
   firstName -> {validation.REQUIRED}
 }
 
@@ -224,12 +272,57 @@ apply:
 ```
 
 ```java
-public enum Conditions {
-  showScreen3 -> appliedForSnap && appliedForCcap,
-} 
+
+class ThirdPage implements Screen {
+  boolean skip() {
+    return conditionLibrary.applyingForSnap;
+  }
+  
+  // if condition, jump
+  Screen jump() {
+    if (someCondition) {
+      return someOtherPage;
+    }
+  }
+}
+
+class Screen {
+  public ArrayList NextScreens;
+  public Screen next();
+  public boolean Skip();
+}
+
+class FirstPage implements Screen {
+     
+  }
+}
+
+
+firstPage --> secondPage --> thirdPage --> fourthPage
+                          -> someOtherPage --> yetAnotherPage
+
+class ApplyFlow implements Flow {
+
+  ArrayList<String> theFlow = [
+      firstPage,
+      secondPage,
+      thirdPage
+      ];
+  
+ 
+  // controller
+  flow.next();
+}
+
 ```
 
 
 ## Defining Conditions ##
 
 Conditions are defined in Java.
+
+```java
+public enum Conditions {
+  showScreen3 -> appliedForSnap && appliedForCcap,
+} 
+```
