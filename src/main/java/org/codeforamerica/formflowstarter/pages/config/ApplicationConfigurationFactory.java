@@ -1,6 +1,8 @@
 package org.codeforamerica.formflowstarter.pages.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -10,13 +12,13 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
-public class ApplicationConfigurationFactory implements FactoryBean<ApplicationConfiguration> {
+public class ApplicationConfigurationFactory implements FactoryBean<List<ApplicationConfiguration>> {
 
   @Value("${pagesConfig:pages-config.yaml}")
   String configPath;
 
   @Override
-  public ApplicationConfiguration getObject() {
+  public List<ApplicationConfiguration> getObject() {
     ClassPathResource classPathResource = new ClassPathResource(configPath);
 
     LoaderOptions loaderOptions = new LoaderOptions();
@@ -26,14 +28,17 @@ public class ApplicationConfigurationFactory implements FactoryBean<ApplicationC
 
     Yaml yaml = new Yaml(new Constructor(ApplicationConfiguration.class), new Representer(),
         new DumperOptions(), loaderOptions);
-    ApplicationConfiguration appConfig = null;
+    List<ApplicationConfiguration> appConfigs = new ArrayList<>();
     try {
-      appConfig = yaml.load(classPathResource.getInputStream());
+      Iterable<Object> appConfigsIterable = yaml.loadAll(classPathResource.getInputStream());
+      appConfigsIterable.forEach(appConfig -> {
+        appConfigs.add((ApplicationConfiguration) appConfig);
+      });
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    return appConfig;
+    return appConfigs;
   }
 
   @Override
@@ -43,6 +48,6 @@ public class ApplicationConfigurationFactory implements FactoryBean<ApplicationC
 
   @Override
   public boolean isSingleton() {
-    return true;
+    return false;
   }
 }
