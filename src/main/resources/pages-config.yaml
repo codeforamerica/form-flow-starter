@@ -1,3 +1,4 @@
+flowName: flow1
 flow:
   firstPage:
     nextPages:
@@ -8,3 +9,14 @@ flow:
   cardPage:
       nextPages:
         - pageName: next
+---
+flowName: flow2
+flow:
+  anotherFirstPage:
+    nextPages:
+      - pageName: anotherSecondPage
+  anotherSecondPage:
+    nextPages:
+      - pageName: cardPage
+  cardPage:
+    nextPages:

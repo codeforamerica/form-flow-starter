@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 public class ApplicationConfiguration {
 
-  /**
-   * Used for page navigation.
-   */
+  private String flowName;
   private Map<String, PageWorkflowConfiguration> flow;
 
   public PageWorkflowConfiguration getPageWorkflow(String pageName) {

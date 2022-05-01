@@ -1,5 +1,6 @@
 package org.codeforamerica.formflowstarter.pages.config;
 
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +13,7 @@ public class ApplicationConfigurationFactoryAppConfig {
   }
 
   @Bean
-  public ApplicationConfiguration applicationConfiguration() throws Exception {
+  public List<ApplicationConfiguration> applicationConfiguration() throws Exception {
     return applicationConfigurationFactory().getObject();
   }
 
