@@ -1,0 +1,56 @@
+<template name="cfa:head" value="&lt;head th:replace=&quot;fragments/head :: head('$TITLE$')&quot;&gt;&lt;/head&gt;"
+          description="Insert global head, define title" toReformat="false" toShortenFQNames="true">
+    <variable name="TITLE" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+        <option name="HTML" value="true"/>
+    </context>
+</template>
+<template name="cfa:html"
+          value="&lt;!DOCTYPE html&gt;&#10;&lt;html th:lang=&quot;${#locale.language}&quot;&gt;&#10;&lt;head th:replace=&quot;fragments/head :: head('$TITLE$')&quot;&gt;&lt;/head&gt;&#10;&lt;body&gt;&#10;$CONTENT$&#10;&lt;/body&gt;&#10;&lt;/html&gt;&#10;"
+          description="Create a full HTML document" toReformat="false" toShortenFQNames="true">
+<variable name="TITLE" expression="" defaultValue="" alwaysStopAt="true"/>
+<variable name="CONTENT" expression="" defaultValue="" alwaysStopAt="true"/>
+<context>
+    <option name="HTML" value="true"/>
+</context>
+</template>
+<template name="cfa:footer" value="&lt;footer th:replace=&quot;fragments/footer :: footer&quot;&gt;&lt;/footer&gt;"
+          description="Insert global footer" toReformat="false" toShortenFQNames="true">
+<context>
+    <option name="HTML" value="true"/>
+</context>
+</template>
+<template name="cfa:cardPage"
+          value="&lt;!DOCTYPE html&gt;&#10;&lt;html th:lang=&quot;${#locale.language}&quot;&gt;&#10;&lt;head th:replace=&quot;fragments/head :: head('$TITLE$')&quot;&gt;&lt;/head&gt;&#10;&lt;body&gt;&#10;&lt;div class=&quot;page-wrapper&quot;&gt;&#10;  &lt;div th:replace=&quot;fragments/toolbar :: toolbar&quot;&gt;&lt;/div&gt;&#10;  &lt;section class=&quot;slab&quot;&gt;&#10;    &lt;div class=&quot;grid&quot;&gt;&#10;      &lt;main id=&quot;content&quot; role=&quot;main&quot; class=&quot;card spacing-above-35&quot;&gt;&#10;        $CONTENT$&#10;      &lt;/main&gt;&#10;    &lt;/div&gt;&#10;  &lt;/section&gt;&#10;&lt;/div&gt;&#10;&lt;footer th:replace=&quot;fragments/footer :: footer&quot;&gt;&lt;/footer&gt;&#10;&lt;/body&gt;&#10;&lt;/html&gt;&#10;"
+          description="Insert an entire card page template" toReformat="false" toShortenFQNames="true">
+<variable name="TITLE" expression="" defaultValue="" alwaysStopAt="true"/>
+<variable name="CONTENT" expression="" defaultValue="" alwaysStopAt="true"/>
+<context>
+    <option name="HTML" value="true"/>
+</context>
+</template>
+<template name="cfa:fragment"
+          value="&lt;!DOCTYPE html&gt;&#10;&lt;html th:lang=&quot;${#locale.language}&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;&#10;&lt;body&gt;&#10; $CONTENT$&#10;&lt;/body&gt;&#10;&lt;/html&gt;"
+          description="Base Thymeleaf fragment" toReformat="false" toShortenFQNames="true">
+<variable name="CONTENT" expression="" defaultValue="" alwaysStopAt="true"/>
+<context>
+    <option name="HTML" value="true"/>
+</context>
+</template>
+<template name="cfa:icon" value="&lt;th:block th:replace=&quot;'fragments/icons' :: $ICON$&quot;&gt;&lt;/th:block&gt;"
+          description="Insert an icon" toReformat="false" toShortenFQNames="true">
+<variable name="ICON" expression="" defaultValue="" alwaysStopAt="true"/>
+<context>
+    <option name="HTML" value="true"/>
+</context>
+</template>
+<template name="cfa:cardHeader"
+          value="&lt;th:block th:replace=&quot;'fragments/cardHeader' :: cardHeader(title=$TITLE$, subtext=$OPTIONAL_SUBTEXT$)&quot; /&gt;&#10;"
+          description="Insert a card header, with named title and named optional subtext" toReformat="false"
+          toShortenFQNames="true">
+<variable name="TITLE" expression="" defaultValue="" alwaysStopAt="true"/>
+<variable name="OPTIONAL_SUBTEXT" expression="" defaultValue="" alwaysStopAt="true"/>
+<context>
+    <option name="HTML" value="true"/>
+</context>
+</template>

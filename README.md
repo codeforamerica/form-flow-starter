@@ -326,3 +326,30 @@ public enum Conditions {
   showScreen3 -> appliedForSnap && appliedForCcap,
 } 
 ```
+
+## IntelliJ Live Templates ##
+
+As a team, we use [IntelliJ](https://www.jetbrains.com/idea/) and can use the [Live Templates](https://www.jetbrains.com/help/idea/using-live-templates.html) feature to quickly build Thymeleaf templates. Support for importing/exporting these Live Templates is a [buggy process](https://youtrack.jetbrains.com/issue/IDEA-184753) that can sometimes wipe away all of your previous settings. So we're going to use a copy/paste approach.
+
+### Steps to apply team Live Templates to your IntelliJ IDE ###
+
+1. Open the [intellij-live-templates/CfA.xml](intellij-live-templates/CfA.xml) from the root of this repo
+2. Copy the whole file
+3. Open Preferences (`cmd + ,`), search or find the section "Live Templates"
+4. If there isn't a template group already called CfA, create one by pressing the "+" in the top right area and selecting "Template group..."
+5. Highlight the template group "CfA", right click and "Paste"
+6. You should now see Live templates with the prefix "cfa:" populated in the template group
+
+### How to use Live Templates ###
+
+Once you have Live Templates installed on your IntelliJ IDE, in `.html` files you can use our Live Templates by typing `cfa:` and a list of templates to autofill will show itself.
+
+### How to contribute new Live Templates ###
+
+1. Open Preferences (`cmd + ,`), search or find the section "Live Templates"
+2. Find the Live Template you want to contribute
+3. Right click and "Copy" (this will copy the Live Template in XML form)
+4. Open [intellij-live-templates/CfA.xml](intellij-live-templates/CfA.xml) in this repo
+5. Paste at the bottom of the file
+6. Commit to GitHub
+7. Now others can copy/paste your Live Templates
