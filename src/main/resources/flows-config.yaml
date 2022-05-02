@@ -1,4 +1,4 @@
-flowName: flow1
+name: flow1
 flow:
   firstPage:
     nextPages:
@@ -10,7 +10,7 @@ flow:
       nextPages:
         - pageName: next
 ---
-flowName: flow2
+name: flow2
 flow:
   anotherFirstPage:
     nextPages:

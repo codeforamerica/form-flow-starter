@@ -1,4 +1,4 @@
-package org.codeforamerica.formflowstarter.pages.config;
+package org.codeforamerica.formflowstarter.app.config;
 
 import lombok.Data;
 
@@ -35,9 +35,9 @@ public class PageConfiguration {
 
   /**
    * Hyperlink at the bottom of the page used for navigation. Destination is set at {@link
-   * PageWorkflowConfiguration#getSubtleLinkTargetPage()}
+   * ScreenNavigationConfiguration#getSubtleLinkTargetPage()}
    *
-   * @see PageWorkflowConfiguration#getSubtleLinkTargetPage()
+   * @see ScreenNavigationConfiguration#getSubtleLinkTargetPage()
    */
 //  private Value subtleLinkTextKey;
 
