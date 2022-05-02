@@ -47,11 +47,7 @@ public class ScreenController {
     }
 
     NextScreen nextScreen = applicationData.getNextScreenName(currentScreen, option);
-    // TODO Use this to set which flow we are in once we have multiple flows
-//    ScreenNavigationConfiguration nextPageWorkflow = currentFlowConfiguration
-//        .getScreenNavigation(nextScreen.getName());
-
-      return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
+    return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
   }
 
   @GetMapping("{flow}/{screen}")
