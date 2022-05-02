@@ -30,11 +30,6 @@ public class ScreenController {
     this.applicationData = applicationData;
   }
 
-  @GetMapping("/")
-  String getRoot() {
-    return "index";
-  }
-
   @GetMapping("{flow}/{screen}/navigation")
   RedirectView navigation(
       @PathVariable String flow,

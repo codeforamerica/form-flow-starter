@@ -54,18 +54,9 @@ erDiagram
 Screens are defined as HTML using the Thymeleaf templating engine. Building block components are
 provided to quickly build pages using Thymeleaf fragments.
 
+
+
 Components provided include:
-
-<!--- 
-Open Ended Questions: 
-- How does this work with definiting input fields? 
--- Should input YAML definitions include values and validations? What about conditions?
-- How does this work with conditional logic?
-- What components do we really need? Where do we draw the line of this is
-a useful component to have vs this could just be written as HTML? 
-- How do we handle follow ups on inputs?
---->
-
 
 __Form Components__
 - Form
@@ -91,16 +82,9 @@ __Page Layout Components__
 - Reveal
 
 
+
 ```html
 
-<TellUsAboutYourself
-  icon="smiley"
-  header="Tell Us about Yourself"
-  layout="card-form"
-  fields="[firstName, lastName]"
->
-  <TextInput label="What's your first name?" field="firstName" />
-</TellUsAboutYourself>
 
 <th:block th:replace="'fragments/icons' :: smiley" />
 <th:block th:replace="'fragments/header' :: header('Tell Us About Yourself', 
@@ -326,6 +310,31 @@ public enum Conditions {
   showScreen3 -> appliedForSnap && appliedForCcap,
 } 
 ```
+
+## Defining Pages ##
+
+Unlike Screens, Pages are static HTML content that is generally not interactive. Examples include
+the home page and an FAQ.
+
+To add a new Page:
+
+1. Add an annotated method (`@GetMapping`) to the `PageController`
+2. Create a page template in `src/resources/templates`.
+
+The template HTML can look like:
+
+```html
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head('Change Me')"></head>
+<body>
+  <!-- more to come -->
+</body>
+</html>
+```
+
+The IntelliJ Live Template for the above example can be generated with `cfa:page`.
+
 
 ## IntelliJ Live Templates ##
 
