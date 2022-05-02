@@ -3,7 +3,7 @@ package org.codeforamerica.formflowstarter.configurations;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSION;
 
-import org.codeforamerica.formflowstarter.pages.data.ApplicationData;
+import org.codeforamerica.formflowstarter.app.data.ApplicationData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
