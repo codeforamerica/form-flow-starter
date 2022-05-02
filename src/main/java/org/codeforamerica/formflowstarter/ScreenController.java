@@ -35,45 +35,47 @@ public class ScreenController {
     return "index";
   }
 
-  @GetMapping("{flowName}/{pageName}/navigation")
+  @GetMapping("{flow}/{screen}/navigation")
   RedirectView navigation(
-      @PathVariable String flowName,
-      @PathVariable String pageName,
+      @PathVariable String flow,
+      @PathVariable String screen,
       @RequestParam(required = false, defaultValue = "0") Integer option
   ) {
-    FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
-        flowConfiguration -> flowConfiguration.getName().equals(flowName)
-    ).toList().get(0);
-    ScreenNavigationConfiguration currentPage = currentFlowConfiguration.getScreenNavigation(pageName);
-    if (currentPage == null) {
+    var currentScreen = getCurrentScreen(flow, screen);
+    if (currentScreen == null) {
       return new RedirectView("/error");
     }
 
-    NextScreen nextScreen = applicationData.getNextScreenName(currentPage, option);
+    NextScreen nextScreen = applicationData.getNextScreenName(currentScreen, option);
     // TODO Use this to set which flow we are in once we have multiple flows
-    ScreenNavigationConfiguration nextPageWorkflow = currentFlowConfiguration
-        .getScreenNavigation(nextScreen.getName());
+//    ScreenNavigationConfiguration nextPageWorkflow = currentFlowConfiguration
+//        .getScreenNavigation(nextScreen.getName());
 
-      return new RedirectView(String.format("/%s/%s", flowName, nextScreen.getName()));
+      return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
   }
 
-  @GetMapping("{flowName}/{pageName}")
+  @GetMapping("{flow}/{screen}")
   ModelAndView getPage(
-      @PathVariable String pageName,
-      @PathVariable String flowName,
+      @PathVariable String flow,
+      @PathVariable String screen,
       HttpServletResponse response,
       HttpSession httpSession,
       Locale locale
   ) {
-    FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
-        flowConfiguration -> flowConfiguration.getName().equals(flowName)
-    ).toList().get(0);
-    ScreenNavigationConfiguration pageWorkflowConfig = currentFlowConfiguration.getScreenNavigation(pageName);
-    if (pageWorkflowConfig == null) {
+    var currentScreen = getCurrentScreen(flow, screen);
+    if (currentScreen == null) {
       return new ModelAndView("redirect:/error");
     }
+
     Map<String, Object> model = new HashMap<>();
-    model.put("pageName", pageName);
-    return new ModelAndView(pageName, model);
+    model.put("screen", screen);
+    return new ModelAndView("/%s/%s".formatted(flow, screen), model);
+  }
+
+  private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
+    FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
+            flowConfiguration -> flowConfiguration.getName().equals(flow)
+    ).toList().get(0);
+    return currentFlowConfiguration.getScreenNavigation(screen);
   }
 }

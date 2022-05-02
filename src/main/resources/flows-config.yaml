@@ -1,22 +1,22 @@
 name: flow1
 flow:
   firstPage:
-    nextPages:
-      - pageName: secondPage
+    nextScreens:
+      - name: secondPage
   secondPage:
-    nextPages:
-      - pageName: cardPage
+    nextScreens:
+      - name: cardPage
   cardPage:
-      nextPages:
-        - pageName: next
+      nextScreens:
+        - name: next
 ---
 name: flow2
 flow:
   anotherFirstPage:
-    nextPages:
-      - pageName: anotherSecondPage
+    nextScreens:
+      - name: anotherSecondPage
   anotherSecondPage:
-    nextPages:
-      - pageName: cardPage
+    nextScreens:
+      - name: cardPage
   cardPage:
-    nextPages:
+    nextScreens:
