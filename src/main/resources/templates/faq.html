@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head('FAQ')"></head>
+<body>
+<div class="page-wrapper">
+  <th:block th:replace="fragments/toolbar :: toolbar" />
+  <th:block th:replace="fragments/demoBanner :: demoBanner" />
+  <section class="slab slab--gradient">
+    <div class="grid">
+      <div class="grid__item">
+        <h1 class="spacing-below-35">FAQ</h1>
+      </div>
+    </div>
+  </section>
+  <main id="content" role="main" class="slab slab--white">
+    <div class="grid">
+      <nav class="grid__item width-one-third">
+        <h2 class="h3">Table of Contents</h2>
+        <div class="spacing-below-35">
+          <a href="#anchor1">Anchor 1</a>
+        </div>
+        <div class="spacing-below-35">
+          <a href="#anchor2">Anchor 2</a>
+        </div>
+      </nav>
+      <div class="grid__item shift-one-twelfth width-seven-twelfths">
+        <div class="grid">
+          <h1 class="h2 spacing-below-35">Frequently Asked Questions (FAQ)</h1>
+          <div class="grid__item">
+            <div class="grid__item spacing-below-35">
+              <h2 id="anchor1" class="h3">Anchor1</h2>
+              <p>Content 1</p>
+              <h2 id="anchor2" class="h3 spacing-above-60">Anchor 2</h2>
+              <p>Content 2</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<th:block th:replace="fragments/footer :: footer" />
+</body>
+</html>

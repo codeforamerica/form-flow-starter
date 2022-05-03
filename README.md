@@ -54,7 +54,10 @@ erDiagram
 Screens are defined as HTML using the Thymeleaf templating engine. Building block components are
 provided to quickly build pages using Thymeleaf fragments.
 
-
+### How to create a new screens? ###
+1. Add a new entry to the desired flow in [flow-config.yaml](src/main/resources/flows-config.yaml).
+2. Add a new template `.html` file with the same name as the entry [in the flow folder](src/main/resources/templates).
+3. Add content to template, input, conditions, validation, TBD.
 
 Components provided include:
 
@@ -80,91 +83,6 @@ __Page Layout Components__
 - PageHeaderSubtext
 - Accordion
 - Reveal
-
-
-
-```html
-
-
-<th:block th:replace="'fragments/icons' :: smiley" />
-<th:block th:replace="'fragments/header' :: header('Tell Us About Yourself', 
-                                                   'Tell us some basic information.')" />
-
-<th:block th:replace="fragments/form :: form_start" />
-  <th:block th:replace="fragments/input :: textInput(flow.firstName)" />
-<th:block th:replace="fragments/form :: form_end" />
-
----
-
-<main id="content" role="main" class="form-card">
-
-  <div th:replace="'fragments/icons' :: smiley"></div>
-  <h1 th:replace="'fragments/header' :: header('Tell Us About Yourself')"></h1>
-  
-  
-  <p id="page-header-help-message" th:text="Tell us some basic information."></p>
-  
-  
-  </div>
-  <th:block th:if="${pageNameContext != null}">
-    <div th:replace="${pageNameContext} :: ${pageNameContext}"></div>
-  </th:block>
-
-  <div class="grid__item spacing-below-60">
-    <!--Form page-->
-    <form id="page-form" th:if="${page.inputs != null && !page.inputs.isEmpty()}"
-          autocomplete="off"
-          method="post" th:action="@{${postTo}}">
-      <div th:each="input: ${page.inputs}">
-        <div
-            th:replace="'fragments/inputs/input-with-followups' :: input-with-followups(${input}, ${data})"></div>
-      </div>
-      <p th:if="${page.hasCardFooterTextKey()}" id="card-footer" class="spacing-below-60 spacing-above-minus-25"
-         th:text="#{${page.cardFooterTextKey}}"></p>
-      <button id="form-submit-button" th:if="${page.hasPrimaryButton}"
-              class="button button--primary"
-              type="submit"
-              th:text="#{${page.primaryButtonTextKey}}"></button>
-      <th:block th:if="${page.hasAlertBox()}">
-        <div th:replace="fragments/alertBox :: alertBox(${page})"></div>
-      </th:block>
-    </form>
-
-    <!--Static page-->
-    <div th:if="${page.inputs == null || page.inputs.isEmpty()}">
-      <a th:if="${page.hasPrimaryButton}" class="button button--primary"
-         th:href="'/pages/'+${pageName}+'/navigation?option=0'"
-         th:text="#{${page.primaryButtonTextKey}}"></a>
-    </div>
-    <a th:if="${page.hasSubtleLinkTextKey()}" class="link--subtle" id="subtle-link"
-       th:href="|/pages/${page.subtleLinkTargetPage}|"
-       th:text="#{${page.subtleLinkTextKey}}"></a>
-  </div>
-</main>
-
-
-```
-
-React brainstorm:
-
-```jsx
-<FormCard>
-  <CardHeader>${tell-us.header}</CardHeader>
-  <Form>
-    <TextInput name="applicantFirstName"
-               helpText="${legally-as-it-appears}"
-               label="${what-is-your-first-name}"/>
-
-    <TextInput name="applicantLastName"
-               helpText="${legally-as-it-appears}"
-               label="${what-is-your-last-name}"/>
-    
-    
-  </Form>
-</FormCard>
-
-```
-
 
 ## Defining Inputs ##
 
