@@ -229,12 +229,12 @@ public enum Conditions {
 } 
 ```
 
-## Defining Pages ##
+## Defining Static Pages ##
 
-Unlike Screens, Pages are static HTML content that is generally not interactive. Examples include
-the home page and an FAQ.
+Unlike Screens, Static Pages are HTML content not part of a flow. Examples include a privacy policy
+or FAQ.
 
-To add a new Page:
+To add a new Static Page:
 
 1. Add an annotated method (`@GetMapping`) to the `PageController`
 2. Create a page template in `src/resources/templates`.
