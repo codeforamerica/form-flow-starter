@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head('First page')"></head>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head('First Page')"></head>
 <body>
-<div>
-  <h1>First page</h1>
-  <p>This is a test.</p>
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <main id="content" role="main" class="card spacing-above-35">
+        <th:block th:replace="'fragments/cardHeader' :: cardHeader(title='First Page', subtext='Some subtext.')" />
+        <form>
+          <div class="form-card__content">
+
+            <th:block th:replace="'fragments/textInput' :: textInput(inputName='firstName', label='What\'s your first name', placeholder='First name')" />
+
+            <div class="form-group form-group--error">
+              <label for="firstName" class="form-question">What's your first name?</label>
+              <input type="text" class="text-input form-width--name" id="firstName" name="firstName" placeholder="First name">
+              <p class="text--error"><i class="icon-warning"></i> Make sure you answer this question.</p>
+            </div>
+            <div class="form-group">
+              <label for="last_name" class="form-question">What's your last name?</label>
+              <input type="text" class="text-input form-width--name" id="last_name" placeholder="Last name">
+            </div>
+          </div>
+          <div class="form-card__footer">
+            <button class="button button--primary">Continue <i class="icon icon-arrow_forward"></i></button>
+            <button class="button">Go back <i class="icon icon-replay"></i></button>
+          </div>
+        </form>
+
+      </main>
+    </div>
+  </section>
 </div>
-<div th:replace="fragments/continue :: continue"></div>
+<th:block th:replace="fragments/footer :: footer" />
 </body>
 </html>
+

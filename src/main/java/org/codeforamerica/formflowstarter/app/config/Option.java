@@ -6,7 +6,7 @@ import lombok.Data;
 public class Option {
 
   private String value;
-  private String messageKey;
+//  private String messageKey;
   private Boolean isNone;
 //  private String helpMessageKey;
 //  private String helpIcon;

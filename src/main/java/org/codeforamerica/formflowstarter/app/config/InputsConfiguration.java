@@ -5,11 +5,11 @@ import java.util.HashMap;
 import lombok.Data;
 
 @Data
-public class FormInputsConfiguration {
+public class InputsConfiguration {
 
-  private HashMap<String, Input> formInputs;
+  private HashMap<String, Input> inputs;
 
   public Input getInputConfiguration(String inputName) {
-    return this.formInputs.get(inputName);
+    return this.inputs.get(inputName);
   }
 }
