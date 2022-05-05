@@ -1,4 +1,10 @@
-formInputs:
+inputs:
+  firstName:
+    name: firstName
+    type: TEXT
+  lastName:
+    name: lastName
+    type: TEXT
   testTextInput:
     name: testTextInput
     type: TEXT
@@ -7,9 +13,6 @@ formInputs:
     type: RADIO
     options:
       - value: RED
-        messageKey: test-inputs.radio-input
       - value: BLUE
-        messageKey: test-inputs.radio-input-blue
       - value: GREEN
-        messageKey: test-inputs.radio-input-green
 
