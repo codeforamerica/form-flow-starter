@@ -1,0 +1,15 @@
+formInputs:
+  testTextInput:
+    name: testTextInput
+    type: TEXT
+  testRadioInput:
+    name: testRadioInput
+    type: RADIO
+    options:
+      - value: RED
+        messageKey: test-inputs.radio-input
+      - value: BLUE
+        messageKey: test-inputs.radio-input-blue
+      - value: GREEN
+        messageKey: test-inputs.radio-input-green
+

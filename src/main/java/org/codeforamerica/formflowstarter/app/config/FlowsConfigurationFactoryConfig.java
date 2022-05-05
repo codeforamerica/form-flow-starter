@@ -13,7 +13,7 @@ public class FlowsConfigurationFactoryConfig {
   }
 
   @Bean
-  public List<FlowConfiguration> flowsConfiguration() throws Exception {
+  public List<FlowConfiguration> flowsConfiguration() {
     return flowsConfigurationFactory().getObject();
   }
 }
