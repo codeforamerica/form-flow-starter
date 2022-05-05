@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
+import org.codeforamerica.formflowstarter.app.config.FormInputsConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
 import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
 import org.codeforamerica.formflowstarter.app.data.ApplicationData;
@@ -22,12 +23,15 @@ public class ScreenController {
 
   private final ApplicationData applicationData;
   private final List<FlowConfiguration> flowConfigurations;
+  private final FormInputsConfiguration formInputsConfiguration;
 
   public ScreenController(
       List<FlowConfiguration> flowConfigurations,
-      ApplicationData applicationData) {
+      ApplicationData applicationData,
+      FormInputsConfiguration formInputsConfiguration) {
     this.flowConfigurations = flowConfigurations;
     this.applicationData = applicationData;
+    this.formInputsConfiguration = formInputsConfiguration;
   }
 
   @GetMapping("{flow}/{screen}/navigation")
@@ -59,6 +63,7 @@ public class ScreenController {
     }
 
     Map<String, Object> model = new HashMap<>();
+    var inputsTest = formInputsConfiguration;
     model.put("screen", screen);
     return new ModelAndView("/%s/%s".formatted(flow, screen), model);
   }

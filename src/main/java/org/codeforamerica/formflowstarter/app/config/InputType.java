@@ -2,7 +2,6 @@ package org.codeforamerica.formflowstarter.app.config;
 
 public enum InputType {
   TEXT,
-  LONG_TEXT,
   DATE,
   NUMBER,
   RADIO,
