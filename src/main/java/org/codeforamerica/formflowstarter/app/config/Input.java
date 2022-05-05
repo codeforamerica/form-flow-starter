@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class Input {
-  private final String name;
-  private final InputType type;
-  private final List<Option> options = new ArrayList<>();
+  private String name;
+  private InputType type;
+  private List<Option> options = new ArrayList<>();
 }
