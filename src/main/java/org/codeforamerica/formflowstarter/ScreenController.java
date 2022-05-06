@@ -63,7 +63,7 @@ public class ScreenController {
     }
 
     Map<String, Object> model = new HashMap<>();
-    var inputs= inputsConfiguration;
+    var inputs= inputsConfiguration.getInputs();
 
     model.put("flow", flow);
     model.put("screen", screen);
