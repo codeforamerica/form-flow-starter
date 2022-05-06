@@ -8,11 +8,11 @@ inputs:
   testTextInput:
     name: testTextInput
     type: TEXT
-  testRadioInput:
-    name: testRadioInput
-    type: RADIO
-    options:
-      - value: RED
-      - value: BLUE
-      - value: GREEN
+#  testRadioInput:
+#    name: testRadioInput
+#    type: RADIO
+#    options:
+#      - value: RED
+#      - value: BLUE
+#      - value: GREEN
 
