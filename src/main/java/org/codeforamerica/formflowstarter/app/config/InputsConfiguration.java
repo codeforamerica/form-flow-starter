@@ -6,10 +6,5 @@ import lombok.Data;
 
 @Data
 public class InputsConfiguration {
-
   private HashMap<String, Input> inputs;
-
-  public Input getInputConfiguration(String inputName) {
-    return this.inputs.get(inputName);
-  }
 }
