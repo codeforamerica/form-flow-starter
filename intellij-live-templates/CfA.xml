@@ -89,3 +89,15 @@ description="Insert the global toolbar" toReformat="false" toShortenFQNames="tru
   <option name="HTML" value="true"/>
 </context>
 </template>
+<template name="cfa:textInput"
+value="&lt;th:block th:replace=&quot;'fragments/textInput' ::&#10;  textInput(inputName='$INPUT_NAME$',&#10;  label=#{$LABEL_KEY$},&#10;  helpText=#{$HELP_TEXT_KEY$},&#10;  placeholder=#{$PLACEHOLDER_KEY$})&quot;/&gt;"
+description="A text input with label, name, optional help text and optional placeholder"
+toReformat="false" toShortenFQNames="true">
+<variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+<variable name="LABEL_KEY" expression="" defaultValue="" alwaysStopAt="true"/>
+<variable name="HELP_TEXT_KEY" expression="" defaultValue="" alwaysStopAt="true"/>
+<variable name="PLACEHOLDER_KEY" expression="" defaultValue="" alwaysStopAt="true"/>
+<context>
+  <option name="HTML" value="true"/>
+</context>
+</template>
