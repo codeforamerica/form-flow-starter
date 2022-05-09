@@ -180,10 +180,12 @@ class Submission {
   private Long id;
   
   private String flow;
-
+  
+  @CreationTimestamp
   @Temporal(TIMESTAMP)
   private Timestamp createdAt;
 
+  @UpdateTimestamp
   @Temporal(TIMESTAMP)
   private Timestamp updatedAt;
 
