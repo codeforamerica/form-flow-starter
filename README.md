@@ -199,7 +199,8 @@ class Submission {
 The `inputData` field is a JSON object that stores input data from the inputs as a given 
 flow progresses. It can be used for defining conditions.
 
-An instance variable `currentSubmission` is available for use in the `ScreenController` and is.
+An instance variable `currentSubmission` is available for use in the `ScreenController` and 
+`inputData` is placed on the Thymeleaf model.
 
 ## Defining Conditions ##
 
