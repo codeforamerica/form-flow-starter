@@ -1,32 +1,30 @@
 # Form Flow Starter App #
 
-This is a standard Spring Boot application that uses Form Flow Builder tools as a library. It can
-be customized to meet any needs of a web app, and is meant to be built upon.
+This is a standard Spring Boot application that uses the `form-flows` Java package as a library. It 
+can be customized to meet the needs of a web app, and is meant to be built upon. It's a plain, 
+boring (but modern) Spring app that uses common, frequently-used libraries throughout.
 
-It contains examples code for a simple, generic application for public benefits. An applicant can
-input their personal information, upload supporting documents, receive a confirmation text message, 
-and receive a confirmation email with a filled-in application PDF. The example flow is content is in
-both English and Spanish.
+It contains example code for a simple, generic application for public benefits. An applicant 
+can fill out screens with their basic info, upload supporting documents, then submit it all. 
+Upon submission, they receive a simple SMS confirmation and a receipt email with a filled-in 
+application PDF. The entire experience is in both English and Spanish.
 
 The example application can be viewed [here](https://example.com).
 
-To power the form flow logic this app depends on the `form-flows` Java library. That library is
+To power the form flow logic, this app depends on the `form-flows` Java library. That library is
 included in `build.gradle` along with all other dependencies. The codebase for the `form-flows`
-package is [open-source](https://example.com).
+package is [open source](https://example.com).
 
-Out-of-the-box, integrations can be set up with the following third-party services:
+Out-of-the-box, integrations can be set up with common third-party services:
 
+- Intercom
 - Google Analytics
 - Mixpanel
 - Optimizely
-- Intercom
 - Google Ads
 - Facebook Ads
 
-These are configurable in `application.yaml`.
-
-The documentation that follows describes the main concepts needed to set up a new form flow and
-accompanying features like PDF generation or confirmation text messages and emails.
+The relevant service keys and other settings are configurable in `application.yaml`.
 
 ## Form Flow Concepts ##
 
@@ -34,11 +32,14 @@ accompanying features like PDF generation or confirmation text messages and emai
 * Inputs
 * Screens
 * Conditions
+* Validations
 
-Flows are the top-level construct. A flow has many inputs to receive user data (e.g. first name, zip
-code, email, uploads). A flow also has many screens. Each screen can be made up of one or more
-inputs. A flow has an ordering of screens, and can use defined conditions to skip screens. 
-Conditions can also be used on individual screens to show or hide content.
+Flows are the top-level construct. A flow has many inputs to accept user data (e.g. first name, zip
+code, email, file upload). Each input can have zero to many validations.
+
+A flow also has many screens. Each screen can be made up of one or more inputs. A flow has an 
+ordering of screens, and can use defined conditions to skip screens. Conditions are based on
+submitted inputs. Conditions can also be used on individual screens to show or hide content.
 
 ```mermaid
 erDiagram      
@@ -49,194 +50,181 @@ erDiagram
     Input }|--o{ Condition: "determines"
 ```
 
-## Defining Screens ##
+## Defining Flows ##
 
-Screens are defined as HTML using the Thymeleaf templating engine. Building block components are
-provided to quickly build pages using Thymeleaf fragments.
+To start, define a new flow by creating a Java class that extends the `Flow` class and defines 
+an empty `screens` instance variable:
 
-### How to create a new screens? ###
-1. Add a new entry to the desired flow in [flow-config.yaml](src/main/resources/flows-config.yaml).
-2. Add a new template `.html` file with the same name as the entry [in the flow folder](src/main/resources/templates).
-3. Add content to template, input, conditions, validation, TBD.
-
-Components provided include:
-
-__Form Components__
-- Form
-- TextInput
-- TextAreaInput
-- DateInput
-- NumberInput
-- RadioInput
-- CheckBoxInput
-- SelectInput
-- MoneyInput
-- PhoneInput
-- SsnInput
-- DocumentUploadInput
-- YesOrNoInput
-- FormSubmitButton
-
-__Page Layout Components__
-- CardPage
-- PageHeader
-- PageHeaderSubtext
-- Accordion
-- Reveal
-
-## Defining Inputs ##
-
-Inputs are defined in YAML, in `resources/inputs`. An example is in `resources/inputs/apply.yaml`.
-
-```yaml
-apply:
-  - firstName
-    type: TEXT
-    validation: REQUIRED
-  - lastName
-    type: TEXT
-    validation: REQUIRED
+```java
+class Apply extends Flow {
+  
+  public ArrayList<Screen> screens = List.of();
+  
+}
 ```
 
+We'll add to this more as we define our screens and inputs! 
 
----
+## Defining Screens and Inputs ##
 
-Brain storming
+Screens follow the classic MVC (model-view-controller) pattern:
 
-```yaml
-apply:
-  - firstName
-    type: TEXT
-    validation: REQUIRED
-  - gender
-    type: RADIO
-    validation: REQUIRED
-    options:
-      - MALE
-      - FEMALE
-      - ELDRITCH_HORROR
-  - city
-    type:
+1. A back-end **model** that's a Java class that extends `Screen`.
+2. A Thymeleaf HTML template as the **view**.
+3. A Spring **controller** called `ScreenController`. Generally, it won't need to be modified just 
+   to add a new screen to the flow.
+
+Here's a new `Screen` class that represents the model:
+
+```java
+class AboutYou extends Screen {
+  
+  public boolean skip() {
+    return false;
+  }
+  
+}
 ```
+
+The model implements a `skip()` method, which is `false` by default.
+
+With the new `Screen` class, an instance can be now added to the `Apply` flow:
+
+```java
+class Apply extends Flow {
+  
+  public ArrayList<Screen> screens = List.of(
+      new AboutYou()
+  );
+  
+  @NotBlank
+  TextInput firstName;
+  
+  @NotBlank
+  TextInput lastName;
+  
+  EmailInput emailAddress;
+
+  PhoneInput phoneNumber;
+}
+```
+
+In addition to adding an instance of the `AboutYou` screen to the `screens` list, inputs are
+added to the flow as well. The name inputs have `@NotBlank` validations (via [Bean Validation](https://beanvalidation.org/)) 
+applied, while the email and phone inputs use validations built into the `EmailInput` and 
+`PhoneInput` classes, respectively.
+
+The built-in input types are:
+
+- `TextInput`
+- `TextAreaInput`
+- `DateInput`
+- `NumberInput`
+- `CheckboxInput`
+- `CheckboxSetInput`
+- `RadioInput`
+- `SelectInput`
+- `MoneyInput`
+- `PhoneInput`
+- `EmailInput`
+- `SsnInput`
+- `FileUploadInput`
+- `YesOrNoInput`
+- `SubmitInput`
+
+Custom input types can be created by extending the `Input` class, while custom validations can 
+be implemented through the [Bean Validation library](https://reflectoring.io/bean-validation-with-spring-boot/#a-custom-validator-with-spring-boot).
+
+
+Then, screen views are defined as HTML with the [Thymeleaf templating engine](https://www.thymeleaf.org/).
+Thymeleaf fragments (building block components) are provided by the `form-flows` library to 
+produce semantically-correct HTML and CSS from the [Honeycrisp design system](https://honeycrisp.herokuapp.com/).
+
+When setting up a new flow, create a folder in `src/main/resources` to hold all HTML files. Then 
+add a new HTML file `about-you.html` [in the flow's templates folder](src/main/resources/templates):
 
 ```html
-<th:block th:replace="inputs :: text('Label', etc, ...)">
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head('About You')"></head>
+<body>
+<div class="page-wrapper">
+   <div th:replace="fragments/toolbar :: toolbar"></div>
+   <section class="slab">
+      <div class="grid">
+         <main id="content" role="main" class="card spacing-above-35">
+            <th:block th:replace="'icons' :: 'clipboard'"></th:block>
+            <th:block th:replace="'content' :: cardHeader(title='Tell us about yourself')" />
+            <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')" />
+            <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')" />
+            <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')" />
+            <th:block th:replace="'inputs' :: submitInput()" />
+         </main>
+      </div>
+   </section>
+</div>
+<th:block th:replace="fragments/footer :: footer" />
+</body>
+</html>
 ```
 
----
+## About Submissions ##
 
-Java class brainstorm:
+Submission data is stored in the `Submission` object, persisted to PostgreSQL via the Hibernate ORM.
 
 ```java
+class Submission {
+  
+  @Id
+  @GeneratedValue
+  private Long id;
+  
+  private String flow;
 
-interface Input {
+  @Temporal(TIMESTAMP)
+  private Timestamp createdAt;
+
+  @Temporal(TIMESTAMP)
+  private Timestamp updatedAt;
+
+  @Temporal(TIMESTAMP)
+  private Timestamp submittedAt;
+   
+  @Type(JsonType.class)
+  private Map<String, String> inputData = new HashMap<>();
   
-  String value;
-  
-  boolean validate() {
-    return true;
-  }
 }
-
-class EmailInput implements Input {
-  
-  boolean validate() {
-    value.isEmailFormatted();  
-  }
-  
-}
-
-class ApplyModel extends FlowModel {
-  public TextInput firstName;
-  public EmailInput email;
-  public PhoneInput phone;
-  
-  
-  firstName.validate() -> {firstName.value.isPresent()}
-  // Do validation on fields
-  firstName -> {validation.REQUIRED}
-}
-
 ```
 
-## Defining A Flow ##
+The `inputData` field is a JSON object that stores input data from the inputs as a given 
+flow progresses. It can be used for defining conditions.
 
-Flows are defined in YAML, in `resources/flows`. An example is in `resources/flows/apply.yaml`.
-It looks like this:
-
-```yaml
-apply:
-  - screen1
-  - screen2:
-    nextPages:
-      - screen3:
-          condition: showScreen3
-```
-
-```java
-
-class ThirdPage implements Screen {
-  boolean skip() {
-    return conditionLibrary.applyingForSnap;
-  }
-  
-  // if condition, jump
-  Screen jump() {
-    if (someCondition) {
-      return someOtherPage;
-    }
-  }
-}
-
-class Screen {
-  public ArrayList NextScreens;
-  public Screen next();
-  public boolean Skip();
-}
-
-class FirstPage implements Screen {
-     
-  }
-}
-
-
-firstPage --> secondPage --> thirdPage --> fourthPage
-                          -> someOtherPage --> yetAnotherPage
-
-class ApplyFlow implements Flow {
-
-  ArrayList<String> theFlow = [
-      firstPage,
-      secondPage,
-      thirdPage
-      ];
-  
- 
-  // controller
-  flow.next();
-}
-
-```
-
+An instance variable `currentSubmission` is available for use in the `ScreenController` and is.
 
 ## Defining Conditions ##
 
-Conditions are defined in Java.
+Conditions are defined in Java as methods, and can read from the `currentSubmission` object. When 
+defining new conditions as methods, the instance variable `inputData` is accessible.
 
 ```java
-public enum Conditions {
-  showScreen3 -> appliedForSnap && appliedForCcap,
+public class ApplyConditions extends FlowConditions {
+  
+  public boolean isGmailUser() {
+    return inputData.get('emailAddress').contains("gmail.com");
+  }
+  
 } 
 ```
 
 ## Defining Static Pages ##
 
-Unlike Screens, Static Pages are HTML content not part of a flow. Examples include a privacy policy
-or FAQ.
+Unlike Screens, Static Pages are HTML content not part of a flow. Examples include the home page, 
+privacy policy, or FAQ. This starter app contains a home page (`index.html`) and FAQ (`faq.html`)
+as examples in the `resources/templates` folder.
 
 To add a new Static Page:
 
-1. Add an annotated method (`@GetMapping`) to the `PageController`
+1. Add an annotated method (`@GetMapping`) to the `StaticPageController`
 2. Create a page template in `src/resources/templates`.
 
 The template HTML can look like:
@@ -244,34 +232,53 @@ The template HTML can look like:
 ```html
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('Change Me')"></head>
+<head th:replace="fragments/head :: head('')"></head>
 <body>
-  <!-- more to come -->
+<div class="page-wrapper">
+   <th:block th:replace="fragments/toolbar :: toolbar" />
+   <th:block th:replace="fragments/demoBanner :: demoBanner" />
+   <section class="slab">
+      <div class="grid">
+         <div class="grid__item">
+            <h1 class="spacing-below-35"></h1>
+         </div>
+      </div>
+   </section>
+   <main id="content" role="main" class="slab slab--white">
+
+   </main>
+</div>
+<th:block th:replace="fragments/footer :: footer" />
 </body>
 </html>
 ```
 
-The IntelliJ Live Template for the above example can be generated with `cfa:page`.
+The IntelliJ Live Template for the above example can be generated with `cfa:staticPage`.
 
+## About IntelliJ Live Templates ##
 
-## IntelliJ Live Templates ##
+As a team, we use [IntelliJ](https://www.jetbrains.com/idea/) and can use the [Live Templates](https://www.jetbrains.com/help/idea/using-live-templates.html) feature to quickly build 
+Thymeleaf templates.
 
-As a team, we use [IntelliJ](https://www.jetbrains.com/idea/) and can use the [Live Templates](https://www.jetbrains.com/help/idea/using-live-templates.html) feature to quickly build Thymeleaf templates. Support for importing/exporting these Live Templates is a [buggy process](https://youtrack.jetbrains.com/issue/IDEA-184753) that can sometimes wipe away all of your previous settings. So we're going to use a copy/paste approach.
+Support for importing/exporting these Live Templates is a [buggy process](https://youtrack. jetbrains.com/issue/IDEA-184753) that can sometimes wipe away all of your previous settings. So we're going to use a copy/paste approach.
 
-### Steps to apply team Live Templates to your IntelliJ IDE ###
+### Applying Live Templates to your IntelliJ IDE ###
 
-1. Open the [intellij-live-templates/CfA.xml](intellij-live-templates/CfA.xml) from the root of this repo
+1. Open the [intellij-live-templates/CfA.xml](intellij-live-templates/CfA.xml) from the root of 
+   this repo
 2. Copy the whole file
 3. Open Preferences (`cmd + ,`), search or find the section "Live Templates"
-4. If there isn't a template group already called CfA, create one by pressing the "+" in the top right area and selecting "Template group..."
+4. If there isn't a template group already called CfA, create one by pressing the "+" in the top 
+   right area and selecting "Template group..."
 5. Highlight the template group "CfA", right click and "Paste"
 6. You should now see Live templates with the prefix "cfa:" populated in the template group
 
-### How to use Live Templates ###
+### Using Live Templates ###
 
-Once you have Live Templates installed on your IntelliJ IDE, in `.html` files you can use our Live Templates by typing `cfa:` and a list of templates to autofill will show itself.
+Once you have Live Templates installed on your IntelliJ IDE, in `.html` files you can use our 
+Live Templates by typing `cfa:` and a list of templates to autofill will show itself.
 
-### How to contribute new Live Templates ###
+### Contribute new Live Templates ###
 
 1. Open Preferences (`cmd + ,`), search or find the section "Live Templates"
 2. Find the Live Template you want to contribute
