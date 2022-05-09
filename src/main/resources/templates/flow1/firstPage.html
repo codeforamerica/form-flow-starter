@@ -12,11 +12,15 @@
         <form>
           <div class="form-card__content">
             <th:block
-                th:replace="'fragments/textInput' ::
-                textInput(inputName='firstName',
+                th:replace="'fragments/inputs/text' ::
+                text(inputName='firstName',
                 label=#{first-page.text-input-label},
                 helpText=#{first-page.text-input-help},
                 placeholder=#{first-page.text-input-placeholder})"/>
+            <th:block th:replace="'fragments/inputs/textArea' ::
+              textArea(inputName='area',
+              label=#{first-page.text-area-label},
+              helpText=#{first-page.text-area-help})"/>
           </div>
           <!--          <div class="form-group">-->
           <!--            <div role="group" th:name="${inputs.favoriteColor.name}">-->

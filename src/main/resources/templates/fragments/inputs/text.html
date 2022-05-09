@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="textInput" th:with="hasHelpText=${helpText != null}">
+<th:block th:fragment="text" th:with="hasHelpText=${helpText != null}">
   <div class="form-group">
-    <label th:for="${inputName}" th:text="${label}" class="form-question" />
+    <label th:for="${inputName}" th:text="${label}" class="form-question"/>
     <p class="text--help"
        th:if="${hasHelpText}"
        th:id="${inputName + '-help-text'}"
