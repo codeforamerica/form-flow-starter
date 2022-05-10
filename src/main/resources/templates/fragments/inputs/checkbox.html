@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="checkbox" th:with="hasHelpText=${checkboxHelpText != null}, hasIcon=${checkboxIcon != null}">
+  <style>
+      /* TODO: add to honeycrisp? */
+      .checkbox {
+          display: flex;
+      }
+  </style>
+  <label th:for="${inputName} + '-' + ${value}"
+         th:id="${inputName} + '-' + ${value} + '-label'"
+         class="checkbox display-flex">
+    <input type="checkbox"
+           th:id="${inputName} + '-' + ${value}"
+           th:value="${value}"
+           th:name="${inputName} + '-' + ${value}"
+           th:checked="${false}">
+    <div th:if="${hasIcon}">
+      <i th:class="${'icon-' + checkboxIcon}" style="margin-right: 0.5rem"></i>
+    </div>
+    <div>
+      <span th:text="${label}"></span>
+      <p th:if="${hasHelpText}" th:text="${checkboxHelpText}" th:id="${inputName} + '-' + ${value} + '-help-text'"
+         class="text--help with-no-padding"></p>
+    </div>
+  </label>
+
+</th:block>
+</body>
+</html>

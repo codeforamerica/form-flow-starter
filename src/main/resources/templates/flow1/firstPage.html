@@ -28,7 +28,19 @@
               number(inputName='age2',
               label=#{first-page.number-input-label},
               helpText=#{first-page.number-input-label},
-              placeholder=#{first-page.number-input-placeholder})" />
+              placeholder=#{first-page.number-input-placeholder})"/>
+            <th:block th:replace="'fragments/inputs/fieldset' ::
+              fieldset(inputName='gender',
+              label='Actually a legend',
+              fieldsetHelpText='Helper text',
+              content=~{::genderContent})">
+              <th:block th:ref="genderContent">
+                <th:block
+                    th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='MALE', label='A tall man', checkboxHelpText='This is helping, right?', checkboxIcon='favorite')"/>
+                <th:block
+                    th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='FEMALE', label='Female')"/>
+              </th:block>
+            </th:block>
           </div>
           <!--          <div class="form-group">-->
           <!--            <div role="group" th:name="${inputs.favoriteColor.name}">-->
