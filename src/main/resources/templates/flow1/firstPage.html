@@ -24,6 +24,11 @@
             <th:block th:replace="'fragments/inputs/date' ::
               date(inputName='date',
               label=#{first-page.text-date-label})"/>
+            <th:block th:replace="'fragments/inputs/number' ::
+              number(inputName='age2',
+              label=#{first-page.number-input-label},
+              helpText=#{first-page.number-input-label},
+              placeholder=#{first-page.number-input-placeholder})" />
           </div>
           <!--          <div class="form-group">-->
           <!--            <div role="group" th:name="${inputs.favoriteColor.name}">-->

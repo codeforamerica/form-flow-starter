@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="number" th:with="hasHelpText=${helpText != null}">
+  <div class="form-group">
+    <label th:for="${inputName}" th:text="${label}" class="form-question"/>
+    <p class="text--help"
+       th:if="${hasHelpText}"
+       th:id="${inputName + '-help-text'}"
+       th:text="${helpText}"></p>
+    <input type="number"
+           class="text-input form-width--med"
+           th:attr="aria-describedby=${hasHelpText ? inputName + '-help-text' : ''}"
+           th:placeholder="${placeholder}"
+           th:id="${inputName}"
+           th:name="${inputName}"
+    >
+  </div>
+</th:block>
+</th:block>
+</html>
