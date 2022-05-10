@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="date"
+     class="form-group">
+  <fieldset>
+    <label th:for="${inputName}" th:text="${label}" class="form-question"/>
+    <p class="text--help">
+      <label th:for="${inputName}+'-month'"
+             th:id="${inputName}+'-month-label'"
+             th:text="#{general.month}"></label>
+      &nbsp;/&nbsp;
+      <label th:for="${inputName}+'-day'"
+             th:id="${inputName}+'-day-label'"
+             th:text="#{general.day}"></label>
+      &nbsp;/&nbsp;
+      <label th:for="${inputName}+'-year'"
+             th:id="${inputName}+'-year-label'"
+             th:text="#{general.year}"></label>
+    </p>
+    <input type="text" inputmode="numeric" maxlength="2"
+           class="input-group--inline text-input form-width--short"
+           th:id="${inputName}+'-month'" th:name="${inputName}+'-month'"
+           th:placeholder="mm"
+           th:attr="aria-describedby=${inputName + '-month-label'}"/>
+    &nbsp;/&nbsp;
+    <input type="text" inputmode="numeric" maxlength="2"
+           class="input-group--inline text-input form-width--short"
+           th:id="${inputName}+'-day'"
+           th:name="${inputName}+'-day'"
+           th:placeholder="dd"
+           th:attr="aria-describedby=${inputName}+'-day-label'"/>
+    &nbsp;/&nbsp;
+    <input type="text" inputmode="numeric" maxlength="4"
+           class="input-group--inline text-input form-width--short"
+           th:id="${inputName}+'-year'"
+           th:name="${formInputName}"
+           th:placeholder="yyyy"
+           th:attr="aria-describedby=${inputName}+'-year-label'"/>
+  </fieldset>
+</div>
+</body>
+</html>
