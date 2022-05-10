@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/assets/fonts/MaterialIcons-Regular.eot?#iefix') format('embedded-opentype'),
+    url('/assets/fonts/MaterialIcons-Regular.ttf') format('truetype'),
+    url('/assets/fonts/MaterialIcons-Regular.woff') format('woff'),
+    url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
+    url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
+}
