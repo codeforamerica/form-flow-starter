@@ -115,10 +115,10 @@ toReformat="false" toShortenFQNames="true">
   <option name="HTML" value="true"/>
 </context>
 </template>
-<template name="cfa:inputDate"
-value="&lt;th:block th:replace=&quot;'fragments/inputs/date' ::&#10;              date(inputName='$NAME$',&#10;              label=$LABEL$&quot;/&gt;"
-description="A Date input with three seperate fields for month (mm), day (dd), year (yyyy)"
-toReformat="false" toShortenFQNames="true">
-<variable name="NAME" expression="" defaultValue="" alwaysStopAt="true"/>
-<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true"/>
+<template name="cfa:inputDate" value="&lt;th:block th:replace=&quot;'fragments/inputs/date' ::&#10;  date(inputName='$NAME$',&#10;  label='$LABEL$')&quot;/&gt;" description="A Date input with three separate fields for month [mm], day [dd], year [yyyy]" toReformat="false" toShortenFQNames="true">
+<variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
 </template>
