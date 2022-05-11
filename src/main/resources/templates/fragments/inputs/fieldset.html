@@ -5,12 +5,13 @@
   <fieldset th:attr="aria-describedby=${hasHelpText ? inputName + '-help-text' : ''}">
     <legend class="form-question"
             th:id="${inputName + '-legend'}"
-            th:text="${label}">
+            th:inline="text">
+      [[${label}]]
+      <p class="text--help"
+         th:if="${hasHelpText}"
+         th:id="${inputName + '-help-text'}"
+         th:text="${fieldsetHelpText}"></p>
     </legend>
-    <p class="text--help"
-       th:if="${hasHelpText}"
-       th:id="${inputName + '-help-text'}"
-       th:text="${fieldsetHelpText}"></p>
     <th:block th:replace="${content}"/>
   </fieldset>
 </div>
