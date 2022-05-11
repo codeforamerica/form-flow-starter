@@ -98,6 +98,15 @@
   <option name="HTML" value="true" />
 </context>
 </template>
+<template name="cfa:inputPhone" value="&lt;th:block&#10;  th:replace=&quot;'fragments/inputs/phone' :: phone(&#10;  inputName='$INPUT_NAME$',&#10;  label=$LABEL$,&#10;  helpText=$OPTIONAL_HELP_TEXT$,&#10;  placeholder=$OPTIONAL_PLACEHOLDER$)&quot;/&gt;" description="Phone input with optional help text and optional placeholder" toReformat="false" toShortenFQNames="true">
+<variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTIONAL_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTIONAL_PLACEHOLDER" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
+</template>
 <template name="cfa:inputSelectWithOption" value="&lt;th:block&#10;  th:replace=&quot;'fragments/inputs/select' :: select(label=$LABEL$, inputName='$INPUT_NAME$', helpText=$OPTIONAL_HELP_TEXT$, content=~{::$REF_CONTENT$})&quot;&gt;&#10;  &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;    &lt;!-- Copy the below option if you want more options --&gt;&#10;    &lt;th:block th:replace=&quot;'fragments/inputs/selectOption' :: selectOption(value='$VALUE$', optionText=$OPTION_TEXT$)&quot;/&gt;&#10;  &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="Select input with optional help text" toReformat="false" toShortenFQNames="true">
 <variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
