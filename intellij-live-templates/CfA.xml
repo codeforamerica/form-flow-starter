@@ -57,7 +57,7 @@
   <option name="HTML" value="true" />
 </context>
 </template>
-<template name="cfa:inputFieldsetWithCheckbox" value="&lt;th:block th:replace=&quot;'fragments/inputs/fieldset' ::&#10;  fieldset(inputName='$INPUT_NAME$',&#10;  label='$LABEL$',&#10;  fieldsetHelpText='$FIELDSET_HELP_TEXT$',&#10;  content=~{::$REF_CONTENT$})&quot;&gt;&#10;    &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;      &lt;th:block&#10;        th:replace=&quot;'fragments/inputs/checkbox' :: checkbox(inputName='$INPUT_NAME$',value='$VALUE$', label='$CHECKBOX_LABEL$', checkboxHelpText='$CHECKBOX_HELP_TEXT$', checkboxIcon='$CHECKBOX_ICON$')&quot;/&gt;&#10;    &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="A fieldset with label, name, optional help text and a checkbox with label, name, value, optional help text and optional icon" toReformat="false" toShortenFQNames="true">
+<template name="cfa:inputFieldsetWithCheckbox" value="&lt;th:block th:replace=&quot;'fragments/inputs/fieldset' ::&#10;  fieldset(inputName='$INPUT_NAME$',&#10;  label='$LABEL$',&#10;  fieldsetHelpText='$FIELDSET_HELP_TEXT$',&#10;  content=~{::$REF_CONTENT$})&quot;&gt;&#10;    &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;      &lt;!-- Copy the below input if you want to add more --&gt;&#10;      &lt;th:block&#10;        th:replace=&quot;'fragments/inputs/checkbox' :: checkbox(inputName='$INPUT_NAME$',value='$VALUE$', label='$CHECKBOX_LABEL$', checkboxHelpText='$CHECKBOX_HELP_TEXT$', checkboxIcon='$CHECKBOX_ICON$')&quot;/&gt;&#10;    &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="A fieldset with label, name, optional help text and a checkbox with label, name, value, optional help text and optional icon" toReformat="false" toShortenFQNames="true">
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="FIELDSET_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
@@ -70,11 +70,32 @@
   <option name="HTML" value="true" />
 </context>
 </template>
+<template name="cfa:inputFieldsetWithRadio" value="&lt;th:block th:replace=&quot;'fragments/inputs/fieldset' ::&#10;              fieldset(inputName='$INPUT_NAME$',&#10;              label=$LABEL$,&#10;              fieldsetHelpText=$OPTIONAL_HELP_TEXT$,&#10;              content=~{::$CONTENTREF$})&quot;&gt;&#10;              &lt;th:block th:ref=&quot;$CONTENTREF$&quot;&gt;&#10;                &lt;!-- Copy the below input if you want to add more --&gt;&#10;                &lt;th:block&#10;                    th:replace=&quot;'fragments/inputs/radio' :: radio(inputName='$INPUT_NAME$',value='$VALUE$', label=$LABEL$)&quot;/&gt;&#10;              &lt;/th:block&gt;&#10;            &lt;/th:block&gt;" description="A fieldset with legend and radio input(s) with optional help text." toReformat="false" toShortenFQNames="true">
+<variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTIONAL_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="CONTENTREF" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
+</template>
 <template name="cfa:inputNumber" value="&lt;th:block th:replace=&quot;'fragments/inputs/number' ::&#10;  number(inputName='$INPUT_NAME$',&#10;  label='$LABEL$',&#10;  helpText='$OPTIONAL_HELP_TEXT$',&#10;  placeholder='$OPTIONAL_PLACEHOLDER$')&quot; /&gt;" description="A number input with label, name, optional help text, and optional placeholder" toReformat="false" toShortenFQNames="true">
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="OPTIONAL_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="OPTIONAL_PLACEHOLDER" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
+</template>
+<template name="cfa:inputSelectWithOption" value="&lt;th:block&#10;  th:replace=&quot;'fragments/inputs/select' :: select(label=$LABEL$, inputName='$INPUT_NAME$', helpText=$OPTIONAL_HELP_TEXT$, content=~{::$REF_CONTENT$})&quot;&gt;&#10;  &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;    &lt;!-- Copy the below option if you want more options --&gt;&#10;    &lt;th:block th:replace=&quot;'fragments/inputs/selectOption' :: selectOption(value='$VALUE$', optionText=$OPTION_TEXT$)&quot;/&gt;&#10;  &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="Select input with optional help text" toReformat="false" toShortenFQNames="true">
+<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTIONAL_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="REF_CONTENT" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTION_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
 <context>
   <option name="HTML" value="true" />
 </context>

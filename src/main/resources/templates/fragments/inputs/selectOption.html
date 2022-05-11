@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="selectOption" class="select form-group">
+  <option th:value="${value}" th:text="${optionText}"
+          th:selected="false"></option>
+</th:block>
+</body>
+</html>
