@@ -78,6 +78,12 @@
                 label='What is your phone number?',
                 helpText='Area code included',
                 placeholder='510-333-4444')"/>
+            <th:block
+                th:replace="'fragments/inputs/ssn' :: ssn(
+                inputName='ssn',
+                label='What is your social security number?',
+                helpText='We will never share this with anyone',
+                placeholder='123-45-6789')"/>
           </div>
           <div class="form-card__footer">
             <button class="button button--primary">Continue <i class="icon icon-arrow_forward"></i>
