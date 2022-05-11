@@ -80,6 +80,15 @@
   <option name="HTML" value="true" />
 </context>
 </template>
+<template name="cfa:inputMoney" value="&lt;th:block&#10;  th:replace=&quot;'fragments/inputs/money' :: money(inputName='$INPUT_NAME$',&#10;  label=$LABEL$,&#10;  helpText=$OPTIONAL_HELP_TEXT$,&#10;  placeholder=$OPTIONAL_PLACEHOLDER$)&quot;/&gt;" description="Money input with optional help text and optional placeholder" toReformat="false" toShortenFQNames="true">
+<variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTIONAL_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="OPTIONAL_PLACEHOLDER" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
+</template>
 <template name="cfa:inputNumber" value="&lt;th:block th:replace=&quot;'fragments/inputs/number' ::&#10;  number(inputName='$INPUT_NAME$',&#10;  label='$LABEL$',&#10;  helpText='$OPTIONAL_HELP_TEXT$',&#10;  placeholder='$OPTIONAL_PLACEHOLDER$')&quot; /&gt;" description="A number input with label, name, optional help text, and optional placeholder" toReformat="false" toShortenFQNames="true">
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />

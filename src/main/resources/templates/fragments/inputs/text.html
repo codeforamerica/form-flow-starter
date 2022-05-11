@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
 <th:block th:fragment="text" th:with="hasHelpText=${helpText != null}">
   <div class="form-group">
     <label th:for="${inputName}" th:text="${label}" class="form-question"/>
@@ -13,5 +14,5 @@
            th:attr="aria-describedby=${hasHelpText ? inputName + '-help-text' : ''}">
   </div>
 </th:block>
-</th:block>
+</body>
 </html>
