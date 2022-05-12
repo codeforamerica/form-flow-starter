@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
 <head th:replace="fragments/head :: head(title)"></head>
-<body>
+<body class="template--question">
 <div class="page-wrapper">
   <div th:replace="fragments/toolbar :: toolbar"></div>
   <div th:replace="fragments/demoBanner :: demoBanner"></div>
   <section class="slab">
     <div class="grid">
       <div th:replace="fragments/aboveCard :: aboveCard"></div>
-      <main id="content" role="main" class="card spacing-above-35">
+      <main id="content" role="main" class="form-card spacing-above-35">
         <th:block th:replace="'fragments/icons' :: authorizedRepContextFragment" />
         <th:block th:replace="'fragments/cardHeader' :: cardHeader(title=#{card-page.title})" />
 

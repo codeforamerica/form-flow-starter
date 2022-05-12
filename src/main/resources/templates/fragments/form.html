@@ -1,29 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="form_start">
-  <form action="/example">
-</th:block>
-
-<th:block th:fragment="form_end">
-  </form>
-</th:block>
-
-<form th:fragment="formTest(yield)">
-  <th:block th:replace="${yield}" />
+<body>
+<form th:fragment="form(action, formContent)"
+      autocomplete="off"
+      method="post"
+      th:action="@{${action}}">
+  <th:block th:replace="${formContent}"/>
 </form>
-
-<th:block th:fragment="firstInput">
-  <div class="form-card">
-    <label for="text-input" th:text="'This is a test label'"></label>
-    <p class="help-text">This is some test help text</p>
-    <input type="text" id="text-input">
-  </div>
-</th:block>
-
-<th:block th:fragment="secondInput(label)">
-  <div class="form-card">
-    <label for="text-input2" th:text="${label}"></label>
-    <input type="text" id="text-input2">
-  </div>
-</th:block>
+</body>
 </html>

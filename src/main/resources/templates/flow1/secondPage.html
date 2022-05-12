@@ -1,11 +1,31 @@
 <!DOCTYPE html>
-<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale.language}">
 <head th:replace="fragments/head :: head('Second page')"></head>
-<body>
-<div>
-  <h1>Second page</h1>
-  <p>This is a continuation of test.</p>
-  <div th:replace="fragments/continue :: continue"></div>
+<body class="template--question">
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <main id="content" role="main" class="form-card spacing-above-35">
+        <th:block
+            th:replace="'fragments/cardHeader' :: cardHeader(title='Second page', subtext='Cool subtext')"/>
+        <th:block th:replace="'fragments/form' :: form(action='/', formContent=~{::formContent})">
+          <th:block th:ref="formContent">
+            <div class="form-card__content">
+              <th:block th:replace="'fragments/inputs/text' ::
+              text(inputName='custom',
+              label='text',
+              helpText='helper')"/>
+            </div>
+            <div class="form-card__footer">
+              <th:block th:replace="'fragments/inputs/continueButton' :: continue"/>
+            </div>
+          </th:block>
+        </th:block>
+      </main>
+    </div>
+  </section>
 </div>
+<th:block th:replace="fragments/footer :: footer"/>
 </body>
 </html>

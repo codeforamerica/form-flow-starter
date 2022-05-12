@@ -130,10 +130,7 @@ The built-in input types are:
 - `Ssn`
 - `YesOrNo`
 - `Submit`
-
----
-
-- `FileUpload`
+- `FileUpload` (TBD)
 
 Custom input types can be created by extending the `Input` class, while custom validations can 
 be implemented through the [Bean Validation library](https://reflectoring.io/bean-validation-with-spring-boot/#a-custom-validator-with-spring-boot).
@@ -155,7 +152,7 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
    <div th:replace="fragments/toolbar :: toolbar"></div>
    <section class="slab">
       <div class="grid">
-         <main id="content" role="main" class="card spacing-above-35">
+         <main id="content" role="main" class="form-card spacing-above-35">
             <th:block th:replace="'icons' :: 'clipboard'"></th:block>
             <th:block th:replace="'content' :: cardHeader(title='Tell us about yourself')" />
             <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')" />

@@ -2,19 +2,17 @@
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="yesOrNo" th:with="hasHelpText=${helpText != null}">
-  <div class="form-group">
-    <div th:if="${hasHelpText}">
-      <p class="text--help" th:text="${helpText}"></p>
-    </div>
-    <button th:name="${inputName}" type="submit" value="true" class="button">
-      <span class="button__icon--left emoji emoji--inline emoji--checkmark"></span>
-      <span th:text="#{general.inputs.yes}"></span>
-    </button>
-    <button th:name="${inputName}" type="submit" value="false" class="button">
-      <span class="button__icon--left emoji emoji--inline emoji--crossmark"></span>
-      <span th:text="#{general.inputs.no}"></span>
-    </button>
+  <div th:if="${hasHelpText}">
+    <p class="text--help spacing-below-25" th:text="${helpText}"></p>
   </div>
+  <button th:name="${inputName}" type="submit" value="true" class="button">
+    <span class="button__icon--left emoji emoji--inline emoji--checkmark"></span>
+    <span th:text="#{general.inputs.yes}"></span>
+  </button>
+  <button th:name="${inputName}" type="submit" value="false" class="button">
+    <span class="button__icon--left emoji emoji--inline emoji--crossmark"></span>
+    <span th:text="#{general.inputs.no}"></span>
+  </button>
 </th:block>
 </body>
 </html>
