@@ -85,11 +85,14 @@
                 helpText='We will never share this with anyone',
                 placeholder='123-45-6789')"/>
           </div>
-          <div class="form-card__footer">
-            <button class="button button--primary">Continue <i class="icon icon-arrow_forward"></i>
-            </button>
-            <button class="button">Go back <i class="icon icon-replay"></i></button>
-          </div>
+          <th:block th:replace="fragments/inputs/yesOrNo :: yesOrNo(
+            inputName='yesOrNo',
+            helpText='A yes or no question')"/>
+          <!--          <div class="form-card__footer">-->
+          <!--            <button class="button button&#45;&#45;primary">Continue <i class="icon icon-arrow_forward"></i>-->
+          <!--            </button>-->
+          <!--            <button class="button">Go back <i class="icon icon-replay"></i></button>-->
+          <!--          </div>-->
         </form>
       </main>
     </div>

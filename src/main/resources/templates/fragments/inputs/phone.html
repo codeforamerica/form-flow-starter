@@ -7,8 +7,8 @@
      th:if="${hasHelpText}"
      th:id="${inputName + '-help-text'}"
      th:text="${helpText}"></p>
-  <input type="tel"
-         class="text-input form-width--med"
+  <input typ2e="tel"
+         class="text-input form-width--med phone-input"
          th:attr="aria-describedby=${hasHelpText ? inputName + '-help-message' : ''}"
          th:placeholder="${placeholder}"
          th:id="${inputName}"

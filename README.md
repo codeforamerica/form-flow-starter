@@ -116,21 +116,24 @@ applied, while the email and phone inputs use validations built into the `EmailI
 
 The built-in input types are:
 
-- `TextInput`
-- `TextAreaInput`
-- `DateInput`
-- `NumberInput`
-- `CheckboxInput`
-- `CheckboxSetInput`
-- `RadioInput`
-- `SelectInput`
-- `MoneyInput`
-- `PhoneInput`
-- `EmailInput`
-- `SsnInput`
-- `FileUploadInput`
-- `YesOrNoInput`
-- `SubmitInput`
+- `Checkbox`
+- `Date`
+- `Fieldset`
+- `Money`
+- `Number`
+- `Radio`
+- `Select`
+- `SelectOption`
+- `Text`
+- `TextArea`
+- `Phone`
+- `Ssn`
+- `YesOrNo`
+
+---
+
+- `Submit`
+- `FileUpload`
 
 Custom input types can be created by extending the `Input` class, while custom validations can 
 be implemented through the [Bean Validation library](https://reflectoring.io/bean-validation-with-spring-boot/#a-custom-validator-with-spring-boot).
