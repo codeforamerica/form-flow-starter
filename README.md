@@ -129,10 +129,10 @@ The built-in input types are:
 - `Phone`
 - `Ssn`
 - `YesOrNo`
+- `Submit`
 
 ---
 
-- `Submit`
 - `FileUpload`
 
 Custom input types can be created by extending the `Input` class, while custom validations can 

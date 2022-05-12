@@ -127,6 +127,12 @@
   <option name="HTML" value="true" />
 </context>
 </template>
+<template name="cfa:inputSubmitButton" value="&lt;th:block th:replace=&quot;fragments/inputs/submitButton :: submitButton(&#10;  text=$TEXT$)&quot; /&gt;" description="A form submit button with text" toReformat="false" toShortenFQNames="true">
+<variable name="TEXT" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
+</template>
 <template name="cfa:inputText" value="&lt;th:block th:replace=&quot;'fragments/inputs/text' ::&#10;  textInput(inputName='$INPUT_NAME$',&#10;  label=#{$LABEL_KEY$},&#10;  helpText=#{$HELP_TEXT_KEY$},&#10;  placeholder=#{$PLACEHOLDER_KEY$})&quot; /&gt;" description="A text input with label, name, optional help text and optional placeholder" toReformat="false" toShortenFQNames="true">
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="LABEL_KEY" expression="" defaultValue="" alwaysStopAt="true" />
