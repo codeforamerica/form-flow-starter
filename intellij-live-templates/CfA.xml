@@ -49,7 +49,7 @@
   <option name="HTML" value="true" />
 </context>
 </template>
-<template name="cfa:inputContinueButton" value="&lt;th:block th:replace=&quot;'fragments/inputs/continueButton' :: continue&quot; /&gt;&#10;" description="A continue link that looks like a button" toReformat="false" toShortenFQNames="true">
+<template name="cfa:continueButton" value="&lt;th:block th:replace=&quot;'fragments/continueButton' :: continue&quot; /&gt;&#10;" description="A continue link that looks like a button" toReformat="false" toShortenFQNames="true">
 <context>
   <option name="HTML" value="true" />
 </context>
