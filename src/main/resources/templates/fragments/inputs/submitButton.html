@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<th:block th:fragment="submitButton">
+<th:block
+    th:fragment="submitButton"
+    th:with="text=${text} ? ${text} : #{general.inputs.submit}">
   <button id="form-submit-button"
           class="button button--primary"
           type="submit"

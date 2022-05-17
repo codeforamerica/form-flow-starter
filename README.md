@@ -146,7 +146,7 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
 ```html
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('About You')"></head>
+<head th:replace="fragments/head :: head(title='About You')"></head>
 <body>
 <div class="page-wrapper">
    <div th:replace="fragments/toolbar :: toolbar"></div>
@@ -235,7 +235,7 @@ The template HTML can look like:
 ```html
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('')"></head>
+<head th:replace="fragments/head :: head(title='')"></head>
 <body>
 <div class="page-wrapper">
    <th:block th:replace="fragments/toolbar :: toolbar" />

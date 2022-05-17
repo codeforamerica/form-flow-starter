@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<form th:fragment="form(action, formContent)"
+<form th:fragment="form"
+      th:assert="${!#strings.isEmpty(action)}, ${!#strings.isEmpty(formContent)}"
+      th:action="@{${action}}"
       autocomplete="off"
-      method="post"
-      th:action="@{${action}}">
+      method="post">
   <th:block th:replace="${formContent}"/>
 </form>
 </body>

@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="fieldset" th:with="hasHelpText=${fieldsetHelpText != null}" class="form-group">
-  <style>
-    /* TODO: add to honeycrisp? */
-    .text--normal {
-      font-weight: 400;
-    }
-  </style>
-  <fieldset th:attr="aria-describedby=${hasHelpText ? inputName + '-help-text' : ''}">
-    <legend class="form-question"
-            th:id="${inputName + '-legend'}"
-            th:inline="text">
-      [[${label}]]
-      <p class="text--help spacing-below-0 text--normal"
-         th:if="${hasHelpText}"
-         th:id="${inputName + '-help-text'}"
-         th:text="${fieldsetHelpText}"></p>
-    </legend>
-    <th:block th:replace="${content}"/>
-  </fieldset>
-</div>
+<th:block
+    th:fragment="fieldset"
+    th:with="
+      hasHelpText=${!#strings.isEmpty(helpText)},
+      hasLabel=${!#strings.isEmpty(label)}"
+    th:assert="
+      ${!#strings.isEmpty(inputName)},
+      ${hasLabel},
+      ${content != null}">
+  <div class="form-group">
+    <style>
+      /* TODO: add to honeycrisp? */
+      .text--normal {
+        font-weight: 400;
+      }
+    </style>
+    <fieldset th:attr="aria-describedby=${hasHelpText ? inputName + '-help-text' : ''}">
+      <legend class="form-question"
+              th:id="${inputName + '-legend'}"
+              th:inline="text">
+        [[${label}]]
+        <p class="text--help spacing-below-0 text--normal"
+           th:if="${hasHelpText}"
+           th:id="${inputName + '-help-text'}"
+           th:text="${fieldsetHelpText}"></p>
+      </legend>
+      <th:block th:replace="${content}"/>
+    </fieldset>
+  </div>
+</th:block>
 </body>
 </html>

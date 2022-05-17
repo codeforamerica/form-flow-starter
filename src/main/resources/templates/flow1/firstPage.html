@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('First Page')"></head>
+<head th:replace="fragments/head :: head(title='First Page')"></head>
 <body class="template--question">
 <div class="page-wrapper">
   <div th:replace="fragments/toolbar :: toolbar"></div>
@@ -57,7 +57,7 @@
                 </th:block>
               </th:block>
               <th:block
-                  th:replace="'fragments/inputs/select' :: select(label='What\'s your favorite fruit?', inputName='favoriteFruit', helpText='Mine is banana', content=~{::favoriteFruitContent})">
+                  th:replace="'fragments/inputs/select' :: select(inputName='favoriteFruit', label='What\'s your favorite fruit?', helpText='Mine is banana', selectContent=~{::favoriteFruitContent})">
                 <th:block th:ref="favoriteFruitContent">
                   <th:block
                       th:replace="'fragments/inputs/selectOption' :: selectOption(value='APPLE', optionText='Apple')"/>
@@ -87,7 +87,7 @@
                             placeholder='123-45-6789')"/>
             </div>
             <div class="form-card__footer">
-              <th:block th:replace="'fragments/continueButton' :: continue" />
+              <th:block th:replace="'fragments/continueButton' :: continue"/>
             </div>
           </th:block>
         </th:block>

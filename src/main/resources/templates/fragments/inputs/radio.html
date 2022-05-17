@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<th:block th:fragment="radio">
+<th:block
+    th:fragment="radio"
+    th:assert="
+      ${!#strings.isEmpty(inputName)},
+      ${!#strings.isEmpty(value)},
+      ${!#strings.isEmpty(label)}">
   <label th:for="${inputName} + '-' + ${value}"
          th:id="${inputName} + '-' + ${value} + '-label'"
          class="radio-button">

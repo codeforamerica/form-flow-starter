@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<th:block th:fragment="checkbox" th:with="hasHelpText=${checkboxHelpText != null}, hasIcon=${checkboxIcon != null}">
+<th:block
+    th:fragment="checkbox"
+    th:with="
+      hasHelpText=${!#strings.isEmpty(checkboxHelpText)},
+      hasIcon=${!#strings.isEmpty(checkboxIcon)}"
+    th:assert="
+      ${!#strings.isEmpty(inputName)},
+      ${!#strings.isEmpty(value)},
+      ${!#strings.isEmpty(label)}">
   <style>
-      /* TODO: add to honeycrisp? */
-      .checkbox {
-          display: flex;
-      }
+    /* TODO: add to honeycrisp? */
+    .checkbox {
+      display: flex;
+    }
   </style>
   <label th:for="${inputName} + '-' + ${value}"
          th:id="${inputName} + '-' + ${value} + '-label'"
@@ -21,7 +29,9 @@
     </div>
     <div>
       <span th:text="${label}"></span>
-      <p th:if="${hasHelpText}" th:text="${checkboxHelpText}" th:id="${inputName} + '-' + ${value} + '-help-text'"
+      <p th:if="${hasHelpText}"
+         th:id="${inputName} + '-' + ${value} + '-help-text'"
+         th:text="${checkboxHelpText}"
          class="text--help with-no-padding"></p>
     </div>
   </label>

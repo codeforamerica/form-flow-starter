@@ -6,7 +6,7 @@
       ${inputContent != null}">
   <!DOCTYPE html>
   <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head :: head(${title})"></head>
+  <head th:replace="fragments/head :: head(title=${title})"></head>
   <body class="template--question">
   <div class="page-wrapper">
     <div th:replace="fragments/toolbar :: toolbar"></div>

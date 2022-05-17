@@ -1,59 +1,73 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="date" class="form-group">
-  <fieldset class="input-group input-group--inline">
-    <label th:for="${inputName}" th:text="${label}" class="form-question"/>
-    <p class="text--help">
-      <label th:for="${inputName}+'-month'"
-             th:id="${inputName}+'-month-label'"
-             th:text="#{general.month}"></label>
-      &nbsp;/&nbsp;
-      <label th:for="${inputName}+'-day'"
-             th:id="${inputName}+'-day-label'"
-             th:text="#{general.day}"></label>
-      &nbsp;/&nbsp;
-      <label th:for="${inputName}+'-year'"
-             th:id="${inputName}+'-year-label'"
-             th:text="#{general.year}"></label>
-    </p>
-    <style>
+<th:block
+    th:fragment="date"
+    th:with="
+      hasLabel=${!#strings.isEmpty(label)},
+      hasAriaLabel=${!#strings.isEmpty(ariaLabel)}"
+    th:assert="${!#strings.isEmpty(inputName)}, ${hasLabel || hasAriaLabel}">
+  <div class="form-group">
+    <fieldset class="input-group input-group--inline">
+      <label th:if="${hasLabel}" th:for="${inputName}" th:text="${label}" class="form-question"/>
+      <p class="text--help">
+        <label th:for="${inputName}+'-month'"
+               th:id="${inputName}+'-month-label'"
+               th:text="#{general.month}"></label>
+        &nbsp;/&nbsp;
+        <label th:for="${inputName}+'-day'"
+               th:id="${inputName}+'-day-label'"
+               th:text="#{general.day}"></label>
+        &nbsp;/&nbsp;
+        <label th:for="${inputName}+'-year'"
+               th:id="${inputName}+'-year-label'"
+               th:text="#{general.year}"></label>
+      </p>
+      <style>
         /* TODO: Add to honeycrisp?? */
         .text-input--inline {
-            display: inline-block;
+          display: inline-block;
         }
 
         .form-width--day,
         .form-width--month {
-            max-width: calc(4.4rem + 2ch);
-            padding: 0 1.5rem;
+          max-width: calc(4.4rem + 2ch);
+          padding: 0 1.5rem;
         }
 
         .form-width--year {
-            max-width: calc(4.4rem + 4ch);
-            padding: 0 2rem;
+          max-width: calc(4.4rem + 4ch);
+          padding: 0 2rem;
         }
-    </style>
-    <input type="text" inputmode="numeric" maxlength="2"
-           class="text-input text-input--inline form-width--month"
-           th:id="${inputName}+'-month'" th:name="${inputName}+'-month'"
-           th:placeholder="mm"
-           th:attr="aria-describedby=${inputName + '-month-label'}"/>
-    /
-    <input type="text" inputmode="numeric" maxlength="2"
-           class="text-input text-input--inline form-width--day"
-           th:id="${inputName}+'-day'"
-           th:name="${inputName}+'-day'"
-           th:placeholder="dd"
-           th:attr="aria-describedby=${inputName}+'-day-label'"/>
-    /
-    <input type="text" inputmode="numeric" maxlength="4"
-           class="text-input text-input--inline form-width--year"
-           th:id="${inputName}+'-year'"
-           th:name="${formInputName}"
-           th:placeholder="yyyy"
-           th:attr="aria-describedby=${inputName}+'-year-label'"/>
-  </fieldset>
-</div>
+      </style>
+      <input type="text" inputmode="numeric" maxlength="2"
+             class="text-input text-input--inline form-width--month"
+             th:id="${inputName}+'-month'"
+             th:name="${inputName}+'-month'"
+             th:placeholder="mm"
+             th:attr="
+              aria-describedby=${inputName + '-month-label'},
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"/>
+      /
+      <input type="text" inputmode="numeric" maxlength="2"
+             class="text-input text-input--inline form-width--day"
+             th:id="${inputName}+'-day'"
+             th:name="${inputName}+'-day'"
+             th:placeholder="dd"
+             th:attr="
+              aria-describedby=${inputName}+'-day-label',
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"/>
+      /
+      <input type="text" inputmode="numeric" maxlength="4"
+             class="text-input text-input--inline form-width--year"
+             th:id="${inputName}+'-year'"
+             th:name="${formInputName}"
+             th:placeholder="yyyy"
+             th:attr="
+              aria-describedby=${inputName}+'-year-label',
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"/>
+    </fieldset>
+  </div>
+</th:block>
 </body>
 </html>
