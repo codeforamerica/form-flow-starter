@@ -1,31 +1,14 @@
-<!DOCTYPE html>
-<html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('Second page')"></head>
-<body class="template--question">
-<div class="page-wrapper">
-  <div th:replace="fragments/toolbar :: toolbar"></div>
-  <section class="slab">
-    <div class="grid">
-      <main id="content" role="main" class="form-card spacing-above-35">
-        <th:block
-            th:replace="'fragments/cardHeader' :: cardHeader(title='Second page', subtext='Cool subtext')"/>
-        <th:block th:replace="'fragments/form' :: form(action='/', formContent=~{::formContent})">
-          <th:block th:ref="formContent">
-            <div class="form-card__content">
-              <th:block th:replace="'fragments/inputs/text' ::
-              text(inputName='custom',
-              label='text',
-              helpText='helper')"/>
-            </div>
-            <div class="form-card__footer">
-              <th:block th:replace="'fragments/continueButton' :: continue"/>
-            </div>
-          </th:block>
-        </th:block>
-      </main>
-    </div>
-  </section>
-</div>
-<th:block th:replace="fragments/footer :: footer"/>
-</body>
-</html>
+<th:block
+    th:replace="fragments/screens/screenWithOneInput ::
+    screenWithOneInput(
+      title='My title',
+      subtext='subtext',
+      formAction='/',
+      inputContent=~{::inputContent})">
+  <th:block th:ref="inputContent">
+    <!-- Be sure to have `ariaLabel='header'` to label the input with the header -->
+    <th:block th:replace="'fragments/inputs/text' ::
+            text(inputName='custom',
+            ariaLabel='header')"/>
+  </th:block>
+</th:block>

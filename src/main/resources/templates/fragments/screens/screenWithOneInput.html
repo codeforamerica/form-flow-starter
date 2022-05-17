@@ -1,0 +1,36 @@
+<th:block
+    th:fragment="screenWithOneInput"
+    th:assert="
+      ${!#strings.isEmpty(title)},
+      ${!#strings.isEmpty(formAction)},
+      ${inputContent != null}">
+  <!DOCTYPE html>
+  <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head(${title})"></head>
+  <body class="template--question">
+  <div class="page-wrapper">
+    <div th:replace="fragments/toolbar :: toolbar"></div>
+    <section class="slab">
+      <div class="grid">
+        <main id="content" role="main" class="form-card spacing-above-35">
+          <th:block
+              th:replace="'fragments/cardHeader' :: cardHeader(title=${title}, subtext=${subtext})"/>
+          <th:block
+              th:replace="'fragments/form' :: form(action=${formAction}, formContent=~{::formContent})">
+            <th:block th:ref="formContent">
+              <div class="form-card__content">
+                <th:block th:replace="${inputContent}"/>
+              </div>
+              <div class="form-card__footer">
+                <div th:insert="'fragments/continueButton' :: continue"></div>
+              </div>
+            </th:block>
+          </th:block>
+        </main>
+      </div>
+    </section>
+  </div>
+  <th:block th:replace="fragments/footer :: footer"/>
+  </body>
+  </html>
+</th:block>
