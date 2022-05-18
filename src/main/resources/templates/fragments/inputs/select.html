@@ -10,7 +10,7 @@
     th:assert="
       ${!#strings.isEmpty(inputName)},
       ${hasLabel || hasAriaLabel},
-      ${selectContent != null}">
+      ${content != null}">
   <div class="form-group">
     <label th:if="${hasLabel}" th:for="${inputName}" th:text="${label}" class="form-question"/>
     <p class="text--help"
@@ -24,7 +24,7 @@
               th:attr="
                 aria-describedby=${hasHelpText ? inputName + '-help-text' : ''},
                 aria-labelledby=${hasAriaLabel ? ariaLabel : ''}">
-        <th:block th:replace="${selectContent}"/>
+        <th:block th:replace="${content}"/>
       </select>
     </div>
   </div>

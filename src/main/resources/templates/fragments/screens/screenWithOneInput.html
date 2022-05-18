@@ -16,7 +16,7 @@
           <th:block
               th:replace="'fragments/cardHeader' :: cardHeader(title=${title}, subtext=${subtext})"/>
           <th:block
-              th:replace="'fragments/form' :: form(action=${formAction}, formContent=~{::formContent})">
+              th:replace="'fragments/form' :: form(action=${formAction}, content=~{::formContent})">
             <th:block th:ref="formContent">
               <div class="form-card__content">
                 <th:block th:replace="${inputContent}"/>

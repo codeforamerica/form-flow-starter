@@ -9,7 +9,7 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{first-page.header}, subtext=#{first-page.subheader})"/>
-        <th:block th:replace="'fragments/form' :: form(action='/', formContent=~{::formContent})">
+        <th:block th:replace="'fragments/form' :: form(action='/', content=~{::formContent})">
           <th:block th:ref="formContent">
             <div class="form-card__content">
               <th:block
@@ -57,7 +57,7 @@
                 </th:block>
               </th:block>
               <th:block
-                  th:replace="'fragments/inputs/select' :: select(inputName='favoriteFruit', label='What\'s your favorite fruit?', helpText='Mine is banana', selectContent=~{::favoriteFruitContent})">
+                  th:replace="'fragments/inputs/select' :: select(inputName='favoriteFruit', label='What\'s your favorite fruit?', helpText='Mine is banana', content=~{::favoriteFruitContent})">
                 <th:block th:ref="favoriteFruitContent">
                   <th:block
                       th:replace="'fragments/inputs/selectOption' :: selectOption(value='APPLE', optionText='Apple')"/>
