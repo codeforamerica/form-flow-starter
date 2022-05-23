@@ -9,9 +9,10 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{first-page.header}, subtext=#{first-page.subheader})"/>
-        <th:block th:replace="'fragments/form' :: form(action='/', content=~{::formContent})">
+        <th:block th:replace="'fragments/form' :: form(action='/flow1/firstPage', content=~{::formContent})">
           <th:block th:ref="formContent">
             <div class="form-card__content">
+
               <th:block
                   th:replace="'fragments/inputs/text' ::
                             text(inputName='firstName',
@@ -85,9 +86,10 @@
                             label='What is your social security number?',
                             helpText='We will never share this with anyone',
                             placeholder='123-45-6789')"/>
+
             </div>
             <div class="form-card__footer">
-              <th:block th:replace="'fragments/continueButton' :: continue"/>
+              <th:block th:replace="fragments/inputs/submitButton :: submitButton(text='Submit')" />
             </div>
           </th:block>
         </th:block>

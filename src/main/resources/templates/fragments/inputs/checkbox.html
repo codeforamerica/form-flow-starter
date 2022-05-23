@@ -22,7 +22,7 @@
     <input type="checkbox"
            th:id="${inputName} + '-' + ${value}"
            th:value="${value}"
-           th:name="${inputName} + '-' + ${value}"
+           th:name="${inputName}"
            th:checked="${false}">
     <div th:if="${hasIcon}">
       <i th:class="${'icon-' + checkboxIcon}" style="margin-right: 0.5rem"></i>
