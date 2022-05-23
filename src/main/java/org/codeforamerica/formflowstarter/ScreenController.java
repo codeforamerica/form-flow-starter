@@ -15,6 +15,7 @@ import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfigurati
 import org.codeforamerica.formflowstarter.app.data.ApplicationData;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,24 +84,18 @@ public class ScreenController {
       if (submission.isPresent()) {
         Submission s = submission.get();
 
-        model.entrySet().stream().flatMap(entry -> {
-          entry.
-          return entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue();
-        });
+        var submissionModel = convertToMultiOrSingleValueMap(model);
 
-        s.setInputData(model);
+        s.setInputData(submissionModel);
         service.save(s);
       }
-
+    } else {
+      var submission = new Submission();
+      submission.setFlow(flow);
+      submission.setInputData(convertToMultiOrSingleValueMap(model));
+      service.save(submission);
+      httpSession.setAttribute("id", submission.getId());
     }
-        // update it
-    // else, create a new submission record
-    var submission = new Submission();
-    submission.setFlow(flow);
-    service.save(submission);
-    httpSession.setAttribute("id", submission.getId());
-
-    // set the session's "id" to submission's ID.
 
 
 
@@ -152,8 +147,16 @@ public class ScreenController {
     return new ModelAndView(String.format("redirect:%s/navigation", screen));
   }
 
+  @NotNull
+  private Map<String, Object> convertToMultiOrSingleValueMap(MultiValueMap<String, String> model) {
+    return model.entrySet().stream().collect(Collectors.toMap(
+        Map.Entry::getKey,
+        entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()
+    ));
+  }
 
-      @GetMapping("{flow}/{screen}/navigation")
+
+  @GetMapping("{flow}/{screen}/navigation")
   RedirectView navigation(
       @PathVariable String flow,
       @PathVariable String screen,
