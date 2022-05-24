@@ -22,7 +22,7 @@
                 <th:block th:replace="${inputContent}"/>
               </div>
               <div class="form-card__footer">
-                <div th:insert="'fragments/continueButton' :: continue"></div>
+                <th:block th:replace="fragments/inputs/submitButton :: submitButton(text='Submit')" />
               </div>
             </th:block>
           </th:block>

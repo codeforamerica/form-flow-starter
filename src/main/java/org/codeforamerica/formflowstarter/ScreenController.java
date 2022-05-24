@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
@@ -31,18 +32,18 @@ public class ScreenController {
   private final List<FlowConfiguration> flowConfigurations;
   private final ApplicationData applicationData;
   private final InputsConfiguration inputsConfiguration;
-  private final SubmissionService service;
+  private final SubmissionService submissionService;
 
 
   public ScreenController(
       List<FlowConfiguration> flowConfigurations,
       ApplicationData applicationData,
       InputsConfiguration inputsConfiguration,
-      SubmissionService service) {
+      SubmissionService submissionService) {
     this.flowConfigurations = flowConfigurations;
     this.applicationData = applicationData;
     this.inputsConfiguration = inputsConfiguration;
-    this.service = service;
+    this.submissionService = submissionService;
   }
 
   @GetMapping("{flow}/{screen}")
@@ -69,7 +70,7 @@ public class ScreenController {
 
   @PostMapping("{flow}/{screen}")
   ModelAndView postScreen(
-      @RequestParam(required = false) MultiValueMap<String, String> model,
+      @RequestParam(required = false) MultiValueMap<String, String> formData,
       @PathVariable String flow,
       @PathVariable String screen,
       HttpSession httpSession
@@ -80,20 +81,26 @@ public class ScreenController {
     // if there's already a session
     Long id = (Long) httpSession.getAttribute("id");
     if (id != null) {
-      Optional<Submission> submission = service.findById(id);
-      if (submission.isPresent()) {
-        Submission s = submission.get();
+      Optional<Submission> submissionOptional = submissionService.findById(id);
+      if (submissionOptional.isPresent()) {
+        Submission submission = submissionOptional.get();
 
-        var submissionModel = convertToMultiOrSingleValueMap(model);
+        var formDataSubmission = convertToMultiOrSingleValueMap(formData);
+        Map<String, Object> inputData = submission.getInputData();
 
-        s.setInputData(submissionModel);
-        service.save(s);
+        inputData.forEach((key, value) -> {
+          formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+        });
+        submission.setInputData(formDataSubmission);
+        submissionService.save(submission);
+        httpSession.setAttribute("inputData", formDataSubmission);
       }
     } else {
       var submission = new Submission();
       submission.setFlow(flow);
-      submission.setInputData(convertToMultiOrSingleValueMap(model));
-      service.save(submission);
+      submission.setInputData(convertToMultiOrSingleValueMap(formData));
+      submissionService.save(submission);
+      httpSession.setAttribute("inputData", convertToMultiOrSingleValueMap(formData));
       httpSession.setAttribute("id", submission.getId());
     }
 
@@ -149,12 +156,14 @@ public class ScreenController {
 
   @NotNull
   private Map<String, Object> convertToMultiOrSingleValueMap(MultiValueMap<String, String> model) {
-    return model.entrySet().stream().collect(Collectors.toMap(
-        Map.Entry::getKey,
-        entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()
+    return model.entrySet().stream()
+        // Filter out any inputs that were not actually answered (those which have a value but that value is empty string)
+        .filter(entry -> entry.getValue().size() >= 1 && !entry.getValue().get(0).equals(""))
+        .collect(Collectors.toMap(
+          Entry::getKey,
+          entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()
     ));
   }
-
 
   @GetMapping("{flow}/{screen}/navigation")
   RedirectView navigation(
