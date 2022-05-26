@@ -8,7 +8,7 @@
       ${!#strings.isEmpty(optionText)}">
   <option
       th:value="${value}"
-      th:selected="false"
+      th:selected="${inputData.getOrDefault(inputName, '').equals(value)}"
       th:text="${optionText}"></option>
 </th:block>
 </body>

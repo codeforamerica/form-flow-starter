@@ -22,7 +22,8 @@
              th:placeholder="${placeholder}"
              th:attr="
               aria-describedby=${hasHelpText ? inputName + '-help-text' : ''},
-              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}">
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
+             th:value="${inputData.getOrDefault(inputName, '')}">
     </div>
   </div>
 </th:block>

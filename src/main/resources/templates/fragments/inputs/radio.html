@@ -14,7 +14,7 @@
            th:id="${inputName} + '-' + ${value}"
            th:value="${value}"
            th:name="${inputName}"
-           th:checked="${false}">
+           th:checked="${inputData.getOrDefault(inputName, '').equals(value)}">
     <span th:text="${label}"></span>
   </label>
 </th:block>

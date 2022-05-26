@@ -1,6 +1,7 @@
 package org.codeforamerica.formflowstarter;
 
 
+import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,9 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class StaticPageController {
 
   @GetMapping("/")
-  String getIndex() { return "index"; }
+  String getIndex(
+      HttpSession httpSession
+  ) {
+    httpSession.invalidate();
+
+    return "index";
+  }
 
   @GetMapping("/faq")
-  String getFaq() { return "faq"; }
+  String getFaq() {
+    return "faq";
+  }
 
 }

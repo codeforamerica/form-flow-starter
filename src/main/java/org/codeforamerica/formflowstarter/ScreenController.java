@@ -65,6 +65,19 @@ public class ScreenController {
     model.put("flow", flow);
     model.put("screen", screen);
     model.put("inputs", inputs);
+
+    // TODO: DRY this up?
+    // if there's already a session
+    Long id = (Long) httpSession.getAttribute("id");
+    if (id != null) {
+      Optional<Submission> submissionOptional = submissionService.findById(id);
+      if (submissionOptional.isPresent()) {
+        Submission submission = submissionOptional.get();
+        model.put("submission", submission);
+        model.put("inputData", submission.getInputData());
+      }
+    }
+
     return new ModelAndView("/%s/%s".formatted(flow, screen), model);
   }
 
@@ -78,6 +91,7 @@ public class ScreenController {
     // get screen (configuration)
     var currentScreen = getCurrentScreen(flow, screen);
 
+    // TODO: DRY this up?
     // if there's already a session
     Long id = (Long) httpSession.getAttribute("id");
     if (id != null) {

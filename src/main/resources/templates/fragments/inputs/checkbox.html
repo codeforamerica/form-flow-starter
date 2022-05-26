@@ -23,7 +23,8 @@
            th:id="${inputName} + '-' + ${value}"
            th:value="${value}"
            th:name="${inputName}"
-           th:checked="${false}">
+           th:with="checked=${T(org.codeforamerica.formflowstarter.utils.InputUtils).arrayOrStringContains(inputData.getOrDefault(inputName, ''), value)}"
+           th:checked="${checked}">
     <div th:if="${hasIcon}">
       <i th:class="${'icon-' + checkboxIcon}" style="margin-right: 0.5rem"></i>
     </div>

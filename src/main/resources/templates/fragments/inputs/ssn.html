@@ -21,6 +21,7 @@
            th:attr="
             aria-describedby=${hasHelpText ? inputName + '-help-text' : ''},
             aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
+           th:value="${inputData.getOrDefault(inputName, '')}"
            inputmode="numeric">
   </div>
 </th:block>

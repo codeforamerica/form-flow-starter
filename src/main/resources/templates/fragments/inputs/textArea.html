@@ -25,8 +25,7 @@
                 rows=${rows},
                 maxlength=${maxLength}"
               th:id="${inputName}"
-              th:name="${inputName}">
-    </textarea>
+              th:name="${inputName}">[[${inputData.getOrDefault(inputName, '')}]]</textarea>
   </div>
 </th:block>
 </body>
