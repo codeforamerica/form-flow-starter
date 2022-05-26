@@ -2,11 +2,14 @@ package testutilities;
 
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
-//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,9 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutilities.TestUtils.resetSubmission;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,16 +26,11 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.apache.tomcat.jni.Address;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.assertj.core.api.Assertions;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.jetbrains.annotations.NotNull;
@@ -46,12 +42,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.servlet.ModelAndView;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = MOCK)
@@ -195,13 +189,13 @@ public class AbstractMockMvcTest {
   }
 
   protected void assertPageHasElementWithId(String pageName, String elementId) throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertThat(page.getElementById(elementId)).isNotNull();
   }
 
   protected void assertPageDoesNotHaveElementWithId(String pageName, String elementId)
       throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertThat(page.getElementById(elementId)).isNull();
   }
 
@@ -354,31 +348,31 @@ public class AbstractMockMvcTest {
   }
 
   protected void assertPageHasInputError(String pageName, String inputName) throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertTrue(page.hasInputError(inputName));
   }
 
   protected void assertPageHasInputError(String pageName, String inputName, String errorMessage)
       throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertEquals(errorMessage, page.getInputError(inputName).text());
 
   }
 
   protected void assertPageHasDateInputError(String pageName, String inputName) throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertTrue(page.hasDateInputError());
   }
 
   protected void assertPageDoesNotHaveInputError(String pageName, String inputName)
       throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertFalse(page.hasInputError(inputName));
   }
 
   protected void assertPageHasWarningMessage(String pageName, String warningMessage)
       throws Exception {
-    var page = new FormPage(getPage(pageName));
+    var page = new FormScreen(getPage(pageName));
     assertEquals(page.getWarningMessage(), warningMessage);
   }
 
@@ -398,9 +392,9 @@ public class AbstractMockMvcTest {
    * @param currentPageName the page
    * @return a form page that can be asserted against
    */
-  protected FormPage getNextPageAsFormPage(String currentPageName) throws Exception {
+  protected FormScreen getNextPageAsFormPage(String currentPageName) throws Exception {
     String nextPage = followRedirectsForPageName(currentPageName);
-    return new FormPage(mockMvc.perform(get(nextPage).session(session)));
+    return new FormScreen(mockMvc.perform(get(nextPage).session(session)));
   }
 
   @NotNull
@@ -428,25 +422,25 @@ public class AbstractMockMvcTest {
     return nextPage;
   }
 
-  protected FormPage postAndFollowRedirect(String pageName, String inputName, String value) throws
+  protected FormScreen postAndFollowRedirect(String pageName, String inputName, String value) throws
       Exception {
     postExpectingSuccess(pageName, inputName, value);
     return getNextPageAsFormPage(pageName);
   }
 
-  protected FormPage postAndFollowRedirect(String pageName, Map<String, List<String>> params) throws
+  protected FormScreen postAndFollowRedirect(String pageName, Map<String, List<String>> params) throws
       Exception {
     postExpectingSuccess(pageName, params);
     return getNextPageAsFormPage(pageName);
   }
 
-  protected FormPage postAndFollowRedirect(String pageName) throws
+  protected FormScreen postAndFollowRedirect(String pageName) throws
       Exception {
     postExpectingSuccess(pageName);
     return getNextPageAsFormPage(pageName);
   }
 
-  protected FormPage postAndFollowRedirect(String pageName, String inputName,
+  protected FormScreen postAndFollowRedirect(String pageName, String inputName,
       List<String> values) throws
       Exception {
     postExpectingSuccess(pageName, inputName, values);
@@ -459,12 +453,12 @@ public class AbstractMockMvcTest {
   }
 
   protected void assertCorrectPageTitle(String pageName, String pageTitle) throws Exception {
-    assertThat(new FormPage(getPage(pageName)).getTitle()).isEqualTo(pageTitle);
+    assertThat(new FormScreen(getPage(pageName)).getTitle()).isEqualTo(pageTitle);
   }
 
   protected void clickContinueOnInfoPage(String pageName, String continueButtonText,
       String expectedNextPageName) throws Exception {
-    FormPage page = new FormPage(getPage(pageName));
+    FormScreen page = new FormScreen(getPage(pageName));
     page.assertLinkWithTextHasCorrectUrl(continueButtonText,
         "/pages/%s/navigation?option=0".formatted(pageName));
     assertNavigationRedirectsToCorrectNextPage(pageName, expectedNextPageName);
