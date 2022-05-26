@@ -5,10 +5,9 @@ flow:
       - name: secondPage
   secondPage:
     nextScreens:
-      - name: cardPage
-  cardPage:
-      nextScreens:
-        - name: next
+      - name: success
+  success:
+    nextScreens:
 ---
 name: flow2
 flow:

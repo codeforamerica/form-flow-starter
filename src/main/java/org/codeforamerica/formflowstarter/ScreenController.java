@@ -1,5 +1,7 @@
 package org.codeforamerica.formflowstarter;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -60,7 +62,7 @@ public class ScreenController {
     }
 
     Map<String, Object> model = new HashMap<>();
-    var inputs= inputsConfiguration.getInputs();
+    var inputs = inputsConfiguration.getInputs();
 
     model.put("flow", flow);
     model.put("screen", screen);
@@ -76,6 +78,8 @@ public class ScreenController {
         model.put("submission", submission);
         model.put("inputData", submission.getInputData());
       }
+    } else {
+      model.put("inputData", new HashMap<>());
     }
 
     return new ModelAndView("/%s/%s".formatted(flow, screen), model);
@@ -107,65 +111,44 @@ public class ScreenController {
         });
         submission.setInputData(formDataSubmission);
         submissionService.save(submission);
-        httpSession.setAttribute("inputData", formDataSubmission);
       }
     } else {
       var submission = new Submission();
       submission.setFlow(flow);
       submission.setInputData(convertToMultiOrSingleValueMap(formData));
       submissionService.save(submission);
-      httpSession.setAttribute("inputData", convertToMultiOrSingleValueMap(formData));
       httpSession.setAttribute("id", submission.getId());
     }
 
-
-
-//    // persist model to database
-//    PageData pageData = PageData.fillOut(page, model);
-//
-//    // read all input data from in-memory model
-//    PagesData pagesData;
-//    pagesData = applicationData.getPagesData();
-//
-//    // put input data from this screen to the in-memory model (pagesData)
-//    pagesData.putPage(page.getName(), pageData);
-//
-//    // validate
-//    Boolean pageDataIsValid = pageData.isValid();
-//    if (pageDataIsValid) {
-//      // if it hasn't been saved to that database yet
-//      if (applicationData.getId() == null) {
-//        applicationData.setId(applicationRepository.getNextId());
-//      }
-//
-//      // set the last page viewed
-//      if (pageName != null && !pageName.isEmpty()) {
-//        applicationData.setLastPageViewed(pageName);
-//      }
-//
-//      // process any enrichments (before_save)
-//      ofNullable(pageWorkflow.getEnrichment())
-//          .map(applicationEnrichment::getEnrichment)
-//          .map(enrichment -> enrichment.process(pagesData))
-//          .ifPresent(pageData::putAll);
-//
-//      // save to the database
-//    Submission submission = applicationFactory.newApplication(applicationData);
-//
-//      // submissionRepository.beforeSave()
-//
-//      applicationRepository.save(application);
-//
-//      // submissionRepository.afterSave()
-//
-//      // redirect to next screen
-//      return new ModelAndView(String.format("redirect:/pages/%s/navigation", pageName));
-//    } else {
-//      // failed validation, show same screen
-//      return new ModelAndView("redirect:/pages/" + pageName);
-//    }
-
     return new ModelAndView(String.format("redirect:%s/navigation", screen));
+  }
+
+  @PostMapping("{flow}/{screen}/submit")
+  ModelAndView submit(
+      @RequestParam(required = false) MultiValueMap<String, String> formData,
+      @PathVariable String flow,
+      @PathVariable String screen,
+      HttpSession httpSession
+  ) {
+    Long id = (Long) httpSession.getAttribute("id");
+    if (id != null) {
+      Optional<Submission> submissionOptional = submissionService.findById(id);
+      if (submissionOptional.isPresent()) {
+        Submission submission = submissionOptional.get();
+
+        var formDataSubmission = convertToMultiOrSingleValueMap(formData);
+        Map<String, Object> inputData = submission.getInputData();
+
+        inputData.forEach((key, value) -> {
+          formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+        });
+        submission.setInputData(formDataSubmission);
+        submission.setSubmittedAt(Date.from(Instant.now()));
+        submissionService.save(submission);
+      }
+    }
+    // Fire async events: send email, generate PDF, send to API, etc...
+    return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
   }
 
   @NotNull
@@ -179,9 +162,9 @@ public class ScreenController {
           return entry;
         })
         .collect(Collectors.toMap(
-          Entry::getKey,
-          entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()
-    ));
+            Entry::getKey,
+            entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()
+        ));
   }
 
   @GetMapping("{flow}/{screen}/navigation")
@@ -199,11 +182,9 @@ public class ScreenController {
     return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
   }
 
-
-
   private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
     FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
-            flowConfiguration -> flowConfiguration.getName().equals(flow)
+        flowConfiguration -> flowConfiguration.getName().equals(flow)
     ).toList().get(0);
     return currentFlowConfiguration.getScreenNavigation(screen);
   }
