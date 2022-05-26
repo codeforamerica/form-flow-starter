@@ -61,6 +61,8 @@
                   th:replace="'fragments/inputs/select' :: select(inputName='favoriteFruit', label='What\'s your favorite fruit?', helpText='Mine is banana', content=~{::favoriteFruitContent})">
                 <th:block th:ref="favoriteFruitContent">
                   <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='', optionText='Choose one')"/>
+                  <th:block
                       th:replace="'fragments/inputs/selectOption' :: selectOption(value='APPLE', optionText='Apple')"/>
                   <th:block
                       th:replace="'fragments/inputs/selectOption' :: selectOption(value='BANANA', optionText='Banana')"/>

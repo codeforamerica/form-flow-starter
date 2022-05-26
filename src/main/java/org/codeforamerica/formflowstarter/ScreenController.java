@@ -157,8 +157,13 @@ public class ScreenController {
   @NotNull
   private Map<String, Object> convertToMultiOrSingleValueMap(MultiValueMap<String, String> model) {
     return model.entrySet().stream()
-        // Filter out any inputs that were not actually answered (those which have a value but that value is empty string)
-        .filter(entry -> entry.getValue().size() >= 1 && !entry.getValue().get(0).equals(""))
+        // Filter out empty value in array with multiple values (empty value was created from hidden input)
+        .map(entry -> {
+          if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
+            entry.getValue().remove(0);
+          }
+          return entry;
+        })
         .collect(Collectors.toMap(
           Entry::getKey,
           entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()

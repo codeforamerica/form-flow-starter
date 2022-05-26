@@ -27,6 +27,7 @@
            th:id="${inputName + '-help-text'}"
            th:text="${fieldsetHelpText}"></p>
       </legend>
+      <input type="hidden" th:id="${inputName} + 'Hidden'" th:name="${inputName}" value="">
       <th:block th:replace="${content}"/>
     </fieldset>
   </div>
