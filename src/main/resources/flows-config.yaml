@@ -3,8 +3,6 @@ flow:
   firstPage:
     nextScreens:
       - name: secondPage
-        condition: dontShowThisPage
-      - name: cardPage
   secondPage:
     nextScreens:
       - name: success
