@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head('Second page')"></head>
-<body>
-<div>
-  <h1>Second page</h1>
-  <p>This is a continuation of test.</p>
-  <div th:replace="fragments/continue :: continue"></div>
-</div>
-</body>
-</html>
+<th:block
+    th:replace="fragments/screens/screenWithOneInput ::
+    screenWithOneInput(
+      title='My title',
+      subtext='subtext',
+      formAction='/flow1/secondPage/submit',
+      inputContent=~{::inputContent})">
+  <th:block th:ref="inputContent">
+    <!-- Be sure to have `ariaLabel='header'` to label the input with the header -->
+    <th:block th:replace="'fragments/inputs/text' ::
+            text(inputName='custom',
+            ariaLabel='header')"/>
+  </th:block>
+</th:block>

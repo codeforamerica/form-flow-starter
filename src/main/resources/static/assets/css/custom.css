@@ -1,0 +1,76 @@
+/* Point to different Material Icons asset path */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/assets/fonts/MaterialIcons-Regular.eot?#iefix') format('embedded-opentype'),
+    url('/assets/fonts/MaterialIcons-Regular.ttf') format('truetype'),
+    url('/assets/fonts/MaterialIcons-Regular.woff') format('woff'),
+    url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
+    url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
+}
+
+/* Point to different emoji asset path */
+.emoji--grinning-face { background-image: url('/assets/images/emojis/1f600.png'); }
+.emoji--neutral-face { background-image: url('/assets/images/emojis/1f610.png'); }
+.emoji--frowning-face { background-image: url('/assets/images/emojis/1f641.png'); }
+.emoji--thumbs-up { background-image: url('/assets/images/emojis/1f44d.png'); }
+.emoji--clipboard { background-image: url('/assets/images/emojis/1f4cb.png'); }
+.emoji--page-facing-up { background-image: url('/assets/images/emojis/1f4c4.png'); }
+.emoji--blush { background-image: url('/assets/images/emojis/1f60a.png'); }
+.emoji--pencil { background-image: url('/assets/images/emojis/270f.png'); }
+.emoji--ok { background-image: url('/assets/images/emojis/1f44c.png'); }
+.emoji--eggs { background-image: url('/assets/images/emojis/1f373.png'); }
+.emoji--credit-card { background-image: url('/assets/images/emojis/1f4b3.png'); }
+.emoji--avocado { background-image: url('/assets/images/emojis/1f951.png'); }
+.emoji--phone { background-image: url('/assets/images/emojis/260e.png'); }
+.emoji--receiver { background-image: url('/assets/images/emojis/1f4de.png'); }
+.emoji--mail { background-image: url('/assets/images/emojis/1f4eb.png'); }
+.emoji--mail-open { background-image: url('/assets/images/emojis/1f4ec.png'); }
+.emoji--bust { background-image: url('/assets/images/emojis/1f464.png'); }
+.emoji--money { background-image: url('/assets/images/emojis/1f4b5.png'); }
+.emoji--house { background-image: url('/assets/images/emojis/1f3e0.png'); }
+.emoji--faucet { background-image: url('/assets/images/emojis/1f6b0.png'); }
+.emoji--dollar-sign { background-image: url('/assets/images/emojis/1f4b2.png'); }
+.emoji--memo { background-image: url('/assets/images/emojis/1f4dd.png'); }
+.emoji--lock { background-image: url('/assets/images/emojis/1f512.png'); }
+.emoji--to-mobile { background-image: url('/assets/images/emojis/1f4f2.png'); }
+.emoji--carrot { background-image: url('/assets/images/emojis/1f955.png'); }
+.emoji--backpack { background-image: url('/assets/images/emojis/1f392.png'); }
+.emoji--money-bag { background-image: url('/assets/images/emojis/1f4b0.png'); }
+.emoji--confused-face { background-image: url('/assets/images/emojis/1f914.png'); }
+.emoji--fist { background-image: url('/assets/images/emojis/270a.png'); }
+.emoji--stew { background-image: url('/assets/images/emojis/1f958.png'); }
+.emoji--rice-bowl { background-image: url('/assets/images/emojis/1f35a.png'); }
+.emoji--salad { background-image: url('/assets/images/emojis/1f957.png'); }
+.emoji--finger-down { background-image: url('/assets/images/emojis/1f447.png'); }
+.emoji--star { background-image: url('/assets/images/emojis/1f31f.png'); }
+.emoji--earth { background-image: url('/assets/images/emojis/1f30e.png'); }
+.emoji--farmer-female { background-image: url('/assets/images/emojis/1f469-1f33e.png'); }
+.emoji--construction-worker { background-image: url('/assets/images/emojis/1f477.png'); }
+.emoji--older-woman { background-image: url('/assets/images/emojis/older-woman.png'); }
+.emoji--older-man { background-image: url('/assets/images/emojis/older-man.png'); }
+.emoji--disabled { background-image: url('/assets/images/emojis/267f.png'); }
+.emoji--fast-disabled { background-image: url('/assets/images/emojis/fast_disability.png'); }
+.emoji--briefcase { background-image: url('/assets/images/emojis/1f4bc.png'); }
+.emoji--pill { background-image: url('/assets/images/emojis/1f48a.png'); }
+.emoji--baby { background-image: url('/assets/images/emojis/1f476.png'); }
+.emoji--checkmark { background-image: url('/assets/images/emojis/checkmark.png'); }
+.emoji--crossmark { background-image: url('/assets/images/emojis/crossmark.png'); }
+.emoji--student-woman { background-image: url('/assets/images/emojis/1f469-1f393.png'); }
+.emoji--student-man { background-image: url('/assets/images/emojis/1f468-1f393.png'); }
+.emoji--student-hat { background-image: url('/assets/images/emojis/1f393.png'); }
+.emoji--warning { background-image: url('/assets/images/emojis/26a0.png'); }
+.emoji--car { background-image: url('/assets/images/emojis/1f697.png'); }
+.emoji--map { background-image: url('/assets/images/emojis/1f5fa.png'); }
+.emoji--woman-detective-medium-dark-skin-tone { background-image: image_url('/assets/images/emojis/1f575-1f3fe-2640.png'); }
+.emoji-pair--jobs { background-image: url('/assets/images/emoji_pairs/emoji_jobs.png'); }
+.emoji-pair--dependent_care { background-image: url('/assets/images/emoji_pairs/emoji_dependent_care.png'); }
+.emoji--fountain-pen { background-image: url('/assets/images/emojis/pen.png'); }
+.emoji--ambulance { background-image: url('/assets/images/emojis/1f691.png'); }
+.emoji-pair--self-employed { background-image: url('/assets/images/emoji_pairs/emoji_self_employed.png'); }
+.emoji-pair--disabled-money { background-image: url('/assets/images/emoji_pairs/emoji_ssi_ssp.png'); }
+.emoji-pair--fast-disabled-money { background-image: image_url('/assets/images/emoji_pairs/emoji_ssi_fast_ssp.png'); }
+.emoji-pair--older-man-and-woman { background-image: url('/assets/images/emoji_pairs/emoji_older_man_and_woman.png'); }
+.emoji-pair--students { background-image: url('/assets/images/emoji_pairs/emoji_students.png'); }
+

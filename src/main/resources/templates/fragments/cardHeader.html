@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="cardHeader" class="grid__item spacing-above-35 spacing-below-35">
-  <h1 id="page-header" class="h2" th:text="${title}"></h1>
-  <p id="page-header-help-message"
-     th:if="${subtext != null}"
+<header
+    th:fragment="cardHeader"
+    th:with="hasSubtext=${!#strings.isEmpty(subtext)}"
+    th:assert="${!#strings.isEmpty(title)}"
+    class="form-card__header">
+  <h1 id="header" class="h2" th:text="${title}"></h1>
+  <p id="header-help-message"
+     th:if="${hasSubtext}"
      th:text="${subtext}"></p>
 </header>
 </body>

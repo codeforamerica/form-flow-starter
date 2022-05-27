@@ -116,21 +116,21 @@ applied, while the email and phone inputs use validations built into the `EmailI
 
 The built-in input types are:
 
-- `TextInput`
-- `TextAreaInput`
-- `DateInput`
-- `NumberInput`
-- `CheckboxInput`
-- `CheckboxSetInput`
-- `RadioInput`
-- `SelectInput`
-- `MoneyInput`
-- `PhoneInput`
-- `EmailInput`
-- `SsnInput`
-- `FileUploadInput`
-- `YesOrNoInput`
-- `SubmitInput`
+- `Checkbox`
+- `Date`
+- `Fieldset`
+- `Money`
+- `Number`
+- `Radio`
+- `Select`
+- `SelectOption`
+- `Text`
+- `TextArea`
+- `Phone`
+- `Ssn`
+- `YesOrNo`
+- `Submit`
+- `FileUpload` (TBD)
 
 Custom input types can be created by extending the `Input` class, while custom validations can 
 be implemented through the [Bean Validation library](https://reflectoring.io/bean-validation-with-spring-boot/#a-custom-validator-with-spring-boot).
@@ -146,13 +146,13 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
 ```html
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('About You')"></head>
+<head th:replace="fragments/head :: head(title='About You')"></head>
 <body>
 <div class="page-wrapper">
    <div th:replace="fragments/toolbar :: toolbar"></div>
    <section class="slab">
       <div class="grid">
-         <main id="content" role="main" class="card spacing-above-35">
+         <main id="content" role="main" class="form-card spacing-above-35">
             <th:block th:replace="'icons' :: 'clipboard'"></th:block>
             <th:block th:replace="'content' :: cardHeader(title='Tell us about yourself')" />
             <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')" />
@@ -236,7 +236,7 @@ The template HTML can look like:
 ```html
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('')"></head>
+<head th:replace="fragments/head :: head(title='')"></head>
 <body>
 <div class="page-wrapper">
    <th:block th:replace="fragments/toolbar :: toolbar" />

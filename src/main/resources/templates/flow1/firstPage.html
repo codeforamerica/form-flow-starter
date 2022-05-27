@@ -1,44 +1,99 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head('First Page')"></head>
-<body>
+<head th:replace="fragments/head :: head(title='First Page')"></head>
+<body class="template--question">
 <div class="page-wrapper">
   <div th:replace="fragments/toolbar :: toolbar"></div>
   <section class="slab">
     <div class="grid">
-      <main id="content" role="main" class="card spacing-above-35">
+      <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{first-page.header}, subtext=#{first-page.subheader})"/>
-        <form>
-          <div class="form-card__content">
-            <th:block
-                th:replace="'fragments/textInput' ::
-                textInput(inputName='firstName',
-                label=#{first-page.text-input-label},
-                helpText=#{first-page.text-input-help},
-                placeholder=#{first-page.text-input-placeholder})"/>
-          </div>
-          <!--          <div class="form-group">-->
-          <!--            <div role="group" th:name="${inputs.favoriteColor.name}">-->
-          <!--              <div role="group" th:name="${inputs.favoriteColor.name}">-->
-          <!--                <fieldset>-->
-          <!--                  <th:block th:each="option: ${inputs.favoriteColor.options}">-->
-          <!--                    <label th:for="${#ids.next(inputs.favoriteColor.name)}" class="radio-button">-->
-          <!--                      <input type="radio" th:name="${formInputName}" th:id="${#ids.seq(inputs.favoriteColor.name)}"-->
-          <!--                             th:value="${option.value}">-->
-          <!--                      <span th:text="#{${option.messageKey}}"></span>-->
-          <!--                    </label>-->
-          <!--                  </th:block>-->
-          <!--                </fieldset>-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-          <div class="form-card__footer">
-            <div th:replace="fragments/continue :: continue"></div>
-            <button class="button">Go back <i class="icon icon-replay"></i></button>
-          </div>
-        </form>
+        <th:block th:replace="'fragments/form' :: form(action='/flow1/firstPage', content=~{::formContent})">
+          <th:block th:ref="formContent">
+            <div class="form-card__content">
+              <th:block
+                  th:replace="'fragments/inputs/text' ::
+                            text(inputName='firstName',
+                            label=#{first-page.text-input-label},
+                            helpText=#{first-page.text-input-help},
+                            placeholder=#{first-page.text-input-placeholder})"/>
+              <th:block th:replace="'fragments/inputs/textArea' ::
+                          textArea(inputName='area',
+                          label=#{first-page.text-area-label},
+                          helpText=#{first-page.text-area-help})"/>
+              <th:block th:replace="'fragments/inputs/date' ::
+                          date(inputName='date',
+                          label=#{first-page.text-date-label})"/>
+              <th:block th:replace="'fragments/inputs/number' ::
+                          number(inputName='age2',
+                          label=#{first-page.number-input-label},
+                          helpText=#{first-page.number-input-label},
+                          placeholder=#{first-page.number-input-placeholder})"/>
+              <th:block th:replace="'fragments/inputs/fieldset' ::
+                          fieldset(inputName='gender',
+                          label='Actually a legend',
+                          fieldsetHelpText='Helper text',
+                          content=~{::genderContent})">
+                <th:block th:ref="genderContent">
+                  <th:block
+                      th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='MALE', label='A tall man', checkboxHelpText='This is helping, right?', checkboxIcon='favorite')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='FEMALE', label='Female')"/>
+                </th:block>
+              </th:block>
+              <th:block th:replace="'fragments/inputs/fieldset' ::
+                          fieldset(inputName='favoriteColor',
+                          label='What\'s your favorite color?',
+                          fieldsetHelpText='The only true answer is blue',
+                          content=~{::favoriteColorContent})">
+                <th:block th:ref="favoriteColorContent">
+                  <th:block
+                      th:replace="'fragments/inputs/radio' :: radio(inputName='favoriteColor',value='BLUE', label='Blue')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/radio' :: radio(inputName='favoriteColor',value='BABY BLUE', label='Baby blue')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/radio' :: radio(inputName='favoriteColor',value='NAVY BLUE', label='Navy blue')"/>
+                </th:block>
+              </th:block>
+              <th:block
+                  th:replace="'fragments/inputs/select' :: select(inputName='favoriteFruit', label='What\'s your favorite fruit?', helpText='Mine is banana', content=~{::favoriteFruitContent})">
+                <th:block th:ref="favoriteFruitContent">
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='', optionText='Choose one')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='APPLE', optionText='Apple')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='BANANA', optionText='Banana')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='KIWI', optionText='Kiwi')"/>
+                </th:block>
+              </th:block>
+              <th:block
+                  th:replace="'fragments/inputs/money' :: money(
+                            inputName='money',
+                            label='How much money is enough money?',
+                            helpText='1 million dollars',
+                            placeholder='1,000,000')"/>
+              <th:block
+                  th:replace="'fragments/inputs/phone' :: phone(
+                            inputName='phone',
+                            label='What is your phone number?',
+                            helpText='Area code included',
+                            placeholder='510-333-4444')"/>
+              <th:block
+                  th:replace="'fragments/inputs/ssn' :: ssn(
+                            inputName='ssn',
+                            label='What is your social security number?',
+                            helpText='We will never share this with anyone',
+                            placeholder='123-45-6789')"/>
 
+            </div>
+            <div class="form-card__footer">
+              <th:block th:replace="fragments/inputs/submitButton :: submitButton(text='Submit')" />
+            </div>
+          </th:block>
+        </th:block>
       </main>
     </div>
   </section>

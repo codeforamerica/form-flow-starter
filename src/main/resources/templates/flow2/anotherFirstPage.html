@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head('First page of flow 2!')"></head>
-<body>
+<head th:replace="fragments/head :: head(title='First page of flow 2!')"></head>
+<body class="template--question">
 <div>
   <h1>New and improved First Page</h1>
   <p>Hey look a working second flow!</p>
 </div>
-<div th:replace="fragments/continue :: continue"></div>
+<th:block th:replace="'fragments/continueButton' :: continue" />
 </body>
 </html>

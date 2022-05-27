@@ -28,12 +28,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'commons-validator:commons-validator:1.7'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.vladmihalcea:hibernate-types-55:2.16.2'
+	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.jetbrains:annotations:23.0.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation("org.jetbrains:annotations:23.0.0")
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.jsoup:jsoup:1.15.1'
 }
 
 tasks.named('test') {
