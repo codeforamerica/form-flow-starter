@@ -221,6 +221,7 @@ public class ApplyConditions extends FlowConditions {
 
 ## Defining Static Pages ##
 
+
 Unlike Screens, Static Pages are HTML content not part of a flow. Examples include the home page, 
 privacy policy, or FAQ. This starter app contains a home page (`index.html`) and FAQ (`faq.html`)
 as examples in the `resources/templates` folder.
