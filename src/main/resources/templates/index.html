@@ -1,13 +1,47 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head(title='Home page')"></head>
-<body>
-  <p>This is our landing page</p>
-  <a href="/flow1/firstPage">✍️  Try our first flow!</a>
-  <br><br>
-  <a href="/flow2/anotherFirstPage">✍️  Try our new and actually working second flow! now with twice as much flow!</a>
-  <br><br>
-  <a href="/faq">📰 FAQ (Page)</a>
-  <footer th:replace="fragments/footer :: footer"></footer>
+<head th:replace="fragments/head :: head(title=#{index.apply-for-ubi})"></head>
+<body class="template--static-page">
+<div class="page-wrapper">
+  <th:block th:replace="fragments/toolbar :: toolbar"/>
+  <th:block th:replace="fragments/demoBanner :: demoBanner"/>
+  <main id="content" role="main" class="slab slab--white spacing-below-0">
+    <section class="slab">
+      <div class="grid">
+        <div class="width-one-half">
+          <th:block th:replace="fragments/icons :: cursiveUbi">
+          </th:block>
+          <h1 class="spacing-below-35 spacing-above-5">Apply for UBI payments easily online</h1>
+          <p th:text="#{index.apply-for-benefits-in-10}"></p>
+          <a th:text="#{index.already-applied}" href="#"></a>
+          <div class="spacing-above-35">
+            <a href="#" th:text="#{index.apply-now}" class="button--primary button"></a>
+          </div>
+          <div class="spacing-below-35">
+            <a href="#" th:text="#{index.aplica-ahora}" class="button--small button"></a>
+          </div>
+        </div>
+        <div class="width-one-half">
+          <img src="/assets/images/ubi-landing-splash.png" alt="" class="nudge--large">
+        </div>
+      </div>
+    </section>
+    <section class="slab slab--teal">
+      <div class="grid">
+        <h2 th:text="#{index.apply-for-cash-assistance}"></h2>
+        <h3 th:text="#{index.universal-basic-income}"></h3>
+        <p th:text="#{index.ubi-provides-750}"></p>
+      </div>
+    </section>
+    <section class="slab">
+      <div class="grid text--centered">
+        <th:block th:replace="fragments/icons :: upload-documents"/>
+        <h2 th:text="#{index.already-applied-additional}"></h2>
+        <a href="#" th:text="#{index.upload-documents}" class="button"></a>
+      </div>
+    </section>
+  </main>
+</div>
+<th:block th:replace="fragments/footer :: footer"/>
 </body>
 </html>
