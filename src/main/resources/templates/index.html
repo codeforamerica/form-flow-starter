@@ -15,7 +15,7 @@
           <p th:text="#{index.apply-for-benefits-in-10}"></p>
           <a th:text="#{index.already-applied}" href="#"></a>
           <div class="spacing-above-35">
-            <a href="#" th:text="#{index.apply-now}" class="button--primary button"></a>
+            <a href="/ubi/howThisWorks" th:text="#{index.apply-now}" class="button--primary button"></a>
           </div>
           <div class="spacing-below-35">
             <a href="#" th:text="#{index.aplica-ahora}" class="button--small button"></a>
@@ -26,7 +26,7 @@
         </div>
       </div>
     </section>
-    <section class="slab slab--teal">
+    <section class="slab slab--shiba">
       <div class="grid">
         <h2 th:text="#{index.apply-for-cash-assistance}"></h2>
         <h3 th:text="#{index.universal-basic-income}"></h3>
@@ -34,7 +34,7 @@
       </div>
     </section>
     <section class="slab">
-      <div class="grid text--centered">
+      <div class="grid text--centered spacing-below-35">
         <th:block th:replace="fragments/icons :: upload-documents"/>
         <h2 th:text="#{index.already-applied-additional}"></h2>
         <a href="#" th:text="#{index.upload-documents}" class="button"></a>

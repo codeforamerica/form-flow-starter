@@ -1,5 +1,8 @@
-name: flow1
+name: ubi
 flow:
+  howThisWorks:
+    nextScreens:
+      - name: firstPage
   firstPage:
     nextScreens:
       - name: secondPage

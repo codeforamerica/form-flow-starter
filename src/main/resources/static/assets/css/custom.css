@@ -63,14 +63,14 @@ url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
 .emoji--warning { background-image: url('/assets/images/emojis/26a0.png'); }
 .emoji--car { background-image: url('/assets/images/emojis/1f697.png'); }
 .emoji--map { background-image: url('/assets/images/emojis/1f5fa.png'); }
-.emoji--woman-detective-medium-dark-skin-tone { background-image: image_url('/assets/images/emojis/1f575-1f3fe-2640.png'); }
+.emoji--woman-detective-medium-dark-skin-tone { background-image: url('/assets/images/emojis/1f575-1f3fe-2640.png'); }
 .emoji-pair--jobs { background-image: url('/assets/images/emoji_pairs/emoji_jobs.png'); }
 .emoji-pair--dependent_care { background-image: url('/assets/images/emoji_pairs/emoji_dependent_care.png'); }
 .emoji--fountain-pen { background-image: url('/assets/images/emojis/pen.png'); }
 .emoji--ambulance { background-image: url('/assets/images/emojis/1f691.png'); }
 .emoji-pair--self-employed { background-image: url('/assets/images/emoji_pairs/emoji_self_employed.png'); }
 .emoji-pair--disabled-money { background-image: url('/assets/images/emoji_pairs/emoji_ssi_ssp.png'); }
-.emoji-pair--fast-disabled-money { background-image: image_url('/assets/images/emoji_pairs/emoji_ssi_fast_ssp.png'); }
+.emoji-pair--fast-disabled-money { background-image: url('/assets/images/emoji_pairs/emoji_ssi_fast_ssp.png'); }
 .emoji-pair--older-man-and-woman { background-image: url('/assets/images/emoji_pairs/emoji_older_man_and_woman.png'); }
 .emoji-pair--students { background-image: url('/assets/images/emoji_pairs/emoji_students.png'); }
 
@@ -202,4 +202,19 @@ body,
 
 .notice--shiba p {
   margin-bottom: 0;
+}
+
+.main-footer {
+  font-weight: normal;
+  height: auto;
+}
+
+.slab a:not(.button):not(.reveal__link):not(.text--red),
+.slab a:not(.button):not(.reveal__link):not(.text--red):focus,
+.button--link, .button--link:focus {
+  color: #003865;
+}
+
+.vertical-align-middle {
+  vertical-align: middle;
 }

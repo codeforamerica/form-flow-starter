@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head(title='Success')"></head>
+<body class="template--question">
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <main id="content" role="main" class="form-card spacing-above-35">
+        <th:block
+            th:replace="'fragments/cardHeader' :: cardHeader(title=#{how-this-works.how-this-works}, subtext=#{how-this-works.this-application-form})"/>
+      </main>
+    </div>
+  </section>
+</div>
+<th:block th:replace="fragments/footer :: footer"/>
+</body>
+</html>
