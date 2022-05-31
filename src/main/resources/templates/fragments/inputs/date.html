@@ -40,10 +40,11 @@
           padding: 0 2rem;
         }
       </style>
+      <!-- TODO: figure out the three fields for each date issue -->
       <input type="text" inputmode="numeric" maxlength="2"
              class="text-input text-input--inline form-width--month"
              th:id="${inputName}+'-month'"
-             th:name="${inputName}+'-month'"
+             th:name="${inputName}+'Month'"
              th:placeholder="mm"
              th:attr="
               aria-describedby=${inputName + '-month-label'},
@@ -53,7 +54,7 @@
       <input type="text" inputmode="numeric" maxlength="2"
              class="text-input text-input--inline form-width--day"
              th:id="${inputName}+'-day'"
-             th:name="${inputName}+'-day'"
+             th:name="${inputName}+'Day'"
              th:placeholder="dd"
              th:attr="
               aria-describedby=${inputName}+'-day-label',
@@ -63,7 +64,7 @@
       <input type="text" inputmode="numeric" maxlength="4"
              class="text-input text-input--inline form-width--year"
              th:id="${inputName}+'-year'"
-             th:name="${inputName}+'-year'"
+             th:name="${inputName}+ 'Year'"
              th:placeholder="yyyy"
              th:attr="
               aria-describedby=${inputName}+'-year-label',

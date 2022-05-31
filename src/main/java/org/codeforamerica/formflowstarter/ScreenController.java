@@ -12,19 +12,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Validator;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
 import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
 import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
-import org.codeforamerica.formflowstarter.app.data.ApplicationData;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,25 +33,22 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ScreenController {
 
   private final List<FlowConfiguration> flowConfigurations;
-  private final ApplicationData applicationData;
   private final InputsConfiguration inputsConfiguration;
   private final ConditionHandler conditionHandler;
   private final SubmissionService submissionService;
-  private final Validator validator;
+  private final ValidationService validationService;
 
   public ScreenController(
       List<FlowConfiguration> flowConfigurations,
-      ApplicationData applicationData,
       InputsConfiguration inputsConfiguration,
       SubmissionService submissionService,
       ConditionHandler conditionHandler,
-      Validator validator) {
+      ValidationService validationService) {
     this.flowConfigurations = flowConfigurations;
-    this.applicationData = applicationData;
     this.inputsConfiguration = inputsConfiguration;
     this.submissionService = submissionService;
     this.conditionHandler = conditionHandler;
-    this.validator = validator;
+    this.validationService = validationService;
   }
 
   @GetMapping("{flow}/{screen}")
@@ -100,9 +94,15 @@ public class ScreenController {
       @PathVariable String flow,
       @PathVariable String screen,
       HttpSession httpSession
-  ) {
+  )
+      throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
     // get screen (configuration)
     var currentScreen = getCurrentScreen(flow, screen);
+    var formDataSubmission = convertToMultiOrSingleValueMap(formData);
+
+    // Do validation here
+    validationService.validate(flow, formDataSubmission);
+    // TODO: on error, redirect to same page with error messages
 
     // TODO: DRY this up?
     // if there's already a session
@@ -112,7 +112,6 @@ public class ScreenController {
       if (submissionOptional.isPresent()) {
         Submission submission = submissionOptional.get();
 
-        var formDataSubmission = convertToMultiOrSingleValueMap(formData);
         Map<String, Object> inputData = submission.getInputData();
 
         inputData.forEach((key, value) -> {
@@ -120,22 +119,6 @@ public class ScreenController {
         });
         submission.setInputData(formDataSubmission);
 
-        // instantiate flow object
-        Class<?> clazz = null;
-        Object flowObject = null;
-        try {
-          clazz = Class.forName("org.codeforamerica.formflowstarter.app.flows." + StringUtils.capitalize(flow));
-          flowObject = clazz.getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-          throw new RuntimeException(e);
-        }
-
-        validator.validateProperty(flowObject, "firstName")
-            .stream()
-            .forEach(violation -> System.out.println(violation.getMessage()));
-
-        // validate each formDataSubmission
-        //formDataSubmission.entrySet().stream().forEach(entry -> validator.validateProperty(flowObject, entry.getKey()));
         submissionService.save(submission);
       }
     } else {
@@ -204,7 +187,8 @@ public class ScreenController {
       return new RedirectView("/error");
     }
     NextScreen nextScreen;
-    if (isConditionalNavigation(currentScreen) && getConditionalNextScreen(currentScreen).size() > 0) {
+    if (isConditionalNavigation(currentScreen)
+        && getConditionalNextScreen(currentScreen).size() > 0) {
       nextScreen = getConditionalNextScreen(currentScreen).get(0);
     } else {
       // TODO this needs to throw an error if there are more than 1 next screen that don't have a condition

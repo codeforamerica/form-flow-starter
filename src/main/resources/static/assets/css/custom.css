@@ -86,6 +86,11 @@ url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
   font-size: 1.6rem;
 }
 
+/* TODO: delete/fix in other way */
+.page-wrapper {
+  padding-bottom: 253px;
+}
+
 @media screen and (min-width: 601px) {
   .toolbar__wrapper {
     margin-left: -3.5rem;
