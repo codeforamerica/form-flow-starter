@@ -7,6 +7,7 @@
   <section class="slab">
     <div class="grid">
       <main id="content" role="main" class="form-card spacing-above-35">
+        <p th:text="${errorMessages}"></p>
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{first-page.header}, subtext=#{first-page.subheader})"/>
         <th:block th:replace="'fragments/form' :: form(action=${'/' + flow + '/' + screen}, content=~{::formContent})">

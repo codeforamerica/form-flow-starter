@@ -1,5 +1,6 @@
 package org.codeforamerica.formflowstarter;
 
+import java.util.ArrayList;
 import java.util.Map;
 import javax.validation.Validator;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class ValidationService {
     this.validator = validator;
   }
 
-  public void validate(String flowName, Map<String, Object> formDataSubmission) {
+  public ArrayList<String> validate(String flowName, Map<String, Object> formDataSubmission) {
     Class<?> clazz = null;
     Object flowObject = null;
     try {
@@ -25,10 +26,12 @@ public class ValidationService {
     }
 
     Class<?> flowClass = clazz;
+    ArrayList<String> validationMessages = new ArrayList<>();
     formDataSubmission.forEach((key, value) -> {
       validator.validateValue(flowClass, key, value)
-          .stream()
-          .forEach(violation -> System.out.println(violation.getMessage()));
+          .forEach(violation -> validationMessages.add(violation.getMessage()));
     });
+
+    return validationMessages;
   }
 }

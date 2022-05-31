@@ -94,15 +94,18 @@ public class ScreenController {
       @PathVariable String flow,
       @PathVariable String screen,
       HttpSession httpSession
-  )
-      throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-    // get screen (configuration)
-    var currentScreen = getCurrentScreen(flow, screen);
+  ) {
     var formDataSubmission = convertToMultiOrSingleValueMap(formData);
 
-    // Do validation here
-    validationService.validate(flow, formDataSubmission);
+    var results = validationService.validate(flow, formDataSubmission);
+    Map<String, Object> model = new HashMap<>();
+
     // TODO: on error, redirect to same page with error messages
+    if (results.size() > 0) {
+      model.put("ourCustomErrorMessages", results);
+      // It is putting errors in parameters
+      return new ModelAndView(String.format("redirect:/%s/%s", flow, screen), model);
+    }
 
     // TODO: DRY this up?
     // if there's already a session
