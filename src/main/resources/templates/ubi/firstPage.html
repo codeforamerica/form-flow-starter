@@ -9,7 +9,7 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{first-page.header}, subtext=#{first-page.subheader})"/>
-        <th:block th:replace="'fragments/form' :: form(action='/flow1/firstPage', content=~{::formContent})">
+        <th:block th:replace="'fragments/form' :: form(action=${'/' + flow + '/' + screen}, content=~{::formContent})">
           <th:block th:ref="formContent">
             <div class="form-card__content">
               <th:block

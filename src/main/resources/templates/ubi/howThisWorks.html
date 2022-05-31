@@ -9,6 +9,9 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{how-this-works.how-this-works}, subtext=#{how-this-works.this-application-form})"/>
+        <div class="form-card__footer">
+          <th:block th:replace="'fragments/continueButton' :: continue" />
+        </div>
       </main>
     </div>
   </section>

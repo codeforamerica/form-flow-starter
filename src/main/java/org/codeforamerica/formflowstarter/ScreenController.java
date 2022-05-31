@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Validator;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
 import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
@@ -23,6 +24,7 @@ import org.codeforamerica.formflowstarter.app.data.SubmissionService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,18 +40,21 @@ public class ScreenController {
   private final InputsConfiguration inputsConfiguration;
   private final ConditionHandler conditionHandler;
   private final SubmissionService submissionService;
+  private final Validator validator;
 
   public ScreenController(
       List<FlowConfiguration> flowConfigurations,
       ApplicationData applicationData,
       InputsConfiguration inputsConfiguration,
       SubmissionService submissionService,
-      ConditionHandler conditionHandler) {
+      ConditionHandler conditionHandler,
+      Validator validator) {
     this.flowConfigurations = flowConfigurations;
     this.applicationData = applicationData;
     this.inputsConfiguration = inputsConfiguration;
     this.submissionService = submissionService;
     this.conditionHandler = conditionHandler;
+    this.validator = validator;
   }
 
   @GetMapping("{flow}/{screen}")
@@ -114,6 +119,23 @@ public class ScreenController {
           formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
         });
         submission.setInputData(formDataSubmission);
+
+        // instantiate flow object
+        Class<?> clazz = null;
+        Object flowObject = null;
+        try {
+          clazz = Class.forName("org.codeforamerica.formflowstarter.app.flows." + StringUtils.capitalize(flow));
+          flowObject = clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
+          throw new RuntimeException(e);
+        }
+
+        validator.validateProperty(flowObject, "firstName")
+            .stream()
+            .forEach(violation -> System.out.println(violation.getMessage()));
+
+        // validate each formDataSubmission
+        //formDataSubmission.entrySet().stream().forEach(entry -> validator.validateProperty(flowObject, entry.getKey()));
         submissionService.save(submission);
       }
     } else {
