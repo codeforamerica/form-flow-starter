@@ -102,9 +102,12 @@ public class ScreenController {
 
     // TODO: on error, redirect to same page with error messages
     if (results.size() > 0) {
-      model.put("ourCustomErrorMessages", results);
+      model.put("errorMessages", results);
       // It is putting errors in parameters
-      return new ModelAndView(String.format("redirect:/%s/%s", flow, screen), model);
+      System.out.println(model);
+      RedirectView currentPage = new RedirectView(String.format("/%s/%s", flow, screen), true);
+      currentPage.setExposeModelAttributes(false);
+      return new ModelAndView(currentPage, model);
     }
 
     // TODO: DRY this up?
