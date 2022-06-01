@@ -1,5 +1,6 @@
 package org.codeforamerica.formflowstarter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Validator;
@@ -15,7 +16,7 @@ public class ValidationService {
     this.validator = validator;
   }
 
-  public HashMap<String, String> validate(String flowName, Map<String, Object> formDataSubmission) {
+  public HashMap<String, ArrayList<String>> validate(String flowName, Map<String, Object> formDataSubmission) {
     Class<?> clazz = null;
     try {
       clazz = Class.forName(
@@ -25,10 +26,14 @@ public class ValidationService {
     }
 
     Class<?> flowClass = clazz;
-    HashMap<String, String> validationMessages = new HashMap<>();
+    HashMap<String, ArrayList<String>> validationMessages = new HashMap<>();
     formDataSubmission.forEach((key, value) -> {
+      var messages = new ArrayList<String>();
       validator.validateValue(flowClass, key, value)
-          .forEach(violation -> validationMessages.put(key, violation.getMessage()));
+          .forEach(violation -> messages.add(violation.getMessage()));
+      if (!messages.isEmpty()) {
+        validationMessages.put(key, messages);
+      }
     });
 
     return validationMessages;

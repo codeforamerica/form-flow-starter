@@ -2,12 +2,14 @@ package org.codeforamerica.formflowstarter.app.flows;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class Ubi {
 
-  @NotBlank(message = "{validation.make-sure-to-provide-a-first-name}")
+  @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
+  @Size(min= 1, message = "{validations.test}")
   String firstName;
 
   @NotBlank

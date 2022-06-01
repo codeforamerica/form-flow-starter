@@ -23,6 +23,7 @@
             aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
            th:value="${inputData.getOrDefault(inputName, '')}">
   </div>
+  <div th:replace="fragments/inputError :: validationError(inputName=${inputName})"></div>
 </th:block>
 </body>
 </html>
