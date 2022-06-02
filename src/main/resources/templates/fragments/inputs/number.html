@@ -6,9 +6,13 @@
     th:with="
       hasHelpText=${!#strings.isEmpty(helpText)},
       hasLabel=${!#strings.isEmpty(label)},
-      hasAriaLabel=${!#strings.isEmpty(ariaLabel)}"
+      hasAriaLabel=${!#strings.isEmpty(ariaLabel)},
+      hasError=${
+        errorMessages != null &&
+        errorMessages.get(inputName) != null &&
+        (#arrays.length(errorMessages.get(inputName)) > 0) }"
     th:assert="${!#strings.isEmpty(inputName)},, ${hasLabel || hasAriaLabel}">
-  <div class="form-group">
+  <div th:class="'form-group' + ${(hasError ? ' form-group--error' : '')}">
     <label th:if="${hasLabel}" th:for="${inputName}" th:text="${label}" class="form-question"/>
     <p class="text--help"
        th:if="${hasHelpText}"
@@ -20,8 +24,10 @@
            th:placeholder="${placeholder}"
            th:attr="
             aria-describedby=${hasHelpText ? inputName + '-help-text' : ''},
-            aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
+            aria-labelledby=${hasAriaLabel ? ariaLabel : ''},
+            aria-invalid=${hasError}"
            th:value="${inputData.getOrDefault(inputName, '')}">
+    <th:block th:replace="fragments/inputError :: validationError(inputName=${inputName})"></th:block>
   </div>
 </th:block>
 </body>

@@ -35,10 +35,13 @@ public class Ubi {
   @Size(min=4, max=4, message = "Year must be exactly four characters")
   String dateYear;
 
+  @NotBlank(message = "Fill out age2")
   String age2;
   String gender;
   String favoriteColor;
   String favoriteFruit;
+
+  @NotBlank(message = "Fill out money")
   String money;
   String ssn;
 }
