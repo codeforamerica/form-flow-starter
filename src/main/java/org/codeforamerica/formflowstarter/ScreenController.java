@@ -65,16 +65,18 @@ public class ScreenController {
     }
 
     Map<String, Object> model = new HashMap<>();
-    var inputs = inputsConfiguration.getInputs();
 
     model.put("flow", flow);
     model.put("screen", screen);
-    model.put("inputs", inputs);
 
     // TODO: DRY this up?
-    // if there's already a session
-    Long id = (Long) httpSession.getAttribute("id");
-    if (id != null) {
+    // if there's formDataSubmission
+    if (httpSession.getAttribute("formDataSubmission") != null) {
+      model.put("inputData", httpSession.getAttribute("formDataSubmission"));
+    }
+    // if there's no formDataSubmission, but an active session
+    else if (httpSession.getAttribute("id") != null) {
+      Long id = (Long) httpSession.getAttribute("id");
       Optional<Submission> submissionOptional = submissionService.findById(id);
       if (submissionOptional.isPresent()) {
         Submission submission = submissionOptional.get();
@@ -84,6 +86,8 @@ public class ScreenController {
     } else {
       model.put("inputData", new HashMap<>());
     }
+
+    model.put("errorMessages", httpSession.getAttribute("errorMessages"));
 
     return new ModelAndView("/%s/%s".formatted(flow, screen), model);
   }
@@ -97,17 +101,18 @@ public class ScreenController {
   ) {
     var formDataSubmission = convertToMultiOrSingleValueMap(formData);
 
-    var results = validationService.validate(flow, formDataSubmission);
+    var errorMessages = validationService.validate(flow, formDataSubmission);
     Map<String, Object> model = new HashMap<>();
 
     // TODO: on error, redirect to same page with error messages
-    if (results.size() > 0) {
-      model.put("errorMessages", results);
-      // It is putting errors in parameters
-      System.out.println(model);
-      RedirectView currentPage = new RedirectView(String.format("/%s/%s", flow, screen), true);
-      currentPage.setExposeModelAttributes(false);
-      return new ModelAndView(currentPage, model);
+    if (errorMessages.size() > 0) {
+      httpSession.setAttribute("errorMessages", errorMessages);
+      System.out.println(httpSession.toString());
+      httpSession.setAttribute("formDataSubmission", formDataSubmission);
+      return new ModelAndView(String.format("redirect:/%s/%s", flow, screen));
+    } else {
+      httpSession.removeAttribute("errorMessages");
+      httpSession.removeAttribute("formDataSubmission");
     }
 
     // TODO: DRY this up?

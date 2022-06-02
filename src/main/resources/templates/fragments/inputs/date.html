@@ -5,9 +5,17 @@
     th:fragment="date"
     th:with="
       hasLabel=${!#strings.isEmpty(label)},
-      hasAriaLabel=${!#strings.isEmpty(ariaLabel)}"
+      hasAriaLabel=${!#strings.isEmpty(ariaLabel)},
+      hasError=${errorMessages != null && (
+                 errorMessages.get(inputName + 'Month') != null ||
+                 errorMessages.get(inputName + 'Day') != null ||
+                 errorMessages.get(inputName + 'Year') != null) && (
+                 (#arrays.length(errorMessages.get(inputName + 'Month')) > 0) ||
+                 (#arrays.length(errorMessages.get(inputName + 'Day')) > 0) ||
+                 (#arrays.length(errorMessages.get(inputName + 'Year')) > 0)
+                 ) }"
     th:assert="${!#strings.isEmpty(inputName)}, ${hasLabel || hasAriaLabel}">
-  <div class="form-group">
+  <div th:class="'form-group' + ${(hasError ? ' form-group--error' : '')}">
     <fieldset class="input-group input-group--inline">
       <label th:if="${hasLabel}" th:for="${inputName}" th:text="${label}" class="form-question"/>
       <p class="text--help">
@@ -48,8 +56,9 @@
              th:placeholder="mm"
              th:attr="
               aria-describedby=${inputName + '-month-label'},
-              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
-             th:value="${inputData.getOrDefault(inputName + '-month', '')}"/>
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''},
+              aria-invalid=${hasError}"
+             th:value="${inputData.getOrDefault(inputName + 'Month', '')}"/>
       /
       <input type="text" inputmode="numeric" maxlength="2"
              class="text-input text-input--inline form-width--day"
@@ -58,8 +67,9 @@
              th:placeholder="dd"
              th:attr="
               aria-describedby=${inputName}+'-day-label',
-              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
-             th:value="${inputData.getOrDefault(inputName + '-day', '')}"/>
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''},
+              aria-invalid=${hasError}"
+             th:value="${inputData.getOrDefault(inputName + 'Day', '')}"/>
       /
       <input type="text" inputmode="numeric" maxlength="4"
              class="text-input text-input--inline form-width--year"
@@ -68,9 +78,14 @@
              th:placeholder="yyyy"
              th:attr="
               aria-describedby=${inputName}+'-year-label',
-              aria-labelledby=${hasAriaLabel ? ariaLabel : ''}"
-             th:value="${inputData.getOrDefault(inputName + '-year', '')}"/>
+              aria-labelledby=${hasAriaLabel ? ariaLabel : ''},
+              aria-invalid=${hasError}"
+             th:value="${inputData.getOrDefault(inputName + 'Year', '')}"/>
     </fieldset>
+    <div th:replace="fragments/inputError :: validationError(inputName=${inputName} + 'Month')"></div>
+    <div th:replace="fragments/inputError :: validationError(inputName=${inputName} + 'Day')"></div>
+    <div th:replace="fragments/inputError :: validationError(inputName=${inputName} + 'Year')"></div>
+
   </div>
 </th:block>
 </body>
