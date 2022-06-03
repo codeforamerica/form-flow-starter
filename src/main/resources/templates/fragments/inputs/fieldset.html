@@ -5,12 +5,16 @@
     th:fragment="fieldset"
     th:with="
       hasHelpText=${!#strings.isEmpty(helpText)},
-      hasLabel=${!#strings.isEmpty(label)}"
+      hasLabel=${!#strings.isEmpty(label)},
+      hasError=${
+        errorMessages != null &&
+        errorMessages.get(inputName) != null &&
+        (#arrays.length(errorMessages.get(inputName)) > 0) }"
     th:assert="
       ${!#strings.isEmpty(inputName)},
       ${hasLabel},
       ${content != null}">
-  <div class="form-group">
+  <div th:class="'form-group' + ${(hasError ? ' form-group--error' : '')}">
     <style>
       /* TODO: add to honeycrisp? */
       .text--normal {
@@ -30,6 +34,8 @@
       <input type="hidden" th:id="${inputName} + 'Hidden'" th:name="${inputName}" value="">
       <th:block th:replace="${content}"/>
     </fieldset>
+    <th:block
+        th:replace="fragments/inputError :: validationError(inputName=${inputName})"></th:block>
   </div>
 </th:block>
 </body>
