@@ -212,3 +212,10 @@
   <option name="HTML" value="true" />
 </context>
 </template>
+<template name="cfa:withCondition" value="th:with=&quot;$VARIABLE$=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).$METHOD$}&quot;" description="Insert a th:with so that you can use a condition within a template" toReformat="false" toShortenFQNames="true">
+<variable name="VARIABLE" expression="" defaultValue="showCondition" alwaysStopAt="true" />
+<variable name="METHOD" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="HTML" value="true" />
+</context>
+</template>
