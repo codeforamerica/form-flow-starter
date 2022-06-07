@@ -1,0 +1,20 @@
+<th:block
+  th:replace="fragments/screens/screenWithOneInput ::
+  screenWithOneInput(
+    title='Select your county',
+    subtext='This is the county we will send your application to.',
+    formAction=${'/' + flow + '/' + screen},
+    buttonLabel='Continue',
+    inputContent=~{::inputContent})">
+  <th:block th:ref="inputContent">
+    <!-- Be sure to have `ariaLabel='header'` to label the input with the header -->
+    <th:block
+      th:replace="'fragments/inputs/select' :: select(ariaLabel='header', inputName='county', content=~{::selectContent})">
+      <th:block th:ref="selectContent">
+        <!-- Copy the below option if you want more options -->
+        <th:block th:replace="'fragments/inputs/selectOption' :: selectOption(value='', optionText='Select county')"/>
+        <th:block th:replace="'fragments/inputs/selectOption' :: selectOption(value='COOK', optionText='Cook')"/>
+      </th:block>
+    </th:block>
+  </th:block>
+</th:block>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head(title='How This Works')"></head>
+<body class="template--question">
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <main id="content" role="main" class="form-card spacing-above-35">
+        <th:block
+            th:replace="'fragments/cardHeader' :: cardHeader(title='How This Works', subtext='This application form should take about <strong>20 minutes</strong> to complete.')"/>
+            <div class="form-card__content">
+              <div class="accordion">
+                <button href="#" class="accordion__button" aria-expanded="true" aria-controls="a1">We will ask you about</button>
+                <div class="accordion__content" id="a1">
+                  <ul class="list--bulleted">
+                    <li>Personal information</li>
+                    <li>People who live with you</li>
+                    <li>Income</li>
+                    <li>Expenses</li>
+                    <li>Assets</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          <div class="form-card__footer">
+            <th:block th:replace="'fragments/continueButton' :: continue" />
+          </div>
+      </main>
+    </div>
+  </section>
+</div>
+<th:block th:replace="fragments/footer :: footer" />
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head(title='Language Preferences')"></head>
+<body class="template--question">
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <main id="content" role="main" class="form-card spacing-above-35">
+        <th:block
+            th:replace="'fragments/cardHeader' :: cardHeader(title='Language preferences')"/>
+        <th:block
+            th:replace="'fragments/form' :: form(action=${'/' + flow + '/' + screen + '/submit'}, content=~{::formContent})">
+          <th:block th:ref="formContent">
+            <div class="form-card__content">
+              <th:block
+                  th:replace="'fragments/inputs/select' :: select(label='What language do you prefer to read or write?', inputName='writtenLanguage', helpText='The county will do their best to provide documents in your preferred language', content=~{::writtenLanguageContent})">
+                <th:block th:ref="writtenLanguageContent">
+                  <!-- Copy the below option if you want more options -->
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='ENGLISH', optionText='English')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='SPANISH', optionText='Espanol')"/>
+                </th:block>
+              </th:block>
+              <th:block
+                  th:replace="'fragments/inputs/select' :: select(label='What language do you prefer to speak?', inputName='spokenLanguage', helpText='The county will do their best to connect you with someone who speaks your language.', content=~{::spokenLanguageContent})">
+                <th:block th:ref="spokenLanguageContent">
+                  <!-- Copy the below option if you want more options -->
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='', optionText='Choose a spoken langauge')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='ENGLISH', optionText='English')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/selectOption' :: selectOption(value='SPANISH', optionText='Espanol')"/>
+                </th:block>
+              </th:block>
+              <th:block th:replace="'fragments/inputs/fieldset' ::
+                              fieldset(inputName='interpreter',
+                              label='Do you need an interpreter?',
+                              content=~{::interpreterContent})">
+                <th:block th:ref="interpreterContent">
+                  <!-- Copy the below input if you want to add more -->
+                  <th:block
+                      th:replace="'fragments/inputs/radio' :: radio(inputName='interpreter',value='YES', label='Yes')"/>
+                  <th:block
+                      th:replace="'fragments/inputs/radio' :: radio(inputName='interpreter',value='NO', label='No')"/>
+                </th:block>
+              </th:block>
+            </div>
+            <div class="form-card__footer">
+              <th:block th:replace="fragments/inputs/submitButton :: submitButton(
+                text='Continue')"/>
+            </div>
+          </th:block>
+        </th:block>
+      </main>
+    </div>
+  </section>
+</div>
+<th:block th:replace="fragments/footer :: footer"/>
+</body>
+</html>

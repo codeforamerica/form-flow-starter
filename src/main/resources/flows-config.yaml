@@ -22,3 +22,17 @@ flow:
       - name: cardPage
   cardPage:
     nextScreens:
+---
+name: mnbenefits
+flow:
+  selectCounty:
+    nextScreens:
+      - name: howThisWorks
+  howThisWorks:
+    nextScreens:
+      - name: languagePreferences
+  languagePreferences:
+    nextScreens:
+      - name: success
+  success:
+    nextScreens:
