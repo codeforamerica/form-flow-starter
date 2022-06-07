@@ -219,6 +219,17 @@ public class ApplyConditions extends FlowConditions {
 } 
 ```
 
+### Using conditions in templates
+
+You can pull in conditions into a Thymeleaf with the T operator, then use the variable to define show logic:
+
+```html
+<div
+  th:with="showCondition=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).<show-method>()}">
+   <h1 th:if="showCondition">Conditionally show this element</h1>
+</div>
+```
+
 ## Defining Static Pages ##
 
 
