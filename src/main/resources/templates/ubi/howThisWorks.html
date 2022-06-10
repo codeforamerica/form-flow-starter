@@ -9,8 +9,21 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{how-this-works.how-this-works}, subtext=#{how-this-works.this-application-form})"/>
+        <div class="form-card__content">
+          <th:block th:replace="'fragments/honeycrisp/accordion' :: accordion(
+            buttonLabel='Open accordion content',
+            content=~{::accordionContent})">
+            <th:block th:ref="accordionContent">
+              <ul class="list--bulleted">
+                <li th:text="'Reason one'"></li>
+                <li th:text="'Reason two'"></li>
+                <li th:text="'Reason three'"></li>
+              </ul>
+            </th:block>
+          </th:block>
+        </div>
         <div class="form-card__footer">
-          <th:block th:replace="'fragments/continueButton' :: continue" />
+          <th:block th:replace="'fragments/continueButton' :: continue"/>
         </div>
       </main>
     </div>

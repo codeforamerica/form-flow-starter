@@ -74,6 +74,14 @@ url('/assets/fonts/MaterialIcons-Regular.svg') format('svg');
 .emoji-pair--older-man-and-woman { background-image: url('/assets/images/emoji_pairs/emoji_older_man_and_woman.png'); }
 .emoji-pair--students { background-image: url('/assets/images/emoji_pairs/emoji_students.png'); }
 
+.accordion__button::after {
+  background-image: url("/assets/images/icon_accordion_close.svg");
+}
+
+.accordion--is-closed .accordion__button::after {
+  background-image: url("/assets/images/icon_accordion_open.svg");
+}
+
 /* Theming from Shiba */
 .toolbar__wrapper {
   background: #003865;
