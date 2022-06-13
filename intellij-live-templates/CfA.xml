@@ -13,6 +13,14 @@
   <option name="HTML" value="true" />
 </context>
 </template>
+<template name="cfa:conditionMethod" value="public static Boolean $METHOD_NAME$(Submission submission) {&#10;  if (submission.getInputData().containsKey(&quot;$FIELD_NAME$&quot;)) {&#10;    // Change logic to suit your needs&#10;    return submission.getInputData().get(&quot;$FIELD_NAME$&quot;)$CURSOR$;&#10;  }&#10;  return false;&#10;}" description="Create a condition method that first check for db field existance then your conditional logic" toReformat="false" toShortenFQNames="true">
+<variable name="METHOD_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="FIELD_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+<variable name="CURSOR" expression="" defaultValue="" alwaysStopAt="true" />
+<context>
+  <option name="JAVA_CODE" value="true" />
+</context>
+</template>
 <template name="cfa:continueButton" value="&lt;th:block th:replace=&quot;'fragments/continueButton' :: continue&quot; /&gt;&#10;" description="A continue link that looks like a button" toReformat="false" toShortenFQNames="true">
 <context>
   <option name="HTML" value="true" />

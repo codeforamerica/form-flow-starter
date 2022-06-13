@@ -60,6 +60,7 @@ public class ScreenController {
       Locale locale
   ) {
     var currentScreen = getCurrentScreen(flow, screen);
+    var submission = getSubmission(httpSession);
     if (currentScreen == null) {
       return new ModelAndView("redirect:/error");
     }
@@ -69,22 +70,13 @@ public class ScreenController {
     model.put("flow", flow);
     model.put("screen", screen);
 
-    // TODO: DRY this up?
     // if there's formDataSubmission
     if (httpSession.getAttribute("formDataSubmission") != null) {
+      model.put("submission", submission);
       model.put("inputData", httpSession.getAttribute("formDataSubmission"));
-    }
-    // if there's no formDataSubmission, but an active session
-    else if (httpSession.getAttribute("id") != null) {
-      Long id = (Long) httpSession.getAttribute("id");
-      Optional<Submission> submissionOptional = submissionService.findById(id);
-      if (submissionOptional.isPresent()) {
-        Submission submission = submissionOptional.get();
-        model.put("submission", submission);
-        model.put("inputData", submission.getInputData());
-      }
     } else {
-      model.put("inputData", new HashMap<>());
+      model.put("submission", submission);
+      model.put("inputData", submission.getInputData());
     }
 
     model.put("errorMessages", httpSession.getAttribute("errorMessages"));
@@ -100,11 +92,11 @@ public class ScreenController {
       HttpSession httpSession
   ) {
     var formDataSubmission = convertToMultiOrSingleValueMap(formData);
+    var submission = getSubmission(httpSession);
 
     var errorMessages = validationService.validate(flow, formDataSubmission);
     Map<String, Object> model = new HashMap<>();
 
-    // TODO: on error, redirect to same page with error messages
     if (errorMessages.size() > 0) {
       httpSession.setAttribute("errorMessages", errorMessages);
       System.out.println(httpSession.toString());
@@ -115,25 +107,17 @@ public class ScreenController {
       httpSession.removeAttribute("formDataSubmission");
     }
 
-    // TODO: DRY this up?
     // if there's already a session
-    Long id = (Long) httpSession.getAttribute("id");
-    if (id != null) {
-      Optional<Submission> submissionOptional = submissionService.findById(id);
-      if (submissionOptional.isPresent()) {
-        Submission submission = submissionOptional.get();
+    if (submission.getId() != null) {
+      Map<String, Object> inputData = submission.getInputData();
 
-        Map<String, Object> inputData = submission.getInputData();
+      inputData.forEach((key, value) -> {
+        formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+      });
+      submission.setInputData(formDataSubmission);
 
-        inputData.forEach((key, value) -> {
-          formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
-        });
-        submission.setInputData(formDataSubmission);
-
-        submissionService.save(submission);
-      }
+      submissionService.save(submission);
     } else {
-      var submission = new Submission();
       submission.setFlow(flow);
       submission.setInputData(convertToMultiOrSingleValueMap(formData));
       submissionService.save(submission);
@@ -191,7 +175,8 @@ public class ScreenController {
   RedirectView navigation(
       @PathVariable String flow,
       @PathVariable String screen,
-      @RequestParam(required = false, defaultValue = "0") Integer option
+      @RequestParam(required = false, defaultValue = "0") Integer option,
+      HttpSession httpSession
   ) {
     var currentScreen = getCurrentScreen(flow, screen);
     if (currentScreen == null) {
@@ -199,10 +184,10 @@ public class ScreenController {
     }
     NextScreen nextScreen;
     if (isConditionalNavigation(currentScreen)
-        && getConditionalNextScreen(currentScreen).size() > 0) {
-      nextScreen = getConditionalNextScreen(currentScreen).get(0);
+        && getConditionalNextScreen(currentScreen, httpSession).size() > 0) {
+      nextScreen = getConditionalNextScreen(currentScreen, httpSession).get(0);
     } else {
-      // TODO this needs to throw an error if there are more than 1 next screen that don't have a condition
+      // TODO this needs to throw an error if there are more than 1 next screen that don't have a condition or more than one evaluate to true
       nextScreen = getNonConditionalNextScreen(currentScreen);
     }
 
@@ -221,7 +206,8 @@ public class ScreenController {
         .anyMatch(nextScreen -> nextScreen.getCondition() != null);
   }
 
-  private List<NextScreen> getConditionalNextScreen(ScreenNavigationConfiguration currentScreen) {
+  private List<NextScreen> getConditionalNextScreen(ScreenNavigationConfiguration currentScreen, HttpSession httpSession) {
+    var submission = getSubmission(httpSession);
     List<NextScreen> screensWithConditionalNavigation =
         currentScreen.getNextScreens().stream()
             .filter(nextScreen -> nextScreen.getCondition() != null).toList();
@@ -229,6 +215,7 @@ public class ScreenController {
     return screensWithConditionalNavigation.stream().filter(nextScreen -> {
       String conditionName = nextScreen.getCondition().getName();
       try {
+        conditionHandler.setSubmission(submission);
         return conditionHandler.handleCondition(conditionName).equals(true);
       } catch (NoSuchMethodException | InvocationTargetException e) {
         System.out.println("No such method could be found in the ConditionDefinitions class.");
@@ -242,5 +229,15 @@ public class ScreenController {
   private NextScreen getNonConditionalNextScreen(ScreenNavigationConfiguration currentScreen) {
     return currentScreen.getNextScreens().stream()
         .filter(nxtScreen -> nxtScreen.getCondition() == null).toList().get(0);
+  }
+
+  private Submission getSubmission(HttpSession httpSession) {
+    var id = (Long) httpSession.getAttribute("id");
+    if (id != null) {
+      Optional<Submission> submissionOptional = submissionService.findById(id);
+      return submissionOptional.orElseGet(Submission::new);
+    } else {
+      return new Submission();
+    }
   }
 }

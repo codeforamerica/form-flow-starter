@@ -40,7 +40,6 @@ public class Ubi {
   @NotBlank(message = "Fill out age2")
   String age2;
 
-  @NotEmpty(message = "Fill out gender")
   String gender;
 
   @NotEmpty(message = "Fill out favorite color")
@@ -52,6 +51,5 @@ public class Ubi {
   @NotBlank(message = "Fill out money")
   String money;
 
-  @NotBlank(message = "Fill out ssn")
   String ssn;
 }

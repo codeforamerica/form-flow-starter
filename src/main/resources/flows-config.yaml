@@ -6,6 +6,8 @@ flow:
   firstPage:
     nextScreens:
       - name: secondPage
+        condition: applicantIsFemale
+      - name: success
   secondPage:
     nextScreens:
       - name: success
