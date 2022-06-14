@@ -18,5 +18,6 @@ spring:
 logging:
   level:
     org.springframework.web: ERROR
+#flowsConfig: flows-config.yaml
 #google_analytics: off
 #google_analytics_id: CHANGEME

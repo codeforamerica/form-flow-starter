@@ -1,0 +1,10 @@
+name: testFlow
+flow:
+  first:
+    nextScreens:
+      - name: next
+  next:
+    nextScreens:
+      - name: last
+  last:
+    nextScreens:

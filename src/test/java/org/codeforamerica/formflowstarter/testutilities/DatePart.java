@@ -1,4 +1,4 @@
-package testutilities;
+package org.codeforamerica.formflowstarter.testutilities;
 
 public enum DatePart {
   YEAR(3), MONTH(1), DAY(2);

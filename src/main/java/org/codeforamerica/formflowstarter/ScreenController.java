@@ -124,7 +124,7 @@ public class ScreenController {
       httpSession.setAttribute("id", submission.getId());
     }
 
-    return new ModelAndView(String.format("redirect:%s/navigation", screen));
+    return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
   }
 
   @PostMapping("{flow}/{screen}/submit")

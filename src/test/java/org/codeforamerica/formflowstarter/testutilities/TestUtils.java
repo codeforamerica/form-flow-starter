@@ -1,4 +1,4 @@
-package testutilities;
+package org.codeforamerica.formflowstarter.testutilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +12,7 @@ import org.codeforamerica.formflowstarter.app.data.Submission;
 public class TestUtils {
 
   public static void resetSubmission(Submission submission) {
+    submission = new Submission();
     submission.setId(null);
     submission.setInputData( new HashMap<>());
     submission.setFlow(null);

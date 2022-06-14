@@ -1,21 +1,17 @@
-package testutilities;
+package org.codeforamerica.formflowstarter.testutilities;
 
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.codeforamerica.formflowstarter.testutilities.TestUtils.resetSubmission;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static testutilities.TestUtils.resetSubmission;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -23,15 +19,12 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.assertj.core.api.Assertions;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
@@ -55,21 +48,25 @@ public class AbstractMockMvcTest {
   @MockBean
   protected Clock clock;
 
+  @MockBean
   protected Submission submission;
 
   @Autowired
   protected MockMvc mockMvc;
+
+//  @Autowired
+//  protected StaticMessageSource staticMessageSource;
 
   protected MockHttpSession session;
 
   @BeforeEach
   protected void setUp() throws Exception {
     session = new MockHttpSession();
-    when(clock.instant()).thenReturn(
-        LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
-        LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant()
-    );
-    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+//    when(clock.instant()).thenReturn(
+//        LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
+//        LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant()
+//    );
+//    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
   }
 
   @AfterEach
@@ -165,7 +162,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return postToUrlExpectingSuccess(postUrl, postUrl + "/navigation", Map.of(inputName, values));
   }
-
+  //TODO Implement CSRF and comment these with(csrf) calls back in
   protected ResultActions postToUrlExpectingSuccess(String postUrl, String redirectUrl,
       Map<String, List<String>> params) throws
       Exception {
@@ -173,7 +170,7 @@ public class AbstractMockMvcTest {
     return mockMvc.perform(
         post(postUrl)
             .session(session)
-            .with(csrf())
+//            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
     ).andExpect(redirectedUrl(redirectUrl));
@@ -185,7 +182,7 @@ public class AbstractMockMvcTest {
       String elementId,
       String expectedText) throws Exception {
     var nextPage = postAndFollowRedirect(pageName, inputName, value);
-    Assertions.assertThat(nextPage.getElementTextById(elementId)).isEqualTo(expectedText);
+    assertThat(nextPage.getElementTextById(elementId)).isEqualTo(expectedText);
   }
 
   protected void assertPageHasElementWithId(String pageName, String elementId) throws Exception {
@@ -281,7 +278,7 @@ public class AbstractMockMvcTest {
     return mockMvc.perform(
         post(postUrl)
             .session(session)
-            .with(csrf())
+//            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
     ).andExpect(redirectedUrl(postUrl));
@@ -328,9 +325,10 @@ public class AbstractMockMvcTest {
   }
 
   @NotNull
+  //TODO Get rid of this maybe?
   private Map<String, List<String>> fixInputNamesForParams(Map<String, List<String>> params) {
     return params.entrySet().stream()
-        .collect(toMap(e -> e.getKey() + "[]", Map.Entry::getValue));
+        .collect(toMap(e -> e.getKey(), Map.Entry::getValue));
   }
 
   protected ResultActions postWithoutData(String pageName) throws Exception {
@@ -338,13 +336,13 @@ public class AbstractMockMvcTest {
     return mockMvc.perform(
         post(postUrl)
             .session(session)
-            .with(csrf())
+//            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     );
   }
 
   protected String getUrlForPageName(String pageName) {
-    return "/pages/" + pageName;
+    return "/testFlow/" + pageName;
   }
 
   protected void assertPageHasInputError(String pageName, String inputName) throws Exception {
@@ -399,7 +397,7 @@ public class AbstractMockMvcTest {
 
   @NotNull
   private String followRedirectsForPageName(String currentPageName) throws Exception {
-    var nextPage = "/pages/" + currentPageName + "/navigation";
+    var nextPage = "/testFlow/" + currentPageName + "/navigation";
     while (Objects.requireNonNull(nextPage).contains("/navigation")) {
       // follow redirects
       nextPage = mockMvc.perform(get(nextPage).session(session))
