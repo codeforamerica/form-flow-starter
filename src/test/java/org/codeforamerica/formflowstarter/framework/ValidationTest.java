@@ -1,9 +1,5 @@
 package org.codeforamerica.formflowstarter.framework;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import org.codeforamerica.formflowstarter.ValidationService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractMockMvcTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,24 +43,10 @@ public class ValidationTest extends AbstractMockMvcTest {
   void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
     var pageName = "first";
     var inputName = "firstName";
-
-// Not doing this chunck anymore
-//    // Submit the page without required fields filled out, should be kept on current page
-//    assertPageDoesNotHaveInputError(pageName, inputName);
-//    postWithoutData(pageName).andExpect(redirectedUrl("/testFlow/" + pageName + "/navigation"));
-//
-//    // Submit with required fields filled out this time
-//    assertPageHasInputError(pageName, inputName);
-//    postExpectingSuccess(pageName, inputName, "not blank");
-//
-//    // When I hit the back button, no input error should be displayed
-//    assertPageDoesNotHaveInputError(pageName, inputName);
-
     assertPageDoesNotHaveInputError(pageName, inputName);
-    // Thinking 🤔 : how can we submit the number of errors so that it can confirm count and text of errors
-    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name. This is just a test.");
-//    postExpectingFailureAndAssertErrorsDisplaysForThatInput("first", "firstName", "", 2);
+    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
     postExpectingSuccess(pageName, inputName, "not blank");
+    assertPageDoesNotHaveInputError(pageName, inputName);
   }
 
 // Attempt to do it from scratch, can delete later
