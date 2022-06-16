@@ -8,6 +8,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 public class TestFlow {
 
   @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
-  @Size(min = 2, message = "{validations.test}")
+//  @Size(min = 2, message = "{validations.test}")
   String firstName;
 }

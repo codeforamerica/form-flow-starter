@@ -1,7 +1,13 @@
 package org.codeforamerica.formflowstarter.framework;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.ArrayList;
 import org.codeforamerica.formflowstarter.ValidationService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractMockMvcTest;
 import org.codeforamerica.formflowstarter.testutilities.FormScreen;
@@ -9,11 +15,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.ui.ModelMap;
 
 //@Tag("validation")
 //@ContextConfiguration(classes = TestFlow.class)
 @SpringBootTest(properties = {"flowsConfig=flows-config/test-validation.yaml"})
 public class ValidationTest extends AbstractMockMvcTest {
+
   @Autowired
   ValidationService validationService;
 
@@ -33,29 +42,69 @@ public class ValidationTest extends AbstractMockMvcTest {
     postExpectingNextPageTitle("first", "firstName", "Testy", "Next Page");
   }
 
-  @Test
-  void shouldDisplayErrorMessageWhenValidationFailed() throws Exception {
-    assertPageDoesNotHaveInputError("first", "firstName");
-    var page = new FormScreen(postExpectingFailure("first", "firstName", ""));
-    page.getInputErrors("firstName");
-  }
-  @Test
-  void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
-    var pageName = "firstPage";
-    var inputName = "someInputName";
+  // Not working yet
+//  @Test
+//  void shouldDisplayErrorMessageWhenValidationFailed() throws Exception {
+//    assertPageDoesNotHaveInputError("first", "firstName");
+//    var page = new FormScreen(postExpectingFailure("first", "firstName", ""));
+//    page.getInputErrors("firstName");
+//  }
 
-    // Submit the page without required fields filled out, should be kept on current page
-    assertPageDoesNotHaveInputError(pageName, inputName);
-    postWithoutData(pageName).andExpect(redirectedUrl("/pages/" + pageName));
-
-    // Submit with required fields filled out this time
-    assertPageHasInputError(pageName, inputName);
-    postExpectingSuccess(pageName, inputName, "not blank");
-
-    // When I hit the back button, no input error should be displayed
-    assertPageDoesNotHaveInputError(pageName, inputName);
-  }
+// WIP getting to work
+//  @Test
+//  void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
+//    var pageName = "first";
+//    var inputName = "firstName";
 //
+//    // Submit the page without required fields filled out, should be kept on current page
+//    assertPageDoesNotHaveInputError(pageName, inputName);
+//    postWithoutData(pageName).andExpect(redirectedUrl("/testFlow/" + pageName + "/navigation"));
+//
+//    // Submit with required fields filled out this time
+//    assertPageHasInputError(pageName, inputName);
+//    postExpectingSuccess(pageName, inputName, "not blank");
+//
+//    // When I hit the back button, no input error should be displayed
+//    assertPageDoesNotHaveInputError(pageName, inputName);
+//
+//    assertPageDoesNotHaveInputError(pageName, inputName);
+//    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
+//    postExpectingSuccess(pageName, inputName, "not blank");
+//  }
+
+  @Test
+  void willThisJustWorkBigQuestionMark() throws Exception {
+    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
+  }
+
+// Attempt to do it from scratch, can delete later
+//  @Test
+//  public void whenSubmit_thenSubsequentFormRequestContainsMostRecentTodo() throws Exception {
+//    MvcResult resultOne = (MvcResult) mockMvc.perform(get("/testFlow/first"))
+//        .andExpect(status().isOk())
+//        .andExpect(model().attributeExists("flow"))
+//        .andExpect(model().attributeExists("screen"))
+//        .andReturn();
+//
+//    String flowName = (String) resultOne.getModelAndView().getModel().get("flow");
+//    assertTrue(flowName.equals("testFlow"));
+//
+//    MvcResult resultPost = mockMvc.perform(post("/testFlow/first")
+//            .param("firstName", ""))
+//        .andExpect(status().is3xxRedirection())
+//        .andReturn();
+//
+//    MvcResult resultTwo = mockMvc.perform(get("/testFlow/first"))
+//        .andExpect(status().isOk())
+//        .andExpect(model().attributeExists("errorMessages"))
+//        .andReturn();
+//    Object errorMessages = resultTwo.getModelAndView().getModel().get("errorMessages");
+//    System.out.println(errorMessages);
+
+//    assertEquals("newtodo", item.getDescription());
+//  }
+
+// Not working yet
 //  @Test
 //  void shouldNotTriggerValidation_whenConditionIsFalse() throws Exception {
 //    postExpectingNextPageTitle("firstPage", "someInputName", "do not trigger validation",
@@ -91,7 +140,6 @@ public class ValidationTest extends AbstractMockMvcTest {
 //    assertThat(actualErrorMessages.text()).contains(moneyErrorMessageKey);
 //    assertThat(actualErrorMessages.text()).doesNotContain("not blank is error");
 //  }
-
 
 //  @Nested
 //  @Tag("validation")

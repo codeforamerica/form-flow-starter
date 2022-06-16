@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.aspectj.lang.annotation.Before;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
@@ -33,12 +35,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.context.WebApplicationContext;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = MOCK)
@@ -52,6 +57,9 @@ public class AbstractMockMvcTest {
   protected Submission submission;
 
   @Autowired
+  private WebApplicationContext webApplicationContext;
+
+  @Autowired
   protected MockMvc mockMvc;
 
 //  @Autowired
@@ -61,12 +69,10 @@ public class AbstractMockMvcTest {
 
   @BeforeEach
   protected void setUp() throws Exception {
-    session = new MockHttpSession();
-//    when(clock.instant()).thenReturn(
-//        LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
-//        LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant()
-//    );
-//    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    this.mockMvc = MockMvcBuilders
+        .webAppContextSetup(this.webApplicationContext)
+        .apply(sharedHttpSession()) // use this session across requests
+        .build();
   }
 
   @AfterEach
@@ -114,20 +120,20 @@ public class AbstractMockMvcTest {
       ZipEntry zEntry = null;
       Path destination = Files.createTempDirectory("");
       while ((zEntry = zipStream.getNextEntry()) != null) {
-          if (!zEntry.isDirectory()) {
-            File files = new File(String.valueOf(destination), zEntry.getName());
-            FileOutputStream fout = new FileOutputStream(files);
-            BufferedOutputStream bufout = new BufferedOutputStream(fout);
-            byte[] buffer = new byte[1024];
-            int read = 0;
-            while ((read = zipStream.read(buffer)) != -1) {
-              bufout.write(buffer, 0, read);
-            }
-            zipStream.closeEntry();//This will delete zip folder after extraction
-            bufout.close();
-            fout.close();
-            fileList.add(files);
+        if (!zEntry.isDirectory()) {
+          File files = new File(String.valueOf(destination), zEntry.getName());
+          FileOutputStream fout = new FileOutputStream(files);
+          BufferedOutputStream bufout = new BufferedOutputStream(fout);
+          byte[] buffer = new byte[1024];
+          int read = 0;
+          while ((read = zipStream.read(buffer)) != -1) {
+            bufout.write(buffer, 0, read);
           }
+          zipStream.closeEntry();//This will delete zip folder after extraction
+          bufout.close();
+          fout.close();
+          fileList.add(files);
+        }
       }
       zipStream.close();//This will delete zip folder after extraction
     } catch (Exception e) {
@@ -136,6 +142,7 @@ public class AbstractMockMvcTest {
     }
     return fileList;
   }
+
   protected ResultActions postExpectingSuccess(String pageName) throws Exception {
     return postWithoutData(pageName)
         .andExpect(redirectedUrl(getUrlForPageName(pageName) + "/navigation"));
@@ -162,6 +169,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return postToUrlExpectingSuccess(postUrl, postUrl + "/navigation", Map.of(inputName, values));
   }
+
   //TODO Implement CSRF and comment these with(csrf) calls back in
   protected ResultActions postToUrlExpectingSuccess(String postUrl, String redirectUrl,
       Map<String, List<String>> params) throws
@@ -169,7 +177,7 @@ public class AbstractMockMvcTest {
     Map<String, List<String>> paramsWithProperInputNames = fixInputNamesForParams(params);
     return mockMvc.perform(
         post(postUrl)
-            .session(session)
+//            .session(session)
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
@@ -254,10 +262,12 @@ public class AbstractMockMvcTest {
     String nextPage = followRedirectsForPageName(pageName);
     assertThat(nextPage).isEqualTo("/pages/" + expectedNextPageName);
   }
-  
-  protected void assertNavigationRedirectsToCorrectNextPageWithOption(String pageName,String option,
+
+  protected void assertNavigationRedirectsToCorrectNextPageWithOption(String pageName,
+      String option,
       String expectedNextPageName) throws Exception {
-    String nextPage = followRedirectsForPageNameWithOption(pageName, option.equals("false")?"1":"0");
+    String nextPage = followRedirectsForPageNameWithOption(pageName,
+        option.equals("false") ? "1" : "0");
     assertThat(nextPage).isEqualTo("/pages/" + expectedNextPageName);
   }
 
@@ -266,7 +276,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-            .session(session)
+//            .session(session)
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .param(inputName, value)
@@ -284,7 +294,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-            .session(session)
+//            .session(session)
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
@@ -342,7 +352,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-            .session(session)
+//            .session(session)
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     );
@@ -382,7 +392,8 @@ public class AbstractMockMvcTest {
 
   @NotNull
   protected ResultActions getPage(String pageName) throws Exception {
-    return mockMvc.perform(get("/testFlow/" + pageName).session(session));
+    return mockMvc.perform(get("/testFlow/" + pageName));
+//        .session(session));
   }
 
   @NotNull
@@ -398,7 +409,8 @@ public class AbstractMockMvcTest {
    */
   protected FormScreen getNextPageAsFormPage(String currentPageName) throws Exception {
     String nextPage = followRedirectsForPageName(currentPageName);
-    return new FormScreen(mockMvc.perform(get(nextPage).session(session)));
+    return new FormScreen(mockMvc.perform(get(nextPage)));
+    // .session(session)
   }
 
   @NotNull
@@ -406,7 +418,8 @@ public class AbstractMockMvcTest {
     var nextPage = "/testFlow/" + currentPageName + "/navigation";
     while (Objects.requireNonNull(nextPage).contains("/navigation")) {
       // follow redirects
-      nextPage = mockMvc.perform(get(nextPage).session(session))
+      nextPage = mockMvc.perform(get(nextPage))
+          // .session(session)
           .andExpect(status().is3xxRedirection()).andReturn()
           .getResponse()
           .getRedirectedUrl();
@@ -432,7 +445,8 @@ public class AbstractMockMvcTest {
     return getNextPageAsFormPage(pageName);
   }
 
-  protected FormScreen postAndFollowRedirect(String pageName, Map<String, List<String>> params) throws
+  protected FormScreen postAndFollowRedirect(String pageName, Map<String, List<String>> params)
+      throws
       Exception {
     postExpectingSuccess(pageName, params);
     return getNextPageAsFormPage(pageName);
@@ -467,10 +481,11 @@ public class AbstractMockMvcTest {
         "/pages/%s/navigation?option=0".formatted(pageName));
     assertNavigationRedirectsToCorrectNextPage(pageName, expectedNextPageName);
   }
-  
+
   @NotNull
-  private String followRedirectsForPageNameWithOption(String currentPageName, String option) throws Exception {
-    var nextPage = "/pages/" + currentPageName + "/navigation?option="+option;
+  private String followRedirectsForPageNameWithOption(String currentPageName, String option)
+      throws Exception {
+    var nextPage = "/pages/" + currentPageName + "/navigation?option=" + option;
     while (Objects.requireNonNull(nextPage).contains("/navigation")) {
       // follow redirects
       nextPage = mockMvc.perform(get(nextPage).session(session))
