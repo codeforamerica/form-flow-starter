@@ -99,7 +99,6 @@ public class ScreenController {
 
     if (errorMessages.size() > 0) {
       httpSession.setAttribute("errorMessages", errorMessages);
-      System.out.println(httpSession.toString());
       httpSession.setAttribute("formDataSubmission", formDataSubmission);
       return new ModelAndView(String.format("redirect:/%s/%s", flow, screen));
     } else {

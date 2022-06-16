@@ -28,7 +28,7 @@ public class FormScreen {
   }
 
   public boolean hasInputError(String inputName) {
-    Element element = html.select("input[name='%s[]'] ~ p.text--error".formatted(inputName))
+    Element element = html.select("input[name='%s'] ~ p.text--error".formatted(inputName))
         .first();
     return element != null;
   }
@@ -39,7 +39,7 @@ public class FormScreen {
   }
 
   public Elements getInputErrors(String inputName) {
-    return html.select("input[name='%s[]'] ~ p.text--error".formatted(inputName));
+    return html.select("input[name='%s'] ~ p.text--error".formatted(inputName));
   }
 
   public Element getInputError(String inputName) {

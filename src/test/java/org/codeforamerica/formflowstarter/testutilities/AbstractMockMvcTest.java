@@ -263,7 +263,14 @@ public class AbstractMockMvcTest {
 
   protected ResultActions postExpectingFailure(String pageName, String inputName, String value)
       throws Exception {
-    return postExpectingFailure(pageName, Map.of(inputName, List.of(value)));
+    String postUrl = getUrlForPageName(pageName);
+    return mockMvc.perform(
+        post(postUrl)
+            .session(session)
+//            .with(csrf())
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .param(inputName, value)
+    ).andExpect(redirectedUrl(postUrl));
   }
 
   protected ResultActions postExpectingFailure(String pageName, String inputName,
@@ -354,7 +361,6 @@ public class AbstractMockMvcTest {
       throws Exception {
     var page = new FormScreen(getPage(pageName));
     assertEquals(errorMessage, page.getInputError(inputName).text());
-
   }
 
   protected void assertPageHasDateInputError(String pageName, String inputName) throws Exception {
@@ -376,7 +382,7 @@ public class AbstractMockMvcTest {
 
   @NotNull
   protected ResultActions getPage(String pageName) throws Exception {
-    return mockMvc.perform(get("/pages/" + pageName).session(session));
+    return mockMvc.perform(get("/testFlow/" + pageName).session(session));
   }
 
   @NotNull

@@ -1,28 +1,26 @@
 package org.codeforamerica.formflowstarter.framework;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
+import org.codeforamerica.formflowstarter.ValidationService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractMockMvcTest;
+import org.codeforamerica.formflowstarter.testutilities.FormScreen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 //@Tag("validation")
 //@ContextConfiguration(classes = TestFlow.class)
 @SpringBootTest(properties = {"flowsConfig=flows-config/test-validation.yaml"})
 public class ValidationTest extends AbstractMockMvcTest {
+  @Autowired
+  ValidationService validationService;
 
-  private final String errorMessage = "error message";
-  private final String nextPageTitle = "next Page Title";
-  private final String lastPageTitle = "last page title";
-  private final String option1 = "option 1";
-  private final String multipleValidationsPageTitle = "multiple validations page title";
-  private final String moneyErrorMessageKey = "money is error";
-  private final String emailErrorConKey = "Input con for com";
   @Override
   @BeforeEach
   protected void setUp() throws Exception {
     super.setUp();
-//    staticMessageSource.addMessage("first-page-title", ENGLISH, "first Page Title");
-//    staticMessageSource.addMessage("next-page-title", ENGLISH, nextPageTitle);
   }
 
   @Test
@@ -34,32 +32,29 @@ public class ValidationTest extends AbstractMockMvcTest {
   void shouldGoOnToNextPage_whenValidationPasses() throws Exception {
     postExpectingNextPageTitle("first", "firstName", "Testy", "Next Page");
   }
-//
-//  @Test
-//  void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
-//    var pageName = "firstPage";
-//    var inputName = "someInputName";
-//
-//    // Submit the page without required fields filled out, should be kept on current page
-//    assertPageDoesNotHaveInputError(pageName, inputName);
-//    postWithoutData(pageName).andExpect(redirectedUrl("/pages/" + pageName));
-//
-//    // Submit with required fields filled out this time
-//    assertPageHasInputError(pageName, inputName);
-//    postExpectingSuccess(pageName, inputName, "not blank");
-//
-//    // When I hit the back button, no input error should be displayed
-//    assertPageDoesNotHaveInputError(pageName, inputName);
-//  }
-//
-//  @Test
-//  void shouldDisplayErrorMessageWhenValidationFailed() throws Exception {
-//    assertPageDoesNotHaveInputError("firstPage", "someInputName");
-//    postWithoutData("firstPage").andExpect(redirectedUrl("/pages/firstPage"));
-//
-//    var page = new FormScreen(getPage("firstPage"));
-//    assertThat(page.getInputError("someInputName").text()).isEqualTo(errorMessage);
-//  }
+
+  @Test
+  void shouldDisplayErrorMessageWhenValidationFailed() throws Exception {
+    assertPageDoesNotHaveInputError("first", "firstName");
+    var page = new FormScreen(postExpectingFailure("first", "firstName", ""));
+    page.getInputErrors("firstName");
+  }
+  @Test
+  void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
+    var pageName = "firstPage";
+    var inputName = "someInputName";
+
+    // Submit the page without required fields filled out, should be kept on current page
+    assertPageDoesNotHaveInputError(pageName, inputName);
+    postWithoutData(pageName).andExpect(redirectedUrl("/pages/" + pageName));
+
+    // Submit with required fields filled out this time
+    assertPageHasInputError(pageName, inputName);
+    postExpectingSuccess(pageName, inputName, "not blank");
+
+    // When I hit the back button, no input error should be displayed
+    assertPageDoesNotHaveInputError(pageName, inputName);
+  }
 //
 //  @Test
 //  void shouldNotTriggerValidation_whenConditionIsFalse() throws Exception {
