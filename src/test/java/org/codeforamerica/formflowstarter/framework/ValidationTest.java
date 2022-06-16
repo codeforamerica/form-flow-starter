@@ -31,13 +31,14 @@ public class ValidationTest extends AbstractMockMvcTest {
     postExpectingNextPageTitle("first", "firstName", "Testy", "Next Page");
   }
 
-  // Not working yet
-//  @Test
-//  void shouldDisplayErrorMessageWhenValidationFailed() throws Exception {
-//    assertPageDoesNotHaveInputError("first", "firstName");
-//    var page = new FormScreen(postExpectingFailure("first", "firstName", ""));
-//    page.getInputErrors("firstName");
-//  }
+  //TODO should this test all input types? Or at least both single value input and multi value inputs?
+  @Test
+  void shouldDisplayErrorMessageWhenValidationFailed() throws Exception {
+    var pageName = "first";
+    var inputName = "firstName";
+    assertPageDoesNotHaveInputError(pageName, inputName);
+    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
+  }
 
   @Test
   void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {

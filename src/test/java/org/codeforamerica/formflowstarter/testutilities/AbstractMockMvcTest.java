@@ -81,27 +81,27 @@ public class AbstractMockMvcTest {
   protected void postWithQueryParam(String pageName, String queryParam, String value)
       throws Exception {
     mockMvc.perform(
-            post("/pages/" + pageName).session(session).with(csrf()).queryParam(queryParam, value))
+            post("/pages/" + pageName).with(csrf()).queryParam(queryParam, value))
         .andExpect(redirectedUrl("/pages/" + pageName + "/navigation"));
   }
 
   protected ResultActions getWithQueryParam(String pageName, String queryParam, String value)
       throws Exception {
-    return mockMvc.perform(get("/pages/" + pageName).session(session).queryParam(queryParam, value))
+    return mockMvc.perform(get("/pages/" + pageName).queryParam(queryParam, value))
         .andExpect(status().isOk());
   }
 
   protected ResultActions getWithQueryParamAndExpectRedirect(String pageName, String queryParam,
       String value,
       String expectedRedirectPageName) throws Exception {
-    return mockMvc.perform(get("/pages/" + pageName).session(session).queryParam(queryParam, value))
+    return mockMvc.perform(get("/pages/" + pageName).queryParam(queryParam, value))
         .andExpect(redirectedUrl("/pages/" + expectedRedirectPageName));
   }
 
   protected void getNavigationPageWithQueryParamAndExpectRedirect(String pageName,
       String queryParam, String value,
       String expectedPageName) throws Exception {
-    var request = get("/pages/" + pageName + "/navigation").session(session)
+    var request = get("/pages/" + pageName + "/navigation")
         .queryParam(queryParam, value);
     var navigationPageUrl = mockMvc.perform(request)
         .andExpect(status().is3xxRedirection())
@@ -175,7 +175,7 @@ public class AbstractMockMvcTest {
     Map<String, List<String>> paramsWithProperInputNames = fixInputNamesForParams(params);
     return mockMvc.perform(
         post(postUrl)
-//            .session(session)
+//
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
@@ -274,7 +274,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-//            .session(session)
+//
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .param(inputName, value)
@@ -292,7 +292,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-//            .session(session)
+//
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
@@ -357,7 +357,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-//            .session(session)
+//
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     );
@@ -404,7 +404,6 @@ public class AbstractMockMvcTest {
   @NotNull
   protected ResultActions getPage(String pageName) throws Exception {
     return mockMvc.perform(get("/testFlow/" + pageName));
-//        .session(session));
   }
 
   @NotNull
@@ -421,7 +420,6 @@ public class AbstractMockMvcTest {
   protected FormScreen getNextPageAsFormPage(String currentPageName) throws Exception {
     String nextPage = followRedirectsForPageName(currentPageName);
     return new FormScreen(mockMvc.perform(get(nextPage)));
-    // .session(session)
   }
 
   @NotNull
@@ -430,7 +428,6 @@ public class AbstractMockMvcTest {
     while (Objects.requireNonNull(nextPage).contains("/navigation")) {
       // follow redirects
       nextPage = mockMvc.perform(get(nextPage))
-          // .session(session)
           .andExpect(status().is3xxRedirection()).andReturn()
           .getResponse()
           .getRedirectedUrl();
@@ -442,7 +439,7 @@ public class AbstractMockMvcTest {
     var nextPage = currentPageUrl;
     while (Objects.requireNonNull(nextPage).contains("/navigation")) {
       // follow redirects
-      nextPage = mockMvc.perform(get(nextPage).session(session))
+      nextPage = mockMvc.perform(get(nextPage))
           .andExpect(status().is3xxRedirection()).andReturn()
           .getResponse()
           .getRedirectedUrl();
@@ -499,7 +496,7 @@ public class AbstractMockMvcTest {
     var nextPage = "/pages/" + currentPageName + "/navigation?option=" + option;
     while (Objects.requireNonNull(nextPage).contains("/navigation")) {
       // follow redirects
-      nextPage = mockMvc.perform(get(nextPage).session(session))
+      nextPage = mockMvc.perform(get(nextPage))
           .andExpect(status().is3xxRedirection()).andReturn()
           .getResponse()
           .getRedirectedUrl();
