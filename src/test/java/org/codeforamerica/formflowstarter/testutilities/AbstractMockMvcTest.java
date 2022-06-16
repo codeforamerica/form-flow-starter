@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.aspectj.lang.annotation.Before;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
@@ -35,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
@@ -317,6 +315,13 @@ public class AbstractMockMvcTest {
 
   }
 
+  protected void postExpectingFailureAndAssertErrorsDisplaysForThatInput(String pageName,
+      String inputName,
+      String value, Integer numOfErrors) throws Exception {
+    postExpectingFailure(pageName, inputName, value);
+    assertInputHasErrors(pageName, inputName, numOfErrors);
+  }
+
   protected void postExpectingFailureAndAssertErrorDisplaysForThatDateInput(String pageName,
       String inputName,
       List<String> values) throws Exception {
@@ -371,6 +376,12 @@ public class AbstractMockMvcTest {
       throws Exception {
     var page = new FormScreen(getPage(pageName));
     assertEquals(errorMessage, page.getInputError(inputName).text());
+  }
+
+  protected void assertInputHasErrors(String pageName, String inputName, Integer numOfErrors)
+      throws Exception {
+    var page = new FormScreen(getPage(pageName));
+    assertEquals(numOfErrors, page.getInputErrors(inputName).size());
   }
 
   protected void assertPageHasDateInputError(String pageName, String inputName) throws Exception {

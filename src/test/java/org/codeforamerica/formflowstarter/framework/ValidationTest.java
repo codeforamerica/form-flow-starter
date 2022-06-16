@@ -2,21 +2,14 @@ package org.codeforamerica.formflowstarter.framework;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import java.util.ArrayList;
 import org.codeforamerica.formflowstarter.ValidationService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractMockMvcTest;
-import org.codeforamerica.formflowstarter.testutilities.FormScreen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.ModelMap;
 
 //@Tag("validation")
 //@ContextConfiguration(classes = TestFlow.class)
@@ -50,12 +43,12 @@ public class ValidationTest extends AbstractMockMvcTest {
 //    page.getInputErrors("firstName");
 //  }
 
-// WIP getting to work
-//  @Test
-//  void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
-//    var pageName = "first";
-//    var inputName = "firstName";
-//
+  @Test
+  void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
+    var pageName = "first";
+    var inputName = "firstName";
+
+// Not doing this chunck anymore
 //    // Submit the page without required fields filled out, should be kept on current page
 //    assertPageDoesNotHaveInputError(pageName, inputName);
 //    postWithoutData(pageName).andExpect(redirectedUrl("/testFlow/" + pageName + "/navigation"));
@@ -66,15 +59,12 @@ public class ValidationTest extends AbstractMockMvcTest {
 //
 //    // When I hit the back button, no input error should be displayed
 //    assertPageDoesNotHaveInputError(pageName, inputName);
-//
-//    assertPageDoesNotHaveInputError(pageName, inputName);
-//    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
-//    postExpectingSuccess(pageName, inputName, "not blank");
-//  }
 
-  @Test
-  void willThisJustWorkBigQuestionMark() throws Exception {
-    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
+    assertPageDoesNotHaveInputError(pageName, inputName);
+    // Thinking 🤔 : how can we submit the number of errors so that it can confirm count and text of errors
+    postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name. This is just a test.");
+//    postExpectingFailureAndAssertErrorsDisplaysForThatInput("first", "firstName", "", 2);
+    postExpectingSuccess(pageName, inputName, "not blank");
   }
 
 // Attempt to do it from scratch, can delete later
