@@ -5,7 +5,7 @@ import org.codeforamerica.formflowstarter.app.data.Submission;
 public class ConditionDefinitions {
 
   // firstName, lastName, email, address
-  public static Boolean applicantIsFemale(Submission submission) {
+  public static boolean applicantIsFemale(Submission submission) {
     // TODO: Tried creating helper methods, but became too complex, waiting to see if a better pattern emerges
     // Null check on fieldName
     if (submission.getInputData().containsKey("gender")) {
@@ -15,11 +15,11 @@ public class ConditionDefinitions {
     return false;
   }
 
-  public static Boolean dontShowThisPage() {
+  public static boolean dontShowThisPage() {
     return false;
   }
 
-  public Boolean thisIsAnotherCondition() {
+  public boolean thisIsAnotherCondition() {
     return true;
   }
 }

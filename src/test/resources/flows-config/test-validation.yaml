@@ -5,8 +5,8 @@ flow:
       - name: pageWithMultipleValidationInput
   pageWithMultipleValidationInput:
     nextScreens:
-      - name: next
-  next:
+      - name: pageWithCheckboxInput
+  pageWithCheckboxInput:
     nextScreens:
       - name: last
   last:

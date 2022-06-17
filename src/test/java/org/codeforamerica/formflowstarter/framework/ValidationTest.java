@@ -31,7 +31,7 @@ public class ValidationTest extends AbstractMockMvcTest {
 
   @Test
   void shouldGoOnToNextPage_whenValidationPasses() throws Exception {
-    postExpectingNextPageTitle("first", "firstName", "Testy", "Next Page");
+    postExpectingNextPageTitle("first", "firstName", "Testy", "Page with Multiple Validation Input");
   }
 
   //TODO should this test all input types? Or at least both single value input and multi value inputs?
@@ -42,6 +42,17 @@ public class ValidationTest extends AbstractMockMvcTest {
     assertPageDoesNotHaveInputError(pageName, inputName);
     postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
   }
+
+  //TODO come back to this test on Monday after discussing issues with multivalue inputs with the rest of the team
+//  @Test
+//  void shouldDisplayErrorMessageforMultiValueInputs() throws Exception {
+//    assertPageDoesNotHaveInputError("pageWithCheckboxInput", "favoriteFruitCheckbox");
+//    postExpectingFailure("pageWithCheckboxInput", "favoriteFruitCheckbox", List.of("Apple", "Orange"));
+//    var page = new FormScreen(getPage("pageWithCheckboxInput"));
+//    assertThat(page.getTitle()).isEqualTo("Checkbox input page");
+//    var actualErrorMessages = page.getInputErrors("favoriteFruitCheckbox");
+//    assertThat(actualErrorMessages.text()).contains("You must select at least one fruit");
+//  }
 
   @Test
   void shouldDisplayAllFailingValidationErrorMessages() throws Exception {
