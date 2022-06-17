@@ -47,6 +47,7 @@ public class ValidationTest extends AbstractMockMvcTest {
   void shouldDisplayAllFailingValidationErrorMessages() throws Exception {
     String firstError = "Don't leave this blank";
     String secondError = "You must enter a value 2 characters or longer";
+    assertPageDoesNotHaveInputError("pageWithMultipleValidationInput", "inputWithMultipleValidations");
     postExpectingFailure("pageWithMultipleValidationInput", "inputWithMultipleValidations", "");
 
     var page = new FormScreen(getPage("pageWithMultipleValidationInput"));
@@ -54,6 +55,18 @@ public class ValidationTest extends AbstractMockMvcTest {
     var actualErrorMessages = page.getInputErrors("inputWithMultipleValidations");
     assertThat(actualErrorMessages.text()).contains(firstError);
     assertThat(actualErrorMessages.text()).contains(secondError);
+  }
+
+  @Test
+  void shouldStayOnPage_whenAnyValidationHasFailed() throws Exception {
+    assertPageDoesNotHaveInputError("pageWithMultipleValidationInput", "inputWithMultipleValidations");
+    postExpectingFailure("pageWithMultipleValidationInput", "inputWithMultipleValidations",
+        "a");
+    var page = new FormScreen(getPage("pageWithMultipleValidationInput"));
+    assertThat(page.getTitle()).isEqualTo("Page with Multiple Validation Input");
+    var actualErrorMessages = page.getInputErrors("inputWithMultipleValidations");
+    assertThat(actualErrorMessages.text()).contains("You must enter a value 2 characters or longer");
+    assertThat(actualErrorMessages.text()).doesNotContain("Don't leave this blank");
   }
 
   @Test
@@ -81,17 +94,6 @@ public class ValidationTest extends AbstractMockMvcTest {
 //  }
 //
 //
-//  @Test
-//  void shouldStayOnPage_whenAnyValidationHasFailed() throws Exception {
-//    postExpectingFailure("pageWithInputWithMultipleValidations", "multipleValidations",
-//        "not money");
-//
-//    var page = new FormScreen(getPage("pageWithInputWithMultipleValidations"));
-//    assertThat(page.getTitle()).isEqualTo(multipleValidationsPageTitle);
-//    var actualErrorMessages = page.getInputErrors("multipleValidations");
-//    assertThat(actualErrorMessages.text()).contains(moneyErrorMessageKey);
-//    assertThat(actualErrorMessages.text()).doesNotContain("not blank is error");
-//  }
 
 //  @Nested
 //  @Tag("validation")
