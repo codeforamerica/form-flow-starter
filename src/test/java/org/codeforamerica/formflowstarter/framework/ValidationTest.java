@@ -1,7 +1,10 @@
 package org.codeforamerica.formflowstarter.framework;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import org.codeforamerica.formflowstarter.ValidationService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractMockMvcTest;
+import org.codeforamerica.formflowstarter.testutilities.FormScreen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,19 @@ public class ValidationTest extends AbstractMockMvcTest {
   }
 
   @Test
+  void shouldDisplayAllFailingValidationErrorMessages() throws Exception {
+    String firstError = "Don't leave this blank";
+    String secondError = "You must enter a value 2 characters or longer";
+    postExpectingFailure("pageWithMultipleValidationInput", "inputWithMultipleValidations", "");
+
+    var page = new FormScreen(getPage("pageWithMultipleValidationInput"));
+    assertThat(page.getTitle()).isEqualTo("Page with Multiple Validation Input");
+    var actualErrorMessages = page.getInputErrors("inputWithMultipleValidations");
+    assertThat(actualErrorMessages.text()).contains(firstError);
+    assertThat(actualErrorMessages.text()).contains(secondError);
+  }
+
+  @Test
   void shouldClearValidationError_afterErrorHasBeenFixed() throws Exception {
     var pageName = "first";
     var inputName = "firstName";
@@ -50,34 +66,7 @@ public class ValidationTest extends AbstractMockMvcTest {
     assertPageDoesNotHaveInputError(pageName, inputName);
   }
 
-// Attempt to do it from scratch, can delete later
-//  @Test
-//  public void whenSubmit_thenSubsequentFormRequestContainsMostRecentTodo() throws Exception {
-//    MvcResult resultOne = (MvcResult) mockMvc.perform(get("/testFlow/first"))
-//        .andExpect(status().isOk())
-//        .andExpect(model().attributeExists("flow"))
-//        .andExpect(model().attributeExists("screen"))
-//        .andReturn();
 //
-//    String flowName = (String) resultOne.getModelAndView().getModel().get("flow");
-//    assertTrue(flowName.equals("testFlow"));
-//
-//    MvcResult resultPost = mockMvc.perform(post("/testFlow/first")
-//            .param("firstName", ""))
-//        .andExpect(status().is3xxRedirection())
-//        .andReturn();
-//
-//    MvcResult resultTwo = mockMvc.perform(get("/testFlow/first"))
-//        .andExpect(status().isOk())
-//        .andExpect(model().attributeExists("errorMessages"))
-//        .andReturn();
-//    Object errorMessages = resultTwo.getModelAndView().getModel().get("errorMessages");
-//    System.out.println(errorMessages);
-
-//    assertEquals("newtodo", item.getDescription());
-//  }
-
-// Not working yet
 //  @Test
 //  void shouldNotTriggerValidation_whenConditionIsFalse() throws Exception {
 //    postExpectingNextPageTitle("firstPage", "someInputName", "do not trigger validation",
@@ -91,16 +80,6 @@ public class ValidationTest extends AbstractMockMvcTest {
 //        "valueToTriggerCondition", "conditionalValidationWhenValueEquals");
 //  }
 //
-//  @Test
-//  void shouldDisplayAllFailingValidationErrorMessages() throws Exception {
-//    postExpectingFailure("pageWithInputWithMultipleValidations", "multipleValidations", "");
-//
-//    var page = new FormScreen(getPage("pageWithInputWithMultipleValidations"));
-//    assertThat(page.getTitle()).isEqualTo(multipleValidationsPageTitle);
-//    var actualErrorMessages = page.getInputErrors("multipleValidations");
-//    assertThat(actualErrorMessages.text()).contains(moneyErrorMessageKey);
-//    assertThat(actualErrorMessages.text()).contains("not blank is error");
-//  }
 //
 //  @Test
 //  void shouldStayOnPage_whenAnyValidationHasFailed() throws Exception {
