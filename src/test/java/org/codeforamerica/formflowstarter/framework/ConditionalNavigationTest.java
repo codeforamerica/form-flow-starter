@@ -18,13 +18,16 @@ public class ConditionalNavigationTest extends AbstractMockMvcTest {
   void shouldGoToPageWhoseConditionIsSatisfied() throws Exception {
     when(mockedConditionHandler.handleCondition(anyString())).thenReturn(true);
     postExpectingNextPageTitle("first", "firstName", "Testy McTesterson", "Second Page");
-    postExpectingNextPageTitle("second", "Other Page");
   }
 
   @Test
   void shouldNotGoToPageWhoseConditionIsNotSatisfied() throws Exception {
     when(mockedConditionHandler.handleCondition(anyString())).thenReturn(false);
-    postExpectingNextPageTitle("first", "firstName", "Not Testy McTesterson", "Second Page");
-    postExpectingNextPageTitle("second", "Last Page");
+    postExpectingNextPageTitle("first", "firstName", "Not Testy McTesterson", "Other Page");
+  }
+
+  @Test
+  void shouldGoToTheFirstPageInNextPagesIfThereAreTwoPagesWithNoConditions() throws Exception {
+    continueExpectingNextPageTitle("second", "Other Page");
   }
 }

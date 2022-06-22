@@ -231,6 +231,12 @@ public class AbstractMockMvcTest {
     assertThat(nextPage.getTitle()).isEqualTo(nextPageTitle);
   }
 
+  protected void continueExpectingNextPageTitle(String currentPageName, String nextPageTitle)
+      throws Exception {
+    var nextPage = getNextPageAsFormPage(currentPageName);
+    assertThat(nextPage.getTitle()).isEqualTo(nextPageTitle);
+  }
+
   protected void postExpectingRedirect(String pageName, String inputName,
       String value, String expectedNextPageName) throws Exception {
     postExpectingSuccess(pageName, inputName, value);
