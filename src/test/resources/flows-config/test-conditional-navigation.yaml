@@ -3,11 +3,13 @@ flow:
   first:
     nextScreens:
       - name: second
-        condition: nameIsTestyMcTesterson
-      - name: other
   second:
     nextScreens:
       - name: last
+      - name: other
+        condition: nameIsTestyMcTesterson
   other:
     nextScreens:
       - name: last
+  last:
+    nextScreens:
