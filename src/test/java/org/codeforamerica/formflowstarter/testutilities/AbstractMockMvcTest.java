@@ -484,6 +484,11 @@ public class AbstractMockMvcTest {
     getPage(getPageName).andExpect(redirectedUrl("/pages/" + redirectPageName));
   }
 
+  protected FormScreen goBackTo(String getPageName)
+    throws Exception {
+    return new FormScreen(getPage(getPageName));
+  }
+
   protected void assertCorrectPageTitle(String pageName, String pageTitle) throws Exception {
     assertThat(new FormScreen(getPage(pageName)).getTitle()).isEqualTo(pageTitle);
   }

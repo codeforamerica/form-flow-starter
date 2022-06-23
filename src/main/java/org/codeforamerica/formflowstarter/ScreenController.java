@@ -91,7 +91,7 @@ public class ScreenController {
       @PathVariable String screen,
       HttpSession httpSession
   ) {
-    var formDataSubmission = convertToMultiOrSingleValueMap(formData);
+    var formDataSubmission = removeEmptyValuesAndFlatten(formData);
     var submission = getSubmission(httpSession);
 
     var errorMessages = validationService.validate(flow, formDataSubmission);
@@ -118,7 +118,7 @@ public class ScreenController {
       submissionService.save(submission);
     } else {
       submission.setFlow(flow);
-      submission.setInputData(convertToMultiOrSingleValueMap(formData));
+      submission.setInputData(removeEmptyValuesAndFlatten(formData));
       submissionService.save(submission);
       httpSession.setAttribute("id", submission.getId());
     }
@@ -139,7 +139,7 @@ public class ScreenController {
       if (submissionOptional.isPresent()) {
         Submission submission = submissionOptional.get();
 
-        var formDataSubmission = convertToMultiOrSingleValueMap(formData);
+        var formDataSubmission = removeEmptyValuesAndFlatten(formData);
         Map<String, Object> inputData = submission.getInputData();
 
         inputData.forEach((key, value) -> {
@@ -155,8 +155,8 @@ public class ScreenController {
   }
 
   @NotNull
-  private Map<String, Object> convertToMultiOrSingleValueMap(MultiValueMap<String, String> model) {
-    return model.entrySet().stream()
+  private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
+    return formData.entrySet().stream()
         // Filter out empty value in array with multiple values (empty value was created from hidden input)
         .map(entry -> {
           if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
@@ -164,6 +164,7 @@ public class ScreenController {
           }
           return entry;
         })
+        // Flatten arrays to be single values if the array contains one item
         .collect(Collectors.toMap(
             Entry::getKey,
             entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()

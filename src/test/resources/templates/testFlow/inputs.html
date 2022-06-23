@@ -15,30 +15,30 @@
                 <th:block
                     th:replace="'fragments/inputs/text' ::
                             text(inputName='textInput',
-                            label='textInput')"/>
+                            label='textInput')" />
                 <th:block th:replace="'fragments/inputs/textArea' ::
                           textArea(inputName='areaInput',
-                          label='areaInput')"/>
+                          label='areaInput')" />
                 <th:block th:replace="'fragments/inputs/date' ::
                           date(inputName='date',
-                          label=#{first-page.text-date-label})"/>
-<!--                <th:block th:replace="'fragments/inputs/number' ::-->
-<!--                          number(inputName='age2',-->
-<!--                          label=#{first-page.number-input-label},-->
-<!--                          helpText=#{first-page.number-input-label},-->
-<!--                          placeholder=#{first-page.number-input-placeholder})"/>-->
-<!--                <th:block th:replace="'fragments/inputs/fieldset' ::-->
-<!--                          fieldset(inputName='gender',-->
-<!--                          label='Actually a legend',-->
-<!--                          fieldsetHelpText='Helper text',-->
-<!--                          content=~{::genderContent})">-->
-<!--                  <th:block th:ref="genderContent">-->
-<!--                    <th:block-->
-<!--                        th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='MALE', label='A tall man', checkboxHelpText='This is helping, right?', checkboxIcon='favorite')"/>-->
-<!--                    <th:block-->
-<!--                        th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='FEMALE', label='Female')"/>-->
-<!--                  </th:block>-->
-<!--                </th:block>-->
+                          label='dateInput')" />
+                <th:block th:replace="'fragments/inputs/number' ::
+                          number(inputName='numberInput',
+                          label='numberInput')" />
+                <th:block th:replace="'fragments/inputs/fieldset' ::
+                          fieldset(inputName='checkboxInput',
+                          label='checkboxInput',
+                          content=~{::checkboxContent})">
+                  <th:block th:ref="checkboxContent">
+                    <th:block
+                        th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='checkboxSet',value='A', label='Input A')"/>
+                    <th:block
+                        th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='checkboxSet',value='B', label='Input B')"/>
+                  </th:block>
+                </th:block>
+
+                <th:block
+                    th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='checkboxInput',value='1', label='Single checkbox')"/>
 <!--                <th:block th:replace="'fragments/inputs/fieldset' ::-->
 <!--                          fieldset(inputName='favoriteColor',-->
 <!--                          label='What\'s your favorite color?',-->

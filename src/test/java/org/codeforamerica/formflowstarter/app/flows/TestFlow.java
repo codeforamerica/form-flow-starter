@@ -1,5 +1,6 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
+import java.awt.Checkbox;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -16,6 +17,9 @@ public class TestFlow {
   String dateDay;
   String dateMonth;
   String dateYear;
+  String numberInput;
+  List<String> checkboxSet;
+  String checkboxInput;
 
   @NotBlank(message = "Don't leave this blank")
   @Size(min = 2, message = "You must enter a value 2 characters or longer")

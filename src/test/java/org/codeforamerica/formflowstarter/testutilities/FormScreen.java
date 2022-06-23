@@ -114,12 +114,19 @@ public class FormScreen {
     assertThat(actualUrl).isEqualTo(expectedUrl);
   }
 
-  public List<String> getCheckboxValues(String inputName) {
+  public List<String> getCheckboxSetValues(String inputName) {
     return html.select("input[name='%s']".formatted(inputName)).stream()
         .filter(element -> element.hasAttr("checked"))
         .map(element -> element.attr("value"))
         .toList();
 
+  }
+
+  public String getCheckboxValue(String inputName) {
+    return html.select("input[name='%s']".formatted(inputName)).stream()
+        .filter(element -> element.hasAttr("checked"))
+        .map(element -> element.attr("value"))
+        .toList().get(0);
   }
 
   public String getSelectValue(String inputName) {

@@ -1,3 +1,5 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/formflow-test
   thymeleaf:
     prefix: classpath:/templates/
