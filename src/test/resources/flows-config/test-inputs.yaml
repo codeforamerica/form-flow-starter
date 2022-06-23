@@ -1,0 +1,7 @@
+name: testFlow
+flow:
+  inputs:
+    nextScreens:
+      - name: success
+  success:
+    nextScreens:

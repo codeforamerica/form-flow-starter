@@ -63,7 +63,7 @@ public class FormScreen {
   }
 
   public String getInputValue(String inputName) {
-    return html.select("input[name='%s[]']".formatted(inputName)).attr("value");
+    return html.select("input[name='%s']".formatted(inputName)).attr("value");
   }
 
   public String getCardValue(String title) {
@@ -87,21 +87,21 @@ public class FormScreen {
   }
 
   public Element getInputByName(String name) {
-    return html.select("input[name='%s[]']".formatted(name)).first();
+    return html.select("input[name='%s']".formatted(name)).first();
   }
 
   public Element getElementByText(String text) {
     return html.getElementsContainingText(text).first();
   }
 
-  public String getBirthDateValue(String inputName, DatePart datePart) {
+  public String getDateValue(String inputName, DatePart datePart) {
     return html.select(
-        "input[name='%s[]']:nth-of-type(%d)".formatted(inputName, datePart.getPosition())
+        "input[name='%s']:nth-of-type(%d)".formatted(inputName, datePart.getPosition())
     ).attr("value");
   }
 
   public String getRadioValue(String inputName) {
-    return html.select("input[name='%s[]']".formatted(inputName)).stream()
+    return html.select("input[name='%s']".formatted(inputName)).stream()
         .filter(element -> element.hasAttr("checked"))
         .findFirst()
         .map(element -> element.attr("value"))
@@ -115,7 +115,7 @@ public class FormScreen {
   }
 
   public List<String> getCheckboxValues(String inputName) {
-    return html.select("input[name='%s[]']".formatted(inputName)).stream()
+    return html.select("input[name='%s']".formatted(inputName)).stream()
         .filter(element -> element.hasAttr("checked"))
         .map(element -> element.attr("value"))
         .toList();
@@ -123,7 +123,7 @@ public class FormScreen {
   }
 
   public String getSelectValue(String inputName) {
-    var optionElements = html.select("select[name='%s[]']".formatted(inputName)).select("option");
+    var optionElements = html.select("select[name='%s']".formatted(inputName)).select("option");
     return optionElements.stream()
         .filter(element -> element.hasAttr("selected"))
         .findFirst()
@@ -135,7 +135,11 @@ public class FormScreen {
     return html.select(selector).first();
   }
 
+  public String getTextAreaAreaValue(String inputName) {
+    return html.select("textarea[name='%s']".formatted(inputName)).text();
+  }
+
   public String getTextAreaAriaLabelledBy(String inputName) {
-    return html.select("textarea[name='%s[]']".formatted(inputName)).attr("aria-labelledby");
+    return html.select("textarea[name='%s']".formatted(inputName)).attr("aria-labelledby");
   }
 }

@@ -11,6 +11,12 @@ public class TestFlow {
   @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
   String firstName;
 
+  String textInput;
+  String areaInput;
+  String dateDay;
+  String dateMonth;
+  String dateYear;
+
   @NotBlank(message = "Don't leave this blank")
   @Size(min = 2, message = "You must enter a value 2 characters or longer")
   String inputWithMultipleValidations;
