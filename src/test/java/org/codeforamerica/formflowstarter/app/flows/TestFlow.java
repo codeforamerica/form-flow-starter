@@ -20,6 +20,11 @@ public class TestFlow {
   String numberInput;
   List<String> checkboxSet;
   String checkboxInput;
+  String radioInput;
+  String selectInput;
+  String moneyInput;
+  String phoneInput;
+  String ssnInput;
 
   @NotBlank(message = "Don't leave this blank")
   @Size(min = 2, message = "You must enter a value 2 characters or longer")

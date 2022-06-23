@@ -26,18 +26,29 @@ public class InputsTest extends AbstractMockMvcTest {
     String dateDay = "30";
     String dateYear = "2020";
     String numberInput = "123";
-    List<String> checkboxSet = List.of("A", "B");
-    String checkboxInput = "1";
+    List<String> checkboxSet = List.of("Checkbox A", "Checkbox B");
+    String checkboxInput = "checkbox value";
+    String radioInput = "Radio B";
+    String selectInput = "Select B";
+    String moneyInput = "100";
+    String phoneInput = "(555) 555-1234";
+    String ssnInput = "333-22-4444";
 
     postExpectingNextPageTitle("inputs",
-        Map.of("textInput", List.of(textInput),
-               "areaInput", List.of(areaInput),
-               "dateMonth", List.of(dateMonth),
-               "dateDay", List.of(dateDay),
-               "dateYear", List.of(dateYear),
-               "numberInput", List.of(numberInput),
-               "checkboxSet", checkboxSet,
-               "checkboxInput", List.of(checkboxInput)),
+        Map.ofEntries(
+            Map.entry("textInput", List.of(textInput)),
+            Map.entry("areaInput", List.of(areaInput)),
+            Map.entry("dateMonth", List.of(dateMonth)),
+            Map.entry("dateDay", List.of(dateDay)),
+            Map.entry("dateYear", List.of(dateYear)),
+            Map.entry("numberInput", List.of(numberInput)),
+            Map.entry("checkboxSet", checkboxSet),
+            Map.entry("checkboxInput", List.of(checkboxInput)),
+            Map.entry("radioInput", List.of(radioInput)),
+            Map.entry("selectInput", List.of(selectInput)),
+            Map.entry("moneyInput", List.of(moneyInput)),
+            Map.entry("phoneInput", List.of(phoneInput)),
+            Map.entry("ssnInput", List.of(ssnInput))),
         "Success");
 
     var inputsScreen = goBackTo("inputs");
@@ -50,6 +61,10 @@ public class InputsTest extends AbstractMockMvcTest {
     assertThat(inputsScreen.getInputValue("numberInput")).isEqualTo(numberInput);
     assertThat(inputsScreen.getCheckboxSetValues("checkboxSet")).isEqualTo(checkboxSet);
     assertThat(inputsScreen.getCheckboxValue("checkboxInput")).isEqualTo(checkboxInput);
-
+    assertThat(inputsScreen.getRadioValue("radioInput")).isEqualTo(radioInput);
+    assertThat(inputsScreen.getSelectValue("selectInput")).isEqualTo(selectInput);
+    assertThat(inputsScreen.getInputValue("moneyInput")).isEqualTo(moneyInput);
+    assertThat(inputsScreen.getInputValue("phoneInput")).isEqualTo(phoneInput);
+    assertThat(inputsScreen.getInputValue("ssnInput")).isEqualTo(ssnInput);
   }
 }
