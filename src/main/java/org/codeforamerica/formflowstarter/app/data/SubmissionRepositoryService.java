@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class SubmissionService {
+public class SubmissionRepositoryService {
 
   @Autowired
   SubmissionRepository repository;

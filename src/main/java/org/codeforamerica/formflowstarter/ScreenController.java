@@ -18,7 +18,7 @@ import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
 import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
 import org.codeforamerica.formflowstarter.app.data.Submission;
-import org.codeforamerica.formflowstarter.app.data.SubmissionService;
+import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -35,18 +35,18 @@ public class ScreenController {
   private final List<FlowConfiguration> flowConfigurations;
   private final InputsConfiguration inputsConfiguration;
   private final ConditionHandler conditionHandler;
-  private final SubmissionService submissionService;
+  private final SubmissionRepositoryService submissionRepositoryService;
   private final ValidationService validationService;
 
   public ScreenController(
       List<FlowConfiguration> flowConfigurations,
       InputsConfiguration inputsConfiguration,
-      SubmissionService submissionService,
+      SubmissionRepositoryService submissionRepositoryService,
       ConditionHandler conditionHandler,
       ValidationService validationService) {
     this.flowConfigurations = flowConfigurations;
     this.inputsConfiguration = inputsConfiguration;
-    this.submissionService = submissionService;
+    this.submissionRepositoryService = submissionRepositoryService;
     this.conditionHandler = conditionHandler;
     this.validationService = validationService;
   }
@@ -115,11 +115,11 @@ public class ScreenController {
       });
       submission.setInputData(formDataSubmission);
 
-      submissionService.save(submission);
+      submissionRepositoryService.save(submission);
     } else {
       submission.setFlow(flow);
       submission.setInputData(removeEmptyValuesAndFlatten(formData));
-      submissionService.save(submission);
+      submissionRepositoryService.save(submission);
       httpSession.setAttribute("id", submission.getId());
     }
 
@@ -135,7 +135,7 @@ public class ScreenController {
   ) {
     Long id = (Long) httpSession.getAttribute("id");
     if (id != null) {
-      Optional<Submission> submissionOptional = submissionService.findById(id);
+      Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
       if (submissionOptional.isPresent()) {
         Submission submission = submissionOptional.get();
 
@@ -147,7 +147,7 @@ public class ScreenController {
         });
         submission.setInputData(formDataSubmission);
         submission.setSubmittedAt(Date.from(Instant.now()));
-        submissionService.save(submission);
+        submissionRepositoryService.save(submission);
       }
     }
     // Fire async events: send email, generate PDF, send to API, etc...
@@ -234,7 +234,7 @@ public class ScreenController {
   private Submission getSubmission(HttpSession httpSession) {
     var id = (Long) httpSession.getAttribute("id");
     if (id != null) {
-      Optional<Submission> submissionOptional = submissionService.findById(id);
+      Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
       return submissionOptional.orElseGet(Submission::new);
     } else {
       return new Submission();

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(properties = {"flowsConfig=flows-config/test-inputs.yaml"})
+//@DirtiesContext()
 public class InputsTest extends AbstractMockMvcTest {
 
   @Override
