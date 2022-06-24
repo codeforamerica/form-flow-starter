@@ -1,21 +1,51 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
+import com.github.microtweak.validator.conditional.core.constraint.NotEmptyWhen;
 import java.util.ArrayList;
+import com.github.microtweak.validator.conditional.core.ConditionalValidate;
+import com.github.microtweak.validator.conditional.core.constraint.NotNullWhen;
+import com.github.microtweak.validator.conditional.core.constraint.SizeWhen;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@ConditionalValidate
+//@NotNullIfAnotherFieldHasValue(
+//    fieldName = "useEmail",
+//    fieldValue = "true",
+//    dependFieldName = "emailAddress")
+//@NotNullIfAnotherFieldHasValue(
+//    fieldName = "userSms",
+//    fieldValue = "true",
+//    dependFieldName = "phoneNumber")
 public class Ubi {
 
   @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
   @Size(min = 2, message = "{validations.test}")
   String firstName;
 
-  @NotBlank
+  Boolean testCondition;
+
+//  @NotEmptyWhen(expression = "null")
+//  @NotEmpty
   String lastName;
+
+// No idea how this would get called
+//  @AssertTrue(message = "Please fill out email")
+//  public boolean isEmail() {
+//    if (this.testCondition) {
+//      return this.lastName != null;
+//    }
+//
+//    return false;
+//  }
 
   @Email
   String emailAddress;
@@ -55,3 +85,20 @@ public class Ubi {
 
   String ssn;
 }
+
+
+//public class SampleClass {
+//
+//  private Boolean useEmail;
+//  private String emailAddress;
+//
+//  @AssertTrue(message = "Please fill out email")
+//  public boolean isEmail() {
+//    if (this.useEmail) {
+//      if (this.emailAddress != null)
+//        return true;
+//    }
+//
+//    return false;
+//  }
+//}

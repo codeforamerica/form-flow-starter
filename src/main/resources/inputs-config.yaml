@@ -1,6 +1,7 @@
 inputs:
   firstName:
-    name: firstName
+#    validation: NOT_BLANK
+#    condition: emailIsSelected
     type: TEXT
   lastName:
     name: lastName
