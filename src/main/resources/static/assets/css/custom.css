@@ -231,3 +231,8 @@ body,
 .vertical-align-middle {
   vertical-align: middle;
 }
+
+.form-group--error fieldset .text--error {
+  margin-top: 30px;
+  margin-bottom: 0;
+}

@@ -1,6 +1,5 @@
 package org.codeforamerica.formflowstarter.testutilities;
 
-import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.formflowstarter.testutilities.TestUtils.resetSubmission;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.codeforamerica.formflowstarter.app.data.Submission;
@@ -172,13 +172,12 @@ public class AbstractMockMvcTest {
   protected ResultActions postToUrlExpectingSuccess(String postUrl, String redirectUrl,
       Map<String, List<String>> params) throws
       Exception {
-    Map<String, List<String>> paramsWithProperInputNames = fixInputNamesForParams(params);
     return mockMvc.perform(
         post(postUrl)
 //
 //            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
+            .params(new LinkedMultiValueMap<>(params))
     ).andExpect(redirectedUrl(redirectUrl));
   }
 
@@ -294,8 +293,9 @@ public class AbstractMockMvcTest {
 
   protected ResultActions postExpectingFailure(String pageName, Map<String, List<String>> params)
       throws Exception {
-    Map<String, List<String>> paramsWithProperInputNames = fixInputNamesForParams(params);
+
     String postUrl = getUrlForPageName(pageName);
+    var paramsWithProperInputNames = fixInputNamesForParams(params);
     return mockMvc.perform(
         post(postUrl)
 //
@@ -318,7 +318,13 @@ public class AbstractMockMvcTest {
       String value, String errorMessage) throws Exception {
     postExpectingFailure(pageName, inputName, value);
     assertPageHasInputError(pageName, inputName, errorMessage);
+  }
 
+  protected void postExpectingFailureAndAssertErrorDisplaysForThatInput(String pageName,
+      String inputName,
+      List<String> value, String errorMessage) throws Exception {
+    postExpectingFailure(pageName, inputName, value);
+    assertPageHasInputError(pageName, inputName, errorMessage);
   }
 
   protected void postExpectingFailureAndAssertErrorsDisplaysForThatInput(String pageName,
@@ -356,7 +362,7 @@ public class AbstractMockMvcTest {
   //TODO Get rid of this maybe?
   private Map<String, List<String>> fixInputNamesForParams(Map<String, List<String>> params) {
     return params.entrySet().stream()
-        .collect(toMap(e -> e.getKey(), Map.Entry::getValue));
+        .collect(Collectors.toMap(e -> e.getKey() + "[]" , Map.Entry::getValue));
   }
 
   protected ResultActions postWithoutData(String pageName) throws Exception {

@@ -1,11 +1,7 @@
 package org.codeforamerica.formflowstarter.app.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractSubmissionRepositoryTest;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -18,15 +14,15 @@ class SubmissionRepositoryTest extends AbstractSubmissionRepositoryTest {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  @Test
-  void shouldSaveSubmissionsWithSequentialIds() {
-    Submission firstSubmission = new Submission();
-    Submission secondSubmission = new Submission();
-    submissionRepositoryService.save(firstSubmission);
-    submissionRepositoryService.save(secondSubmission);
-    assertThat(firstSubmission.getId()).isEqualTo(12);
-    assertThat(secondSubmission.getId()).isEqualTo(13);
-  }
+//  @Test
+//  void shouldSaveSubmissionsWithSequentialIds() {
+//    Submission firstSubmission = new Submission();
+//    Submission secondSubmission = new Submission();
+//    submissionRepositoryService.save(firstSubmission);
+//    submissionRepositoryService.save(secondSubmission);
+//    assertThat(firstSubmission.getId()).isEqualTo(12);
+//    assertThat(secondSubmission.getId()).isEqualTo(13);
+//  }
 
 //  @Test
 //  void shouldPrefixIdWithRandom3DigitSalt() {

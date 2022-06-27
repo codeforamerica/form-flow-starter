@@ -2,6 +2,7 @@ package org.codeforamerica.formflowstarter.framework;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import java.util.List;
 import org.codeforamerica.formflowstarter.ValidationService;
 import org.codeforamerica.formflowstarter.testutilities.AbstractMockMvcTest;
 import org.codeforamerica.formflowstarter.testutilities.FormScreen;
@@ -88,6 +89,12 @@ public class ValidationTest extends AbstractMockMvcTest {
     postExpectingFailureAndAssertErrorDisplaysForThatInput("first", "firstName", "", "Make sure to provide a first name.");
     postExpectingSuccess(pageName, inputName, "not blank");
     assertPageDoesNotHaveInputError(pageName, inputName);
+  }
+
+  @Test
+  void shouldValidateCheckboxSetAsStringArray() throws Exception {
+    postExpectingFailureAndAssertErrorDisplaysForThatInput("pageWithCheckboxSetInput",
+        "favoriteFruitCheckbox", List.of(""), "Please select at least one");
   }
 
 //

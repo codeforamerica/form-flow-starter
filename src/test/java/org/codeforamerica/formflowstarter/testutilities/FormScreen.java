@@ -39,7 +39,7 @@ public class FormScreen {
   }
 
   public Elements getInputErrors(String inputName) {
-    return html.select("input[name='%s'] ~ p.text--error".formatted(inputName));
+    return html.select("input[name^='%s'] ~ p.text--error".formatted(inputName));
   }
 
   public Element getInputError(String inputName) {
@@ -115,7 +115,7 @@ public class FormScreen {
   }
 
   public List<String> getCheckboxSetValues(String inputName) {
-    return html.select("input[name='%s']".formatted(inputName)).stream()
+    return html.select("input[name^='%s']".formatted(inputName)).stream()
         .filter(element -> element.hasAttr("checked"))
         .map(element -> element.attr("value"))
         .toList();

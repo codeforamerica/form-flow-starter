@@ -9,21 +9,21 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title='Checkbox input page')"/>
-          <th:block th:replace="'fragments/form' :: form(action='/testFlow/pageWithCheckboxInput', content=~{::formContent})">
+          <th:block th:replace="'fragments/form' :: form(action='/testFlow/pageWithCheckboxSetInput', content=~{::formContent})">
             <th:block th:ref="formContent">
-              <th:block th:replace="'fragments/inputs/fieldset' ::
-                fieldset(inputName='favoriteFruitCheckbox',
+              <th:block th:replace="'fragments/inputs/checkboxFieldset' ::
+                checkboxFieldset(inputName='favoriteFruitCheckbox',
                 label='favoriteFruit',
                 fieldsetHelpText='favoriteFruitGoesHere',
                 content=~{::favoriteFruit})">
                   <th:block th:ref="favoriteFruit">
                     <!-- Copy the below input if you want to add more -->
                     <th:block
-                      th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='favoriteFruitCheckbox',value='Apple', label='Apple')"/>
+                      th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='favoriteFruitCheckbox',value='Apple', label='Apple')"/>
                     <th:block
-                        th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='favoriteFruitCheckbox',value='Orange', label='Orange')"/>
+                        th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='favoriteFruitCheckbox',value='Orange', label='Orange')"/>
                     <th:block
-                        th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='favoriteFruitCheckbox',value='Banana', label='Banana')"/>
+                        th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='favoriteFruitCheckbox',value='Banana', label='Banana')"/>
                   </th:block>
               </th:block>
             <div class="form-card__footer">

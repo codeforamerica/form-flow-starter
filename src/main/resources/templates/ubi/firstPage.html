@@ -32,20 +32,20 @@
                           label=#{first-page.number-input-label},
                           helpText=#{first-page.number-input-label},
                           placeholder=#{first-page.number-input-placeholder})"/>
-              <th:block th:replace="'fragments/inputs/fieldset' ::
-                          fieldset(inputName='gender',
+              <th:block th:replace="'fragments/inputs/checkboxFieldset' ::
+                          checkboxFieldset(inputName='gender',
                           label='Actually a legend',
                           fieldsetHelpText='Helper text',
                           content=~{::genderContent})">
                 <th:block th:ref="genderContent">
                   <th:block
-                      th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='MALE', label='A tall man', checkboxHelpText='This is helping, right?', checkboxIcon='favorite')"/>
+                      th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='gender',value='MALE', label='A tall man', checkboxHelpText='This is helping, right?', checkboxIcon='favorite')"/>
                   <th:block
-                      th:replace="'fragments/inputs/checkbox' :: checkbox(inputName='gender',value='FEMALE', label='Female')"/>
+                      th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='gender',value='FEMALE', label='Female')"/>
                 </th:block>
               </th:block>
-              <th:block th:replace="'fragments/inputs/fieldset' ::
-                          fieldset(inputName='favoriteColor',
+              <th:block th:replace="'fragments/inputs/radioFieldset' ::
+                          radioFieldset(inputName='favoriteColor',
                           label='What\'s your favorite color?',
                           fieldsetHelpText='The only true answer is blue',
                           content=~{::favoriteColorContent})">

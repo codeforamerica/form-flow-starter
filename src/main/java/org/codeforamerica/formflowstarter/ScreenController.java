@@ -2,6 +2,7 @@ package org.codeforamerica.formflowstarter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -156,9 +157,13 @@ public class ScreenController {
 
   @NotNull
   private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
+    //TODO Check if we are somehow incorrectly handling the empty checkbox scenario
     return formData.entrySet().stream()
-        // Filter out empty value in array with multiple values (empty value was created from hidden input)
         .map(entry -> {
+          // An empty checkboxSet has a hidden value of "" which needs to be removed
+          if (entry.getKey().contains("[]") && entry.getValue().size() == 1) {
+            entry.setValue(new ArrayList<>());
+          }
           if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
             entry.getValue().remove(0);
           }
@@ -167,7 +172,7 @@ public class ScreenController {
         // Flatten arrays to be single values if the array contains one item
         .collect(Collectors.toMap(
             Entry::getKey,
-            entry -> entry.getValue().size() == 1 ? entry.getValue().get(0) : entry.getValue()
+            entry -> entry.getValue().size() == 1 && !entry.getKey().contains("[]") ? entry.getValue().get(0) : entry.getValue()
         ));
   }
 

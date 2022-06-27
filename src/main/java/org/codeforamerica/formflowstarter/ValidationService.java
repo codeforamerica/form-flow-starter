@@ -29,6 +29,9 @@ public class ValidationService {
     HashMap<String, ArrayList<String>> validationMessages = new HashMap<>();
     formDataSubmission.forEach((key, value) -> {
       var messages = new ArrayList<String>();
+      if (key.contains("[]")) {
+        key = key.replace("[]", "");
+      }
       validator.validateValue(flowClass, key, value)
           .forEach(violation -> messages.add(violation.getMessage()));
       if (!messages.isEmpty()) {
