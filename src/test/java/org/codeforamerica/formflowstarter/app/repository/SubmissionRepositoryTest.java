@@ -1,28 +1,34 @@
 package org.codeforamerica.formflowstarter.app.repository;
 
-import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
-import org.codeforamerica.formflowstarter.testutilities.AbstractSubmissionRepositoryTest;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.codeforamerica.formflowstarter.app.data.Submission;
+import org.codeforamerica.formflowstarter.app.data.SubmissionRepository;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
-//@DirtiesContext(MethodMode.AFTER_METHOD)
-class SubmissionRepositoryTest extends AbstractSubmissionRepositoryTest {
-
-//  @Autowired
-  private SubmissionRepositoryService submissionRepositoryService;
+@ActiveProfiles("test")
+@Sql(statements = {"ALTER SEQUENCE submissions_id_seq RESTART WITH 12", "TRUNCATE TABLE submissions"})
+@SpringBootTest
+class SubmissionRepositoryTest {
 
   @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private SubmissionRepository submissionRepository;
 
-//  @Test
-//  void shouldSaveSubmissionsWithSequentialIds() {
-//    Submission firstSubmission = new Submission();
-//    Submission secondSubmission = new Submission();
-//    submissionRepositoryService.save(firstSubmission);
-//    submissionRepositoryService.save(secondSubmission);
-//    assertThat(firstSubmission.getId()).isEqualTo(12);
-//    assertThat(secondSubmission.getId()).isEqualTo(13);
-//  }
+  @Test
+  void shouldSaveSubmissionsWithSequentialIds() {
+    Submission firstSubmission = new Submission();
+    Submission secondSubmission = new Submission();
+    firstSubmission.setFlow("testFlow");
+    secondSubmission.setFlow("testFlow");
+    submissionRepository.save(firstSubmission);
+    submissionRepository.save(secondSubmission);
+    assertThat(firstSubmission.getId()).isEqualTo(12);
+    assertThat(secondSubmission.getId()).isEqualTo(13);
+  }
 
 //  @Test
 //  void shouldPrefixIdWithRandom3DigitSalt() {
