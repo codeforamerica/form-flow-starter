@@ -2,6 +2,12 @@ package org.codeforamerica.formflowstarter.app.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepository;
 import org.junit.jupiter.api.Test;
@@ -30,6 +36,33 @@ class SubmissionRepositoryTest {
     assertThat(secondSubmission.getId()).isEqualTo(13);
   }
 
+  @Test
+  void shouldSaveSubmission() {
+
+    Submission submission = Submission.builder()
+        .id(123L)
+        .inputData(Map.of(
+            "testKey", "this is a test value",
+            "otherTestKey", List.of("A", "B", "C")))
+        .createdAt(Date.from(Instant.now().minus(Duration.ofDays(10))))
+        .flow("testFlow")
+        .build();
+
+    submissionRepository.save(submission);
+
+    Optional<Submission> savedSubmissionOptional = submissionRepository.findById(123L);
+    Submission savedSubmission = null;
+    if (savedSubmissionOptional.isPresent()) {
+      savedSubmission = savedSubmissionOptional.get();
+    }
+    assertThat(savedSubmission.getId()).isEqualTo(submission.getId());
+    assertThat(savedSubmission.getFlow()).isEqualTo("foo");
+    assertThat(savedSubmission.getCreatedAt()).isEqualTo(submission.getCreatedAt());
+    assertThat(savedSubmission.getInputData()).isEqualTo(submission.getInputData());
+    assertThat(submission.getSubmittedAt()).isNotNull();
+    assertThat(savedSubmission.getSubmittedAt()).isNotNull();
+  }
+
 //  @Test
 //  void shouldPrefixIdWithRandom3DigitSalt() {
 //    String nextId = applicationRepository.getNextId();
@@ -47,46 +80,6 @@ class SubmissionRepositoryTest {
 //
 //    assertThat(nextId).hasSize(10);
 //    assertThat(nextId.substring(3, 8)).isEqualTo("00000");
-//  }
-//
-//  @Test
-//  void shouldSaveApplication() {
-//    ApplicationData applicationData = new TestApplicationDataBuilder()
-//        .withPageData("somePage", "someInput", emptyList())
-//        .withSubworkflow("someGroup", new PagesDataBuilder()
-//            .withPageData("someGroupedPage", "someGroupedPageInput", "someGroupedPageValue"))
-//        .build();
-//
-//    String contentType = "image/jpeg";
-//    String originalFilename = "originalFilename";
-//    MockMultipartFile image = new MockMultipartFile("image", originalFilename, contentType,
-//        "test".getBytes());
-//    applicationData.addUploadedDoc(image, "someS3FilePath", "someDataUrl", contentType);
-//
-//    Application application = Application.builder()
-//        .id("someid")
-//        .completedAt(ZonedDateTime.now(UTC).truncatedTo(ChronoUnit.MILLIS))
-//        .applicationData(applicationData)
-//        .county(Olmsted)
-//        .timeToComplete(Duration.ofSeconds(12415))
-//        .build();
-//
-//    applicationRepository.save(application);
-//
-//    Application savedApplication = applicationRepository.find("someid");
-//    assertThat(savedApplication.getId()).isEqualTo(application.getId());
-//    assertThat(savedApplication.getCompletedAt()).isEqualTo(application.getCompletedAt());
-//    assertThat(savedApplication.getApplicationData()).isEqualTo(application.getApplicationData());
-//    assertThat(savedApplication.getCounty()).isEqualTo(application.getCounty());
-//    assertThat(savedApplication.getTimeToComplete()).isEqualTo(application.getTimeToComplete());
-//    assertThat(savedApplication.getApplicationStatuses()).isEmpty();
-//
-//    UploadedDocument uploadedDoc = savedApplication.getApplicationData().getUploadedDocs().get(0);
-//    assertThat(uploadedDoc.getFilename()).isEqualTo(originalFilename);
-//    assertThat(uploadedDoc.getS3Filepath()).isEqualTo("someS3FilePath");
-//    assertThat(uploadedDoc.getThumbnailFilepath()).isEqualTo("someDataUrl");
-//    assertThat(uploadedDoc.getType()).isEqualTo(contentType);
-//    assertThat(uploadedDoc.getSize()).isEqualTo(4L);
 //  }
 //
 //  @Test

@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,7 +31,9 @@ import org.springframework.stereotype.Component;
 @Table(name = "submissions")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Component
+@Builder
 public class Submission {
 
   @Id
@@ -56,5 +60,4 @@ public class Submission {
   @Temporal(TIMESTAMP)
   @Column(name="submitted_at")
   private Date submittedAt;
-
 }
