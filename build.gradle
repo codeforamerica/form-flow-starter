@@ -38,10 +38,13 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.jetbrains:annotations:23.0.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.jsoup:jsoup:1.15.1'
 	testImplementation 'org.seleniumhq.selenium:selenium-java'
 	testImplementation 'io.github.bonigarcia:webdrivermanager:5.2.0'
+	testImplementation 'org.awaitility:awaitility'
+	testImplementation 'io.percy:percy-java-selenium:1.0.0'
 }
 
 tasks.named('test') {

@@ -51,4 +51,7 @@ public class Ubi {
   String money;
 
   String ssn;
+  String applicantSsn;
+  String householdMemberSsn;
+  String householdMemberSsn2;
 }
