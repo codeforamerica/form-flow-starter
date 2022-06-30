@@ -11,6 +11,8 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: formflow-test
+          POSTGRES_USER: formflow
+          POSTGRES_PASSWORD: formflow
         options: >-
           --health-cmd pg_isready
           --health-interval 10s

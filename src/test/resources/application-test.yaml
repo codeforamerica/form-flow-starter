@@ -1,11 +1,12 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/formflow-test
+    username: formflow
+    password: formflow
   thymeleaf:
     prefix: classpath:/templates/
   jpa:
     hibernate:
       ddl-auto: update
   main:
-#    allow-bean-definition-overriding: true
     allow-circular-references: true
