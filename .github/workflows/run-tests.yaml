@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:latest
+        image: postgres
         env:
           POSTGRES_DB: formflow-test
           POSTGRES_USER: formflow
@@ -31,7 +31,7 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 #      In [GitHub docs](https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers#testing-the-postgresql-service-container), they have this step that manually connects to Postgres, but do we need to do
-#      something similiar?
+#      something similar?
 #      - name: Connect to PostgreSQL
 #        # Runs a script that creates a PostgreSQL table, populates
 #        # the table with data, and then retrieves the data.
@@ -54,7 +54,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Test with Gradle
-        run: ./gradlew test --rerun-tasks --scan
+        run: ./gradlew test --rerun-tasks
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: formflow-test
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
       - name: Cleanup Gradle Cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
