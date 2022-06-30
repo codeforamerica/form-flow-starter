@@ -49,12 +49,14 @@ jobs:
           # Test psql connection
           PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test -c "select 1"
       - name: Test with Gradle
-        run: ./gradlew test --rerun-tasks --debug --stacktrace
+        run: ./gradlew test --rerun-tasks --debug
 #        didn't seem to work
-#        env:
-#          # The hostname used to communicate with the PostgreSQL service container
-#          POSTGRES_HOST: formflow-test
-#          # The default PostgreSQL port
+        env:
+          POSTGRES_USER: formflow
+          POSTGRES_PASSWORD: formflow
+          # The hostname used to communicate with the PostgreSQL service container
+#          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
 #          POSTGRES_PORT: 5432
       - name: Cleanup Gradle Cache
         run: |
