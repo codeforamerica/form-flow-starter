@@ -59,7 +59,7 @@ jobs:
           # for psql
           sudo apt-get install -y postgresql-client
           # Test psql connection
-          POSTGRES_PASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test -c "select 1"
+          PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test -c "select 1"
       - name: Test with Gradle
         run: ./gradlew test --rerun-tasks
         env:
