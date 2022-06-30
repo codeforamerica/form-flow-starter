@@ -44,20 +44,20 @@ public class Submission {
   private String flow;
 
   @Type(type = "json")
-  @Column(name="input_data", columnDefinition = "jsonb")
+  @Column(name = "input_data", columnDefinition = "jsonb")
   private Map<String, Object> inputData = new HashMap<>();
 
   @CreationTimestamp
   @Temporal(TIMESTAMP)
-  @Column(name="created_at")
+  @Column(name = "created_at")
   private Date createdAt;
 
   @UpdateTimestamp
   @Temporal(TIMESTAMP)
-  @Column(name="updated_at")
+  @Column(name = "updated_at")
   private Date updatedAt;
 
   @Temporal(TIMESTAMP)
-  @Column(name="submitted_at")
+  @Column(name = "submitted_at")
   private Date submittedAt;
 }
