@@ -30,18 +30,6 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
           cache: 'gradle'
-#      In [GitHub docs](https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers#testing-the-postgresql-service-container), they have this step that manually connects to Postgres, but do we need to do
-#      something similar?
-#      - name: Connect to PostgreSQL
-#        # Runs a script that creates a PostgreSQL table, populates
-#        # the table with data, and then retrieves the data.
-#        run: node client.js
-#        # Environment variables used by the `client.js` script to create a new PostgreSQL table.
-#        env:
-#          # The hostname used to communicate with the PostgreSQL service container
-#          POSTGRES_HOST: postgres
-#          # The default PostgreSQL port
-#          POSTGRES_PORT: 5432
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -61,12 +49,13 @@ jobs:
           # Test psql connection
           PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test -c "select 1"
       - name: Test with Gradle
-        run: ./gradlew test --rerun-tasks
-        env:
-          # The hostname used to communicate with the PostgreSQL service container
-          POSTGRES_HOST: formflow-test
-          # The default PostgreSQL port
-          POSTGRES_PORT: 5432
+        run: ./gradlew test --rerun-tasks --debug --stacktrace
+#        didn't seem to work
+#        env:
+#          # The hostname used to communicate with the PostgreSQL service container
+#          POSTGRES_HOST: formflow-test
+#          # The default PostgreSQL port
+#          POSTGRES_PORT: 5432
       - name: Cleanup Gradle Cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
