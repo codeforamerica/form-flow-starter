@@ -3,8 +3,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/formflow-test
     username: formflow
     password: formflow
-    hikari:
-      maximum-pool-size: 2
   thymeleaf:
     prefix: classpath:/templates/
   jpa:
