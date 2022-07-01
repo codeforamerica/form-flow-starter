@@ -51,7 +51,7 @@ jobs:
       - name: Test with Gradle
         run: |
           PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test
-          ./gradlew test --rerun-tasks --debug
+          ./gradlew test --rerun-tasks --stacktrace
 #        didn't seem to work
 #        env:
 #          POSTGRES_USER: formflow
