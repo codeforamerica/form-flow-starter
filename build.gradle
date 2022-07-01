@@ -32,13 +32,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.vladmihalcea:hibernate-types-55:2.16.2'
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.jetbrains:annotations:23.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.jetbrains:annotations:23.0.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'com.h2database:h2'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.jsoup:jsoup:1.15.1'
 	testImplementation 'org.seleniumhq.selenium:selenium-java'
