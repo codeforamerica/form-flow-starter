@@ -49,7 +49,9 @@ jobs:
           # Test psql connection
           PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test -c "select 1"
       - name: Test with Gradle
-        run: ./gradlew test --rerun-tasks --debug
+        run: |
+          PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test
+          ./gradlew test --rerun-tasks --debug
 #        didn't seem to work
 #        env:
 #          POSTGRES_USER: formflow
