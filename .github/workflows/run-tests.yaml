@@ -11,8 +11,8 @@ jobs:
         image: postgres
         env:
           POSTGRES_DB: formflow-test
-#          POSTGRES_USER: formflow
-#          POSTGRES_PASSWORD: formflow
+          POSTGRES_USER: formflow
+          POSTGRES_PASSWORD: formflow
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -51,13 +51,13 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew test --rerun-tasks --debug
 #        didn't seem to work
-        env:
-          POSTGRES_USER: formflow
-          POSTGRES_PASSWORD: formflow
-          # The hostname used to communicate with the PostgreSQL service container
-#          POSTGRES_HOST: localhost
-          # The default PostgreSQL port
-#          POSTGRES_PORT: 5432
+#        env:
+#          POSTGRES_USER: formflow
+#          POSTGRES_PASSWORD: formflow
+#          # The hostname used to communicate with the PostgreSQL service container
+##          POSTGRES_HOST: localhost
+#          # The default PostgreSQL port
+##          POSTGRES_PORT: 5432
       - name: Cleanup Gradle Cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
