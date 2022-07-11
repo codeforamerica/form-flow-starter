@@ -37,7 +37,7 @@ jobs:
         if: ${{ always() }}
         uses: innocarpe/actions-slack@v1.1
         with:
-          status: ${{ status }}
+          status: ${{ job.status }}
           success_text: 'Deploy to staging succeeded :smile:'
           failure_text: 'Deploy to staging failed :frowning:'
         env:
