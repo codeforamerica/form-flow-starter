@@ -33,6 +33,7 @@ jobs:
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
+      - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Announce on Slack
         if: ${{ always() }}
         uses: innocarpe/actions-slack@v1
