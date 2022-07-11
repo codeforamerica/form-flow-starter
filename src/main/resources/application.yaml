@@ -1,7 +1,6 @@
 spring:
   datasource:
-    #url: jdbc:postgresql://localhost:5432/formflow
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://localhost:5432/formflow
   session:
     store-type: jdbc
     jdbc:
