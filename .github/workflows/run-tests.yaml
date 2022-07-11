@@ -6,20 +6,6 @@ jobs:
   test:
     name: Run unit tests
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_DB: formflow-test
-          POSTGRES_USER: formflow
-          POSTGRES_PASSWORD: formflow
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - uses: actions/checkout@v3
       - name: Set up ChromeDriver
@@ -41,25 +27,8 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      # Test if we can connect to db
-      - name: Test database connection
-        run: |
-          # for psql
-          sudo apt-get install -y postgresql-client
-          # Test psql connection
-          PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test -c "select 1"
       - name: Test with Gradle
-        run: |
-          PGPASSWORD=formflow psql -h localhost -p 5432 -U formflow -d formflow-test
-          ./gradlew test --rerun-tasks --stacktrace
-#        didn't seem to work
-#        env:
-#          POSTGRES_USER: formflow
-#          POSTGRES_PASSWORD: formflow
-#          # The hostname used to communicate with the PostgreSQL service container
-##          POSTGRES_HOST: localhost
-#          # The default PostgreSQL port
-##          POSTGRES_PORT: 5432
+        run: ./gradlew clean test --stacktrace
       - name: Cleanup Gradle Cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
