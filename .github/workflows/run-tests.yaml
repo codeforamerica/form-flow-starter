@@ -33,12 +33,11 @@ jobs:
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
-      - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Announce on Slack
 #        if: ${{ always() }}
         uses: innocarpe/actions-slack@v1
         with:
-          status: ${{ job.status }}
+          status: ${{ job.test.status }}
           success_text: 'Deploy to staging succeeded :smile:'
           failure_text: 'Deploy to staging failed :frowning:'
           cancelled_text: 'This is a test'
