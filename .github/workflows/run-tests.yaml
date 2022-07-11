@@ -35,7 +35,7 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/gc.properties
       - name: Announce on Slack
         if: ${{ always() }}
-        uses: innocarpe/actions-slack@v1
+        uses: innocarpe/actions-slack@v1.1
         with:
           status: ${{ status }}
           success_text: 'Deploy to staging succeeded :smile:'
