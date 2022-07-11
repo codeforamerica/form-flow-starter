@@ -29,12 +29,7 @@ jobs:
         run: chmod +x gradlew
       - name: Test with Gradle
         run: ./gradlew clean test --stacktrace
-      - name: Cleanup Gradle Cache
-        run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
       - name: Announce on Slack
-#        if: ${{ always() }}
         uses: innocarpe/actions-slack@v1
         with:
           status: ${{ job.test.status }}
@@ -44,3 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Cleanup Gradle Cache
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
