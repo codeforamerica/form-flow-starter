@@ -30,14 +30,15 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew clean test --stacktrace
       - name: Announce on Slack
-        uses: innocarpe/actions-slack@v1
+        if: always()
+        uses: ravsamhq/notify-slack-action@v1
         with:
           status: ${{ job.status }}
-          success_text: 'Deploy to staging succeeded :smile:'
-          failure_text: 'Deploy to staging failed :frowning:'
-          cancelled_text: 'This is a test'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          notification_title: '{workflow} has {status_message}'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       - name: Cleanup Gradle Cache
         run: |
