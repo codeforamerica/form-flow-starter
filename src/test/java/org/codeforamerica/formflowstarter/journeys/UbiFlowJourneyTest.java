@@ -16,7 +16,7 @@ public class UbiFlowJourneyTest extends JourneyTest {
   @Test
   void fullUbiFlow() {
     assertThat(testPage.getTitle()).isEqualTo("Apply for UBI payments easily online.");
-    testPage.clickButton("Apply now");
+    testPage.clickButton("Apply foo");
   }
 
 // Assert intercom button is present on landing page
