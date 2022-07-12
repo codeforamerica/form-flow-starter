@@ -1,0 +1,33 @@
+name: Deploy to Aptible
+
+on:
+  workflow_run:
+    workflows: [ "Run tests" ]
+    branches: [ main ]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs: { }
+
+jobs:
+  deploy:
+    name: Deploy to Aptible
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      - run: git fetch --prune --unshallow
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2.3.1
+        with:
+          key: ${{ secrets.APTIBLE_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.APTIBLE_KNOWN_HOSTS }}
+      - name: Push to Aptible remote branch
+        run: git push --force git@beta.aptible.com:form-flow-staging/app.git "${{ github.event.inputs.branch }}:master"
+      - name: Install Aptible CLI and deploy to Aptible
+        run: |
+          wget -O aptible-package https://omnibus-aptible-toolbelt.s3.amazonaws.com/aptible/omnibus-aptible-toolbelt/master/206/pkg/aptible-toolbelt_0.16.5%2B20200508143656~ubuntu.16.04-1_amd64.deb
+          sudo dpkg -i aptible-package
+          aptible login --email=${{ secrets.APTIBLE_USERNAME }} --password=${{ secrets.APTIBLE_PASSWORD}}
+          aptible deploy --app app
