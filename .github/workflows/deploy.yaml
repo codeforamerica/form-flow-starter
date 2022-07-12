@@ -23,15 +23,5 @@ jobs:
         with:
           key: ${{ secrets.APTIBLE_SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.APTIBLE_KNOWN_HOSTS }}
-      - name: Check inputs branch
-        run: echo "${{ github.event.inputs.branch }}"
-      - name: Push to Aptible remote branch
-#        was:
-#        run: git push --force git@beta.aptible.com:form-flow-staging/app.git "${{ github.event.inputs.branch }}:master"
-        run: git push --force git@beta.aptible.com:form-flow-staging/app.git main:master
-      - name: Install Aptible CLI and deploy to Aptible
-        run: |
-          wget -O aptible-package https://omnibus-aptible-toolbelt.s3.amazonaws.com/aptible/omnibus-aptible-toolbelt/master/206/pkg/aptible-toolbelt_0.16.5%2B20200508143656~ubuntu.16.04-1_amd64.deb
-          sudo dpkg -i aptible-package
-          aptible login --email=${{ secrets.APTIBLE_USERNAME }} --password=${{ secrets.APTIBLE_PASSWORD}}
-          aptible deploy --app app
+      - name: Push to Aptible remote branch and deploy
+        run: git push --force git@beta.aptible.com:form-flow-staging/app.git "${{ github.event.inputs.branch }}:master"
