@@ -23,6 +23,8 @@ jobs:
         with:
           key: ${{ secrets.APTIBLE_SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.APTIBLE_KNOWN_HOSTS }}
+      - name: Check inputs branch
+        run: echo "${{ github.event.inputs.branch }}"
       - name: Push to Aptible remote branch
 #        was:
 #        run: git push --force git@beta.aptible.com:form-flow-staging/app.git "${{ github.event.inputs.branch }}:master"
