@@ -119,7 +119,7 @@ public class ScreenController {
       submissionRepositoryService.save(submission);
     } else {
       submission.setFlow(flow);
-      submission.setInputData(removeEmptyValuesAndFlatten(formData));
+      submission.setInputData(formDataSubmission);
       submissionRepositoryService.save(submission);
       httpSession.setAttribute("id", submission.getId());
     }

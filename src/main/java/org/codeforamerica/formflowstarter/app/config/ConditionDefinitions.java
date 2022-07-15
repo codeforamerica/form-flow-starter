@@ -1,16 +1,14 @@
 package org.codeforamerica.formflowstarter.app.config;
 
+import java.util.ArrayList;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 
 public class ConditionDefinitions {
 
-  // firstName, lastName, email, address
   public static boolean applicantIsFemale(Submission submission) {
-    // TODO: Tried creating helper methods, but became too complex, waiting to see if a better pattern emerges
-    // Null check on fieldName
-    if (submission.getInputData().containsKey("gender")) {
-      // Condition logic
-      return submission.getInputData().get("gender").equals("FEMALE");
+    var inputData = submission.getInputData();
+    if (inputData.containsKey("gender[]")) {
+      return ((ArrayList<String>) inputData.get("gender[]")).contains("FEMALE");
     }
     return false;
   }
