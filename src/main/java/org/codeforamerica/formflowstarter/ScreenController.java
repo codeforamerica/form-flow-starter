@@ -94,7 +94,10 @@ public class ScreenController {
   ) {
     var formDataSubmission = removeEmptyValuesAndFlatten(formData);
     var submission = getSubmission(httpSession);
+    var currentScreen = getCurrentScreen(flow, screen);
+    if (currentScreen.getGroup() != null) {
 
+    }
     var errorMessages = validationService.validate(flow, formDataSubmission);
     Map<String, Object> model = new HashMap<>();
 

@@ -7,8 +7,15 @@ flow:
     nextScreens:
       - name: secondPage
         condition: applicantIsFemale
-      - name: success
+      - name: addHouseholdMember
   secondPage:
+    nextScreens:
+      - name: addHouseholdMember
+  addHouseholdMember:
+    group: household
+    nextScreens:
+      - name: householdList
+  householdList:
     nextScreens:
       - name: success
   success:

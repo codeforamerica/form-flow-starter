@@ -42,7 +42,8 @@ class SubmissionRepositoryTest {
   void shouldSaveSubmission() {
     var inputData = Map.of(
         "testKey", "this is a test value",
-        "otherTestKey", List.of("A", "B", "C"));
+        "otherTestKey", List.of("A", "B", "C"),
+        "household", List.of(Map.of("firstName", "John", "lastName", "Perez")));
     var timeNow = Instant.now();
     var submission = Submission.builder()
         .inputData(inputData)

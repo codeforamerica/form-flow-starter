@@ -2,6 +2,17 @@ name: testFlow
 flow:
   inputs:
     nextScreens:
+      - name: addHouseholdMember
+  addHouseholdMember:
+    group: household
+    nextScreens:
+      - name: addContactInfo
+  addContactInfo:
+    group: household
+    nextScreens:
+      - name: householdList
+  householdList:
+    nextScreens:
       - name: success
   success:
     nextScreens:
