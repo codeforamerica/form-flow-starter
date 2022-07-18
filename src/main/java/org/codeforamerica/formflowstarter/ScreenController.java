@@ -65,8 +65,13 @@ public class ScreenController {
     if (currentScreen == null) {
       return new ModelAndView("redirect:/error");
     }
-
     Map<String, Object> model = new HashMap<>();
+    if (currentScreen.getGroup() != null) {
+      // We need to keep state about whether we are in a group or if there is an iteration in session
+      // Check session to see if there is an iteration?
+      // if there is a group get its name
+
+    }
 
     model.put("flow", flow);
     model.put("screen", screen);
@@ -95,9 +100,6 @@ public class ScreenController {
     var formDataSubmission = removeEmptyValuesAndFlatten(formData);
     var submission = getSubmission(httpSession);
     var currentScreen = getCurrentScreen(flow, screen);
-    if (currentScreen.getGroup() != null) {
-
-    }
     var errorMessages = validationService.validate(flow, formDataSubmission);
     Map<String, Object> model = new HashMap<>();
 
@@ -160,7 +162,6 @@ public class ScreenController {
 
   @NotNull
   private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
-    //TODO Check if we are somehow incorrectly handling the empty checkbox scenario
     return formData.entrySet().stream()
         .map(entry -> {
           // An empty checkboxSet has a hidden value of "" which needs to be removed

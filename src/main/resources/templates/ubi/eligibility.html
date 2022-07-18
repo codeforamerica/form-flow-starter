@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head(title='Eligibility')"></head>
+<body >
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <main id="content" role="main" class="form-card spacing-above-35">
+        <div class="text--centered">
+          <th:block th:replace="'fragments/icons' :: household" />
+          <p th:text="#{eligibility.step}"></p>
+          <th:block th:replace="'fragments/cardHeader' :: cardHeader(title=#{eligibility.eligibility})" />
+        </div>
+        <div class="boxed-content">
+          <h2 class="text--centered" th:text="#{eligibility.we-will}"></h2>
+          <ol class="list--numbered">
+            <li th:text="#{eligibility.everyone}"></li>
+            <li th:text="#{eligibility.your-income}"></li>
+            <li th:text="#{eligibility.their-income}"></li>
+            <li th:text="#{eligibility.economic}"></li>
+          </ol>
+        </div>
+        <div class="form-card__footer text--centered">
+          <th:block th:replace="'fragments/continueButton' :: continue"/>
+        </div>
+      </main>
+    </div>
+  </section>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

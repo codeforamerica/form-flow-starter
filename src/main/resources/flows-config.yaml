@@ -2,7 +2,15 @@ name: ubi
 flow:
   howThisWorks:
     nextScreens:
-      - name: firstPage
+      - name: eligibility
+  eligibility:
+    nextScreens:
+      - name: housemates
+  housemates:
+    nextScreens:
+      - name: housemateInfo
+  housemateInfo:
+    nextScreens:
   firstPage:
     nextScreens:
       - name: secondPage

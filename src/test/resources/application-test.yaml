@@ -12,7 +12,4 @@ spring:
       ddl-auto: update
   main:
     allow-circular-references: true
-# TODO: Remove extra logging when test CI work is complete
-logging:
-  level:
-    root: debug
+

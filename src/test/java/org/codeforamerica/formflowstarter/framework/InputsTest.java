@@ -69,14 +69,14 @@ public class InputsTest extends AbstractMockMvcTest {
     assertThat(inputsScreen.getInputValue("ssnInput")).isEqualTo(ssnInput);
   }
 
-  @Test
-  void shouldPersistSubflowInputs() throws Exception {
-    // post to that screen
-    postExpectingNextPageTitle("addHouseholdMember",
-        Map.of("firstName", List.of("John"), "lastName", List.of("Perez")),
-        "addContactInfo");
-
-    // verify that the values are persisted
-
-  }
+//  @Test
+//  void shouldPersistSubflowInputs() throws Exception {
+//    // post to that screen
+//    postExpectingNextPageTitle("addHouseholdMember",
+//        Map.of("firstName", List.of("John"), "lastName", List.of("Perez")),
+//        "addContactInfo");
+//
+//    // verify that the values are persisted
+//
+//  }
 }

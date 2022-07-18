@@ -54,4 +54,10 @@ public class Ubi {
   String applicantSsn;
   String householdMemberSsn;
   String householdMemberSsn2;
+
+  String hasHousehold;
+  String householdMemberFirstName;
+  String householdMemberLastName;
+  String householdMemberRelationship;
+  String householdMemberRecentlyMovedToUS;
 }
