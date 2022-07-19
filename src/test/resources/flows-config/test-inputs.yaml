@@ -2,12 +2,8 @@ name: testFlow
 flow:
   inputs:
     nextScreens:
-      - name: addHouseholdMember
-  addHouseholdMember:
-    group: household
-    nextScreens:
-      - name: addContactInfo
-  addContactInfo:
+      - name: housemateInfo
+  housemateInfo:
     group: household
     nextScreens:
       - name: householdList

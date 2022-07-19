@@ -1,5 +1,8 @@
 name: ubi
 flow:
+  firstPage:
+    nextScreens:
+      - name: howThisWorks
   howThisWorks:
     nextScreens:
       - name: eligibility
@@ -10,17 +13,6 @@ flow:
     nextScreens:
       - name: housemateInfo
   housemateInfo:
-    nextScreens:
-  firstPage:
-    nextScreens:
-      - name: secondPage
-        condition: applicantIsFemale
-      - name: addHouseholdMember
-  secondPage:
-    nextScreens:
-      - name: addHouseholdMember
-  addHouseholdMember:
-    group: household
     nextScreens:
       - name: householdList
   householdList:

@@ -31,4 +31,9 @@ public class TestFlow {
   @NotBlank(message = "Don't leave this blank")
   @Size(min = 2, message = "You must enter a value 2 characters or longer")
   String inputWithMultipleValidations;
+
+  String householdMemberFirstName;
+  String householdMemberLastName;
+  String householdMemberRelationship;
+  String householdMemberRecentlyMovedToUS;
 }

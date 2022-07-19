@@ -50,7 +50,7 @@ public class InputsTest extends AbstractMockMvcTest {
             Map.entry("moneyInput", List.of(moneyInput)),
             Map.entry("phoneInput", List.of(phoneInput)),
             Map.entry("ssnInput", List.of(ssnInput))),
-        "Success");
+        "Housemate Info");
 
     var inputsScreen = goBackTo("inputs");
 
@@ -69,14 +69,25 @@ public class InputsTest extends AbstractMockMvcTest {
     assertThat(inputsScreen.getInputValue("ssnInput")).isEqualTo(ssnInput);
   }
 
-//  @Test
-//  void shouldPersistSubflowInputs() throws Exception {
-//    // post to that screen
-//    postExpectingNextPageTitle("addHouseholdMember",
-//        Map.of("firstName", List.of("John"), "lastName", List.of("Perez")),
-//        "addContactInfo");
-//
-//    // verify that the values are persisted
-//
-//  }
+  @Test
+  void shouldPersistSubworkflowInputs() throws Exception {
+    String housemateFirstName = "John";
+    String housemateLastName = "Perez";
+    String householdMemberRelationship = "Spouse";
+    // post to that screen
+    postExpectingNextPageTitle("housemateInfo",
+      Map.of(
+        "householdMemberFirstName", List.of(housemateFirstName),
+        "householdMemberLastName", List.of(housemateLastName),
+        "householdMemberRelationship", List.of(householdMemberRelationship),
+        "householdMemberRecentlyMovedToUS", List.of("No")),
+          "Household List");
+
+    // verify that the values are persisted
+    var housemateInfoScreen = goBackTo("housemateInfo");
+    assertThat(housemateInfoScreen.getInputValue("householdMemberFirstName")).isEqualTo(housemateFirstName);
+    assertThat(housemateInfoScreen.getInputValue("householdMemberLastName")).isEqualTo(housemateLastName);
+    assertThat(housemateInfoScreen.getSelectValue("householdMemberRelationship")).isEqualTo(householdMemberRelationship);
+    assertThat(housemateInfoScreen.getRadioValue("recentlyMovedToUS")).isEqualTo("No");
+  }
 }
