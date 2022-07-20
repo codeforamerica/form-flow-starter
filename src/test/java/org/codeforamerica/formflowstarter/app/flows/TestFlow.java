@@ -1,5 +1,6 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -18,7 +19,7 @@ public class TestFlow {
   String dateMonth;
   String dateYear;
   String numberInput;
-  List<String> checkboxSet;
+  ArrayList<String> checkboxSet;
   String checkboxInput;
   String radioInput;
   String selectInput;

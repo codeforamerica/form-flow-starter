@@ -43,7 +43,8 @@ public class InputsTest extends AbstractMockMvcTest {
             Map.entry("dateDay", List.of(dateDay)),
             Map.entry("dateYear", List.of(dateYear)),
             Map.entry("numberInput", List.of(numberInput)),
-            Map.entry("checkboxSet", checkboxSet),
+            // CheckboxSet's need to have the [] in their name for POST actions
+            Map.entry("checkboxSet[]", checkboxSet),
             Map.entry("checkboxInput", List.of(checkboxInput)),
             Map.entry("radioInput", List.of(radioInput)),
             Map.entry("selectInput", List.of(selectInput)),
