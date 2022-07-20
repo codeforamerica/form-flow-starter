@@ -5,7 +5,9 @@
     th:fragment="checkboxInSet"
     th:with="
       hasHelpText=${!#strings.isEmpty(checkboxHelpText)},
-      hasIcon=${!#strings.isEmpty(checkboxIcon)}"
+      hasIcon=${!#strings.isEmpty(checkboxIcon)},
+      name=${inputName} + '[]',
+      checked=${T(org.codeforamerica.formflowstarter.utils.InputUtils).arrayOrStringContains(inputData.getOrDefault(name, ''), value)}"
     th:assert="
       ${!#strings.isEmpty(inputName)},
       ${!#strings.isEmpty(value)},
@@ -22,8 +24,7 @@
     <input type="checkbox"
            th:id="${inputName} + '-' + ${value}"
            th:value="${value}"
-           th:name="${inputName} + '[]'"
-           th:with="checked=${T(org.codeforamerica.formflowstarter.utils.InputUtils).arrayOrStringContains(inputData.getOrDefault(inputName, ''), value)}"
+           th:name="${name}"
            th:checked="${checked}"
            th:attr="aria-invalid=${hasError}">
     <div th:if="${hasIcon}">
