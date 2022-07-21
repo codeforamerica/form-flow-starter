@@ -245,4 +245,10 @@ body,
   margin-right: auto;
 }
 
+.form-width {
+  max-width: 55rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 

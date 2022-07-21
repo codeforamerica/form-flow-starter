@@ -64,7 +64,7 @@ public class Page {
 
   public void enter(String inputName, String value) {
     checkForBadMessageKeys();
-    List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+    List<WebElement> formInputElements = driver.findElements(By.name(inputName));
     WebElement firstElement = formInputElements.get(0);
     FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
     switch (formInputHtmlTag) {

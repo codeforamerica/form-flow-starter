@@ -13,11 +13,11 @@ public class ConditionDefinitions {
     return false;
   }
 
-  public static boolean dontShowThisPage() {
+  public static boolean hasHousehold(Submission submission) {
+    var inputData = submission.getInputData();
+    if (inputData.containsKey("hasHousehold")) {
+      return inputData.get("hasHousehold").equals("true");
+    }
     return false;
-  }
-
-  public boolean thisIsAnotherCondition() {
-    return true;
   }
 }

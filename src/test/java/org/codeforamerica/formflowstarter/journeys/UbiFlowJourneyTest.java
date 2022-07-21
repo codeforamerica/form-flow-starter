@@ -1,6 +1,8 @@
 package org.codeforamerica.formflowstarter.journeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.codeforamerica.formflowstarter.testutilities.YesNoAnswer.NO;
+import static org.codeforamerica.formflowstarter.testutilities.YesNoAnswer.YES;
 
 import org.codeforamerica.formflowstarter.testutilities.PercyTestPage;
 import org.junit.jupiter.api.Tag;
@@ -15,12 +17,30 @@ public class UbiFlowJourneyTest extends JourneyTest {
 
   @Test
   void fullUbiFlow() {
-    // Landing Page
+    // Landing screen
     assertThat(testPage.getTitle()).isEqualTo("Apply for UBI payments easily online.");
     testPage.clickButton("Apply now");
-    // How this works page
+    // How this works screen
     testPage.clickContinue();
-    // Language Prefs page
+    // Eligibility screen
+    testPage.clickContinue();
+    // Housemates screen
+    testPage.enter("hasHousehold", NO.getDisplayValue());
+    // Income screen
+    assertThat(testPage.getTitle()).isEqualTo("Income");
+    // Go back to household page and select yes instead
+    testPage.goBack();
+    testPage.enter("hasHousehold", YES.getDisplayValue());
+    // Housemate Info screen
+    // Enter housemate information
+    testPage.clickContinue();
+    // Household List screen
+    testPage.clickButton("Add a person");
+    // Housemate Info screen
+    // Enter information for another housemate
+    testPage.clickContinue();
+    // Assert that household list page has the correct people listed
+
   }
 
 // Assert intercom button is present on landing page

@@ -9,12 +9,21 @@ flow:
   housemates:
     nextScreens:
       - name: housemateInfo
+        condition: hasHousehold
+      - name: income
   housemateInfo:
     nextScreens:
       - name: householdList
   householdList:
     nextScreens:
       - name: success
+  income:
+    nextScreens:
+      - name: housemateIncome
+        condition: hasHousehold
+  reportedAnnualHouseholdIncome:
+    nextScreens:
+      - name: AnnualHouseholdIncome
   success:
     nextScreens:
 ---
