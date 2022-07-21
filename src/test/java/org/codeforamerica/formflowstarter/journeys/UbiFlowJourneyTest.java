@@ -32,15 +32,18 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.goBack();
     testPage.enter("hasHousehold", YES.getDisplayValue());
     // Housemate Info screen
-    // Enter housemate information
+    testPage.enter("householdMemberFirstName", "John");
+    testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
     // Household List screen
-    testPage.clickButton("Add a person");
+    testPage.clickButton("+ Add a person");
     // Housemate Info screen
-    // Enter information for another housemate
+    testPage.enter("householdMemberFirstName", "Jane");
+    testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
-    // Assert that household list page has the correct people listed
-
+    // TODO: uncomment when working on feature to save to db
+//    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("John Doe");
+//    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
   }
 
 // Assert intercom button is present on landing page

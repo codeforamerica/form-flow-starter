@@ -11,8 +11,10 @@
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{household-list.header},
             subtext=#{household-list.include-children})"/>
         <div class="form-card__content">
-          <div class="boxed-content">
+          <div class="boxed-content text--centered">
             <strong th:text="#{household-list.your-household}"></strong>
+            <!--  TODO: Show added folks from db -->
+            <a th:href="'/' + ${flow} + '/housemateInfo'" class="button" th:text="#{household-list.add}"></a>
           </div>
         </div>
         <div class="form-card__footer">

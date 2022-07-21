@@ -175,6 +175,10 @@ public class Page {
     return driver.findElement(By.id(inputId)).getText();
   }
 
+  public String getCssSelectorText(String cssSelector) {
+    return driver.findElement(By.cssSelector(cssSelector)).getText();
+  }
+
   public String getBirthDateValue(String inputName, DatePart datePart) {
     return driver.findElement(
             By.cssSelector(
