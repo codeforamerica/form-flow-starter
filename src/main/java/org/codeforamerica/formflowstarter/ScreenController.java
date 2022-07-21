@@ -66,11 +66,14 @@ public class ScreenController {
       return new ModelAndView("redirect:/error");
     }
     Map<String, Object> model = new HashMap<>();
-    if (currentScreen.getGroup() != null) {
+    if (currentScreen.getSubflow() != null) {
+      String subflow = currentScreen.getSubflow();
       // We need to keep state about whether we are in a group or if there is an iteration in session
       // Check session to see if there is an iteration?
       // if there is a group get its name
 
+      // Is subworkflow currently null? []
+      if (submission.getInputData().containsKey(subflow)) {}
     }
 
     model.put("flow", flow);
@@ -130,6 +133,17 @@ public class ScreenController {
     }
 
     return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
+  }
+
+  @PostMapping("{flow}/{subflow}/{screen}/new")
+  ModelAndView postScreen(
+      @RequestParam(required = false) MultiValueMap<String, String> formData,
+      @PathVariable String flow,
+      @PathVariable String subflow,
+      @PathVariable String screen,
+      HttpSession httpSession
+  ) {
+    return
   }
 
   @PostMapping("{flow}/{screen}/submit")

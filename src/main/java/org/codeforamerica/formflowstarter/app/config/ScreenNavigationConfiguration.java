@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class ScreenNavigationConfiguration {
   private List<NextScreen> nextScreens = Collections.emptyList();
-  private String group;
+  private String subflow;
 }

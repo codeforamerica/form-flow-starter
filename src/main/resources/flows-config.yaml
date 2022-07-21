@@ -12,6 +12,7 @@ flow:
         condition: hasHousehold
       - name: income
   housemateInfo:
+    subflow: household
     nextScreens:
       - name: householdList
   householdList:
