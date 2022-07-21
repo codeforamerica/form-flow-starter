@@ -21,7 +21,6 @@ public class UbiFlowJourneyTest extends JourneyTest {
     // How this works page
     testPage.clickContinue();
     // Language Prefs page
-    throw new RuntimeException();
   }
 
 // Assert intercom button is present on landing page
