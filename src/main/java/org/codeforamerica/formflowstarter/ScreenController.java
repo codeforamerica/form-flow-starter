@@ -143,7 +143,7 @@ public class ScreenController {
       @PathVariable String screen,
       HttpSession httpSession
   ) {
-    return
+    return new ModelAndView("index");
   }
 
   @PostMapping("{flow}/{screen}/submit")
