@@ -172,6 +172,7 @@ public class AbstractMockMvcTest {
   protected ResultActions postToUrlExpectingSuccess(String postUrl, String redirectUrl,
       Map<String, List<String>> params) throws
       Exception {
+    var test = "test";
     return mockMvc.perform(
         post(postUrl)
 //

@@ -40,7 +40,7 @@
                 </th:block>
               </th:block>
               <th:block th:replace="'fragments/inputs/radioFieldset' ::
-                            radioFieldset(inputName='recentlyMovedToUS',
+                            radioFieldset(inputName='householdMemberRecentlyMovedToUS',
                             label=#{housemate-info.did-they-move},
                             content=~{::radioOptions})">
                 <th:block th:ref="radioOptions">
@@ -52,7 +52,8 @@
                 </th:block>
               </th:block>
               <div class="form-card__footer">
-                <th:block th:replace="'fragments/continueButton' :: continue"/>
+                <th:block th:replace="fragments/inputs/submitButton :: submitButton(
+                  text=#{general.inputs.continue})" />
               </div>
             </div>
           </th:block>

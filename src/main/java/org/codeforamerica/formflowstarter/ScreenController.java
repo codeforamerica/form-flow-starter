@@ -67,10 +67,6 @@ public class ScreenController {
 		}
 		if (currentScreen.getSubflow() != null) {
 			String subflow = currentScreen.getSubflow();
-			// We need to keep state about whether we are in a group or if there is an iteration in session
-			// Check session to see if there is an iteration?
-			// if there is a group get its name
-
 			// Is subworkflow currently null? []
 			if (!submission.getInputData().containsKey(subflow)) {
 				return new ModelAndView("redirect:/%s/%s/new".formatted(flow, screen));
@@ -169,6 +165,7 @@ public class ScreenController {
 		var formDataSubmission = removeEmptyValuesAndFlatten(formData);
 		var submission = getSubmission(httpSession);
 		var currentScreen = getCurrentScreen(flow, screen);
+		var subflowName = getCurrentScreen(flow, screen).getSubflow();
 		var errorMessages = validationService.validate(flow, formDataSubmission);
 		handleErrors(httpSession, errorMessages, formDataSubmission);
 		if (errorMessages.size() > 0) {
@@ -178,13 +175,17 @@ public class ScreenController {
 		// if there's already a session
 		if (submission.getId() != null) {
 			Map<String, Object> inputData = submission.getInputData();
+			if (!submission.getInputData().containsKey(subflowName)) {
+				submission.getInputData().put(subflowName, new ArrayList<Map<String, Object>>());
+			}
+			ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+			subflow.add(formDataSubmission);
 
-			inputData.forEach((key, value) -> {
-				formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
-			});
-			submission.setInputData(formDataSubmission);
+//			inputData.putAll(formDataSubmission);
+//			submission.setInputData(formDataSubmission);
 
 			submissionRepositoryService.save(submission);
+			var test = "test";
 		} else {
 			submission.setFlow(flow);
 			submission.setInputData(formDataSubmission);

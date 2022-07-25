@@ -51,7 +51,7 @@ public class InputsTest extends AbstractMockMvcTest {
             Map.entry("moneyInput", List.of(moneyInput)),
             Map.entry("phoneInput", List.of(phoneInput)),
             Map.entry("ssnInput", List.of(ssnInput))),
-        "Housemate Info");
+        "Test");
 
     var inputsScreen = goBackTo("inputs");
 
@@ -70,7 +70,7 @@ public class InputsTest extends AbstractMockMvcTest {
     assertThat(inputsScreen.getInputValue("ssnInput")).isEqualTo(ssnInput);
   }
 
-//  TODO: Should data persist still? I don't think so after today's discussion
+//  TODO: Should data still persist when going back from a Subworkflow?
 //  @Test
 //  void shouldPersistSubworkflowInputs() throws Exception {
 //    String housemateFirstName = "John";

@@ -2,6 +2,9 @@ name: testFlow
 flow:
   inputs:
     nextScreens:
+      - name: test
+  test:
+    nextScreens:
       - name: housemateInfo
   housemateInfo:
     subflow: household
