@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 @ActiveProfiles("test")
 // TODO: rework to work with h2
@@ -34,8 +33,8 @@ class SubmissionRepositoryTest {
     secondSubmission.setFlow("testFlow");
     submissionRepository.save(firstSubmission);
     submissionRepository.save(secondSubmission);
-    assertThat(firstSubmission.getId()).isEqualTo(2);
-    assertThat(secondSubmission.getId()).isEqualTo(3);
+    assertThat(firstSubmission.getId()).isEqualTo(1);
+    assertThat(secondSubmission.getId()).isEqualTo(2);
   }
 
   @Test

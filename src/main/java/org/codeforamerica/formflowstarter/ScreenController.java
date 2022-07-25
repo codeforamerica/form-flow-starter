@@ -33,234 +33,285 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 public class ScreenController {
 
-  private final List<FlowConfiguration> flowConfigurations;
-  private final InputsConfiguration inputsConfiguration;
-  private final ConditionHandler conditionHandler;
-  private final SubmissionRepositoryService submissionRepositoryService;
-  private final ValidationService validationService;
+	private final List<FlowConfiguration> flowConfigurations;
+	private final InputsConfiguration inputsConfiguration;
+	private final ConditionHandler conditionHandler;
+	private final SubmissionRepositoryService submissionRepositoryService;
+	private final ValidationService validationService;
 
-  public ScreenController(
-      List<FlowConfiguration> flowConfigurations,
-      InputsConfiguration inputsConfiguration,
-      SubmissionRepositoryService submissionRepositoryService,
-      ConditionHandler conditionHandler,
-      ValidationService validationService) {
-    this.flowConfigurations = flowConfigurations;
-    this.inputsConfiguration = inputsConfiguration;
-    this.submissionRepositoryService = submissionRepositoryService;
-    this.conditionHandler = conditionHandler;
-    this.validationService = validationService;
-  }
+	public ScreenController(
+			List<FlowConfiguration> flowConfigurations,
+			InputsConfiguration inputsConfiguration,
+			SubmissionRepositoryService submissionRepositoryService,
+			ConditionHandler conditionHandler,
+			ValidationService validationService) {
+		this.flowConfigurations = flowConfigurations;
+		this.inputsConfiguration = inputsConfiguration;
+		this.submissionRepositoryService = submissionRepositoryService;
+		this.conditionHandler = conditionHandler;
+		this.validationService = validationService;
+	}
 
-  @GetMapping("{flow}/{screen}")
-  ModelAndView getScreen(
-      @PathVariable String flow,
-      @PathVariable String screen,
-      HttpServletResponse response,
-      HttpSession httpSession,
-      Locale locale
-  ) {
-    var currentScreen = getCurrentScreen(flow, screen);
-    var submission = getSubmission(httpSession);
-    if (currentScreen == null) {
-      return new ModelAndView("redirect:/error");
-    }
-    Map<String, Object> model = new HashMap<>();
-    if (currentScreen.getSubflow() != null) {
-      String subflow = currentScreen.getSubflow();
-      // We need to keep state about whether we are in a group or if there is an iteration in session
-      // Check session to see if there is an iteration?
-      // if there is a group get its name
+	@GetMapping("{flow}/{screen}")
+	ModelAndView getScreen(
+			@PathVariable String flow,
+			@PathVariable String screen,
+			HttpServletResponse response,
+			HttpSession httpSession,
+			Locale locale
+	) {
+		var currentScreen = getCurrentScreen(flow, screen);
+		var submission = getSubmission(httpSession);
+		if (currentScreen == null) {
+			return new ModelAndView("redirect:/error");
+		}
+		if (currentScreen.getSubflow() != null) {
+			String subflow = currentScreen.getSubflow();
+			// We need to keep state about whether we are in a group or if there is an iteration in session
+			// Check session to see if there is an iteration?
+			// if there is a group get its name
 
-      // Is subworkflow currently null? []
-      if (submission.getInputData().containsKey(subflow)) {}
-    }
+			// Is subworkflow currently null? []
+			if (!submission.getInputData().containsKey(subflow)) {
+				return new ModelAndView("redirect:/%s/%s/new".formatted(flow, screen));
+			}
+		}
 
-    model.put("flow", flow);
-    model.put("screen", screen);
+		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
 
-    // if there's formDataSubmission
-    if (httpSession.getAttribute("formDataSubmission") != null) {
-      model.put("submission", submission);
-      model.put("inputData", httpSession.getAttribute("formDataSubmission"));
-    } else {
-      model.put("submission", submission);
-      model.put("inputData", submission.getInputData());
-    }
+		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
+	}
 
-    model.put("errorMessages", httpSession.getAttribute("errorMessages"));
+	private Map<String, Object> createModel(String flow, String screen, HttpSession httpSession, Submission submission) {
+		Map<String, Object> model = new HashMap<>();
+		model.put("flow", flow);
+		model.put("screen", screen);
+		// if there's formDataSubmission
+		if (httpSession.getAttribute("formDataSubmission") != null) {
+			model.put("submission", submission);
+			model.put("inputData", httpSession.getAttribute("formDataSubmission"));
+		} else {
+			model.put("submission", submission);
+			model.put("inputData", submission.getInputData());
+		}
+		model.put("errorMessages", httpSession.getAttribute("errorMessages"));
+		return model;
+	}
 
-    return new ModelAndView("/%s/%s".formatted(flow, screen), model);
-  }
+	@PostMapping("{flow}/{screen}")
+	ModelAndView postScreen(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String screen,
+			HttpSession httpSession
+	) {
+		var formDataSubmission = removeEmptyValuesAndFlatten(formData);
+		var submission = getSubmission(httpSession);
+		var currentScreen = getCurrentScreen(flow, screen);
+		var errorMessages = validationService.validate(flow, formDataSubmission);
+		handleErrors(httpSession, errorMessages, formDataSubmission);
 
-  @PostMapping("{flow}/{screen}")
-  ModelAndView postScreen(
-      @RequestParam(required = false) MultiValueMap<String, String> formData,
-      @PathVariable String flow,
-      @PathVariable String screen,
-      HttpSession httpSession
-  ) {
-    var formDataSubmission = removeEmptyValuesAndFlatten(formData);
-    var submission = getSubmission(httpSession);
-    var currentScreen = getCurrentScreen(flow, screen);
-    var errorMessages = validationService.validate(flow, formDataSubmission);
-    Map<String, Object> model = new HashMap<>();
+		if (errorMessages.size() > 0) {
+			return new ModelAndView(String.format("redirect:/%s/%s", flow, screen));
+		}
 
-    if (errorMessages.size() > 0) {
-      httpSession.setAttribute("errorMessages", errorMessages);
-      httpSession.setAttribute("formDataSubmission", formDataSubmission);
-      return new ModelAndView(String.format("redirect:/%s/%s", flow, screen));
-    } else {
-      httpSession.removeAttribute("errorMessages");
-      httpSession.removeAttribute("formDataSubmission");
-    }
+		// if there's already a session
+		if (submission.getId() != null) {
+			Map<String, Object> inputData = submission.getInputData();
 
-    // if there's already a session
-    if (submission.getId() != null) {
-      Map<String, Object> inputData = submission.getInputData();
+			inputData.forEach((key, value) -> {
+				formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+			});
+			submission.setInputData(formDataSubmission);
 
-      inputData.forEach((key, value) -> {
-        formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
-      });
-      submission.setInputData(formDataSubmission);
+			submissionRepositoryService.save(submission);
+		} else {
+			submission.setFlow(flow);
+			submission.setInputData(formDataSubmission);
+			submissionRepositoryService.save(submission);
+			httpSession.setAttribute("id", submission.getId());
+		}
 
-      submissionRepositoryService.save(submission);
-    } else {
-      submission.setFlow(flow);
-      submission.setInputData(formDataSubmission);
-      submissionRepositoryService.save(submission);
-      httpSession.setAttribute("id", submission.getId());
-    }
+		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
+	}
 
-    return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
-  }
+	private void handleErrors(HttpSession httpSession, HashMap<String, ArrayList<String>> errorMessages, Map<String, Object> formDataSubmission) {
+		if (errorMessages.size() > 0) {
+			httpSession.setAttribute("errorMessages", errorMessages);
+			httpSession.setAttribute("formDataSubmission", formDataSubmission);
+		} else {
+			httpSession.removeAttribute("errorMessages");
+			httpSession.removeAttribute("formDataSubmission");
+		}
+	}
 
-  @PostMapping("{flow}/{subflow}/{screen}/new")
-  ModelAndView postScreen(
-      @RequestParam(required = false) MultiValueMap<String, String> formData,
-      @PathVariable String flow,
-      @PathVariable String subflow,
-      @PathVariable String screen,
-      HttpSession httpSession
-  ) {
-    return new ModelAndView("index");
-  }
+	@GetMapping("{flow}/{screen}/new")
+	ModelAndView getNewSubflow(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String screen,
+			HttpSession httpSession
+	) {
+		Submission submission = getSubmission(httpSession);
+		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
 
-  @PostMapping("{flow}/{screen}/submit")
-  ModelAndView submit(
-      @RequestParam(required = false) MultiValueMap<String, String> formData,
-      @PathVariable String flow,
-      @PathVariable String screen,
-      HttpSession httpSession
-  ) {
-    Long id = (Long) httpSession.getAttribute("id");
-    if (id != null) {
-      Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
-      if (submissionOptional.isPresent()) {
-        Submission submission = submissionOptional.get();
+		return new ModelAndView(String.format("/%s/%s", flow, screen), model);
+	}
 
-        var formDataSubmission = removeEmptyValuesAndFlatten(formData);
-        Map<String, Object> inputData = submission.getInputData();
+	@PostMapping("{flow}/{screen}/new")
+	ModelAndView postNewSubflow(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String screen,
+			HttpSession httpSession
+	) {
+//    Copy from OG /post request
+		var formDataSubmission = removeEmptyValuesAndFlatten(formData);
+		var submission = getSubmission(httpSession);
+		var currentScreen = getCurrentScreen(flow, screen);
+		var errorMessages = validationService.validate(flow, formDataSubmission);
+		handleErrors(httpSession, errorMessages, formDataSubmission);
+		if (errorMessages.size() > 0) {
+			return new ModelAndView(String.format("redirect:/%s/%s", flow, screen));
+		}
 
-        inputData.forEach((key, value) -> {
-          formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
-        });
-        submission.setInputData(formDataSubmission);
-        submission.setSubmittedAt(Date.from(Instant.now()));
-        submissionRepositoryService.save(submission);
-      }
-    }
-    // Fire async events: send email, generate PDF, send to API, etc...
-    return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
-  }
+		// if there's already a session
+		if (submission.getId() != null) {
+			Map<String, Object> inputData = submission.getInputData();
 
-  @NotNull
-  private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
-    return formData.entrySet().stream()
-        .map(entry -> {
-          // An empty checkboxSet has a hidden value of "" which needs to be removed
-          if (entry.getKey().contains("[]") && entry.getValue().size() == 1) {
-            entry.setValue(new ArrayList<>());
-          }
-          if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
-            entry.getValue().remove(0);
-          }
-          return entry;
-        })
-        // Flatten arrays to be single values if the array contains one item
-        .collect(Collectors.toMap(
-            Entry::getKey,
-            entry -> entry.getValue().size() == 1 && !entry.getKey().contains("[]") ? entry.getValue().get(0) : entry.getValue()
-        ));
-  }
+			inputData.forEach((key, value) -> {
+				formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+			});
+			submission.setInputData(formDataSubmission);
 
-  @GetMapping("{flow}/{screen}/navigation")
-  RedirectView navigation(
-      @PathVariable String flow,
-      @PathVariable String screen,
-      @RequestParam(required = false, defaultValue = "0") Integer option,
-      HttpSession httpSession
-  ) {
-    var currentScreen = getCurrentScreen(flow, screen);
-    if (currentScreen == null) {
-      return new RedirectView("/error");
-    }
-    NextScreen nextScreen;
-    if (isConditionalNavigation(currentScreen)
-        && getConditionalNextScreen(currentScreen, httpSession).size() > 0) {
-      nextScreen = getConditionalNextScreen(currentScreen, httpSession).get(0);
-    } else {
-      // TODO this needs to throw an error if there are more than 1 next screen that don't have a condition or more than one evaluate to true
-      nextScreen = getNonConditionalNextScreen(currentScreen);
-    }
+			submissionRepositoryService.save(submission);
+		} else {
+			submission.setFlow(flow);
+			submission.setInputData(formDataSubmission);
+			submissionRepositoryService.save(submission);
+			httpSession.setAttribute("id", submission.getId());
+		}
 
-    return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
-  }
+		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
+	}
 
-  private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
-    FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
-        flowConfiguration -> flowConfiguration.getName().equals(flow)
-    ).toList().get(0);
-    return currentFlowConfiguration.getScreenNavigation(screen);
-  }
+	@PostMapping("{flow}/{screen}/submit")
+	ModelAndView submit(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String screen,
+			HttpSession httpSession
+	) {
+		Long id = (Long) httpSession.getAttribute("id");
+		if (id != null) {
+			Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+			if (submissionOptional.isPresent()) {
+				Submission submission = submissionOptional.get();
 
-  private Boolean isConditionalNavigation(ScreenNavigationConfiguration currentScreen) {
-    return currentScreen.getNextScreens().stream()
-        .anyMatch(nextScreen -> nextScreen.getCondition() != null);
-  }
+				var formDataSubmission = removeEmptyValuesAndFlatten(formData);
+				Map<String, Object> inputData = submission.getInputData();
 
-  private List<NextScreen> getConditionalNextScreen(ScreenNavigationConfiguration currentScreen, HttpSession httpSession) {
-    var submission = getSubmission(httpSession);
-    List<NextScreen> screensWithConditionalNavigation =
-        currentScreen.getNextScreens().stream()
-            .filter(nextScreen -> nextScreen.getCondition() != null).toList();
+				inputData.forEach((key, value) -> {
+					formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+				});
+				submission.setInputData(formDataSubmission);
+				submission.setSubmittedAt(Date.from(Instant.now()));
+				submissionRepositoryService.save(submission);
+			}
+		}
+		// Fire async events: send email, generate PDF, send to API, etc...
+		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
+	}
 
-    return screensWithConditionalNavigation.stream().filter(nextScreen -> {
-      String conditionName = nextScreen.getCondition().getName();
-      try {
-        conditionHandler.setSubmission(submission);
-        return conditionHandler.handleCondition(conditionName).equals(true);
-      } catch (NoSuchMethodException | InvocationTargetException e) {
-        System.out.println("No such method could be found in the ConditionDefinitions class.");
-      } catch (IllegalAccessException e) {
-        e.printStackTrace();
-      }
-      return false;
-    }).toList();
-  }
+	@NotNull
+	private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
+		return formData.entrySet().stream()
+				.map(entry -> {
+					// An empty checkboxSet has a hidden value of "" which needs to be removed
+					if (entry.getKey().contains("[]") && entry.getValue().size() == 1) {
+						entry.setValue(new ArrayList<>());
+					}
+					if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
+						entry.getValue().remove(0);
+					}
+					return entry;
+				})
+				// Flatten arrays to be single values if the array contains one item
+				.collect(Collectors.toMap(
+						Entry::getKey,
+						entry -> entry.getValue().size() == 1 && !entry.getKey().contains("[]")
+								? entry.getValue().get(0) : entry.getValue()
+				));
+	}
 
-  private NextScreen getNonConditionalNextScreen(ScreenNavigationConfiguration currentScreen) {
-    return currentScreen.getNextScreens().stream()
-        .filter(nxtScreen -> nxtScreen.getCondition() == null).toList().get(0);
-  }
+	@GetMapping("{flow}/{screen}/navigation")
+	RedirectView navigation(
+			@PathVariable String flow,
+			@PathVariable String screen,
+			@RequestParam(required = false, defaultValue = "0") Integer option,
+			HttpSession httpSession
+	) {
+		var currentScreen = getCurrentScreen(flow, screen);
+		if (currentScreen == null) {
+			return new RedirectView("/error");
+		}
+		NextScreen nextScreen;
+		if (isConditionalNavigation(currentScreen)
+				&& getConditionalNextScreen(currentScreen, httpSession).size() > 0) {
+			nextScreen = getConditionalNextScreen(currentScreen, httpSession).get(0);
+		} else {
+			// TODO this needs to throw an error if there are more than 1 next screen that don't have a condition or more than one evaluate to true
+			nextScreen = getNonConditionalNextScreen(currentScreen);
+		}
 
-  private Submission getSubmission(HttpSession httpSession) {
-    var id = (Long) httpSession.getAttribute("id");
-    if (id != null) {
-      Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
-      return submissionOptional.orElseGet(Submission::new);
-    } else {
-      return new Submission();
-    }
-  }
+		return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
+	}
+
+	private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
+		FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
+				flowConfiguration -> flowConfiguration.getName().equals(flow)
+		).toList().get(0);
+		return currentFlowConfiguration.getScreenNavigation(screen);
+	}
+
+	private Boolean isConditionalNavigation(ScreenNavigationConfiguration currentScreen) {
+		return currentScreen.getNextScreens().stream()
+				.anyMatch(nextScreen -> nextScreen.getCondition() != null);
+	}
+
+	private List<NextScreen> getConditionalNextScreen(ScreenNavigationConfiguration currentScreen,
+			HttpSession httpSession) {
+		var submission = getSubmission(httpSession);
+		List<NextScreen> screensWithConditionalNavigation =
+				currentScreen.getNextScreens().stream()
+						.filter(nextScreen -> nextScreen.getCondition() != null).toList();
+
+		return screensWithConditionalNavigation.stream().filter(nextScreen -> {
+			String conditionName = nextScreen.getCondition().getName();
+			try {
+				conditionHandler.setSubmission(submission);
+				return conditionHandler.handleCondition(conditionName).equals(true);
+			} catch (NoSuchMethodException | InvocationTargetException e) {
+				System.out.println("No such method could be found in the ConditionDefinitions class.");
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return false;
+		}).toList();
+	}
+
+	private NextScreen getNonConditionalNextScreen(ScreenNavigationConfiguration currentScreen) {
+		return currentScreen.getNextScreens().stream()
+				.filter(nxtScreen -> nxtScreen.getCondition() == null).toList().get(0);
+	}
+
+	private Submission getSubmission(HttpSession httpSession) {
+		var id = (Long) httpSession.getAttribute("id");
+		if (id != null) {
+			Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+			return submissionOptional.orElseGet(Submission::new);
+		} else {
+			return new Submission();
+		}
+	}
 }

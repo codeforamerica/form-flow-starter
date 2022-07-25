@@ -11,6 +11,6 @@ spring:
     prefix: classpath:/templates/
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
   main:
     allow-circular-references: true
