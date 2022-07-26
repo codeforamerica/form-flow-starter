@@ -23,6 +23,7 @@ import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -193,6 +194,26 @@ public class ScreenController {
 		}
 
 		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
+	}
+
+	@DeleteMapping("{flow}/{subflow}/{iteration}")
+	ModelAndView deleteSubflowIteration(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String subflow,
+			@PathVariable String iteration,
+			HttpSession httpSession
+	) {
+		Long id = (Long) httpSession.getAttribute("id");
+		if (id == null) {
+			// we should throw an error here?
+		}
+		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+		if (submissionOptional.isPresent()) {
+			Submission submission = submissionOptional.get();
+			var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflow);
+		}
+		return new ModelAndView();
 	}
 
 	@PostMapping("{flow}/{screen}/submit")
