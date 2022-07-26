@@ -22,6 +22,8 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickButton("Apply now");
     // How this works screen
     testPage.clickContinue();
+    // Personal info
+    testPage.clickContinue();
     // Eligibility screen
     testPage.clickContinue();
     // Housemates screen

@@ -2,6 +2,9 @@ name: ubi
 flow:
   howThisWorks:
     nextScreens:
+      - name: personalInfo
+  personalInfo:
+    nextScreens:
       - name: eligibility
   eligibility:
     nextScreens:
