@@ -14,8 +14,17 @@
         <div class="form-card__content">
           <div class="boxed-content text--centered">
             <strong th:text="#{household-list.your-household}"></strong>
+<!--            <p th:text="${inputData.household}"></p>-->
+            <ul class="subflow-list">
+              <li th:each="householdMember: ${inputData.household}" class="spacing-below-15">
+                <span th:text="${householdMember.householdMemberFirstName}"></span>
+                <span th:text="${householdMember.householdMemberLastName}"></span>
+                <a href="#" th:text="#{general.edit}" ></a>
+                <a href="#" th:text="#{general.delete}"></a>
+              </li>
+            </ul>
             <!--  TODO: Show added folks from db -->
-            <a th:href="'/' + ${flow} + '/housemateInfo/new'" class="button" th:text="#{household-list.add}"></a>
+            <a th:href="'/' + ${flow} + '/housemateInfo/new'" class="button spacing-above-15" th:text="#{household-list.add}"></a>
           </div>
         </div>
         <div class="form-card__footer">

@@ -74,7 +74,6 @@ public class ScreenController {
 		}
 
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
-
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 	}
 
