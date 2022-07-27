@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head(title=#{household-delete-confirmation.title})"></head>
+<body>
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <div th:replace="fragments/goBack :: goBackLink"></div>
+      <main th:with="name=${inputData.household[param.iterationIndex].householdMemberFirstName + ' ' +
+                             inputData.household[param.iterationIndex].householdMemberLastName}"
+            id="content" role="main" class="form-card spacing-above-35">
+        <h1 class="h2" th:text="#{household-delete-confirmation.header(${name})}"></h1>
+        <h2 th:text="#{household-delete-confirmation.is-that-okay}"></h2>
+        <div class="form-card__footer">
+          <!-- TODO: can we not hardcode the household subflow part of the path here? -->
+          <form method="post"
+                th:action="'/' + ${flow} + ${subflow} + ${param.iterationIndex} + '/delete'">
+            <th:block th:replace="fragments/inputs/submitButton :: submitButton(
+                  text=#{household-delete-confirmation.yes})"/>
+          </form>
+          <a class="button spacing-above-35" th:href="'/' + flow + '/householdList'"
+             th:text="#{household-delete-confirmation.no}"></a>
+        </div>
+      </main>
+    </div>
+  </section>
+</div>
+<th:block th:replace="fragments/footer :: footer"/>
+</body>
+</html>

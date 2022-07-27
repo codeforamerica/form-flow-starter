@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -57,6 +60,7 @@ public class ScreenController {
 	ModelAndView getScreen(
 			@PathVariable String flow,
 			@PathVariable String screen,
+			HttpServletRequest request,
 			HttpServletResponse response,
 			HttpSession httpSession,
 			Locale locale
@@ -73,8 +77,12 @@ public class ScreenController {
 				return new ModelAndView("redirect:/%s/%s/new".formatted(flow, screen));
 			}
 		}
-
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
+		var flashMap = RequestContextUtils.getInputFlashMap(request);
+		if (flashMap != null) {
+			String subflow = (String) flashMap.get("subflow");
+			model.put(subflow, subflow);
+		}
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 	}
 
@@ -192,15 +200,17 @@ public class ScreenController {
 		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
 	}
 
-	@GetMapping("{flow}/{subflow}/{iteration}/deleteWarning")
-	ModelAndView deleteWarning(
+	@GetMapping("{flow}/{subflow}/{iteration}/deleteConfirmation")
+	RedirectView deleteConfirmation(
 			@PathVariable String flow,
 			@PathVariable String subflow,
-			@PathVariable int iteration
+			@PathVariable int iteration,
+			RedirectAttributes redirectAttributes
 	) {
-		String deleteWarningScreen = getFlowConfigurationByName(flow)
-				.getSubflows().get(subflow).getDeleteWarningScreen();
-		return new ModelAndView(String.format("redirect:/%s/%s/" + deleteWarningScreen + "?iterationIndex=" + iteration, flow, subflow));
+		String deleteConfirmationScreen = getFlowConfigurationByName(flow)
+				.getSubflows().get(subflow).getDeleteConfirmationScreen();
+		redirectAttributes.addFlashAttribute("subflow", subflow);
+		return new RedirectView(String.format("/%s/" + deleteConfirmationScreen + "?iterationIndex=" + iteration, flow));
 	}
 
 	@PostMapping("{flow}/{subflow}/{iteration}/delete")
@@ -223,7 +233,10 @@ public class ScreenController {
 			submission.getInputData().put(subflow, subflowArr);
 			submissionRepositoryService.save(submission);
 		}
-		return new ModelAndView(referer);
+		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getReviewScreen();
+
+		// TODO: if else with taking you to review or start depending on if you just deleted the last iteration
+		return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
 	}
 
 	@PostMapping("{flow}/{screen}/submit")

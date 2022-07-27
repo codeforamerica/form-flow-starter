@@ -24,7 +24,7 @@ flow:
   householdList:
     nextScreens:
       - name: success
-  householdDeleteWarning:
+  householdDeleteConfirmation:
     nextScreens:
   income:
     nextScreens:
@@ -39,7 +39,7 @@ subflows:
   household:
     startScreen: housemateInfo
     reviewScreen: householdList
-    deleteWarningScreen: householdDeleteWarning
+    deleteConfirmationScreen: householdDeleteConfirmation
 ---
 name: flow2
 flow:

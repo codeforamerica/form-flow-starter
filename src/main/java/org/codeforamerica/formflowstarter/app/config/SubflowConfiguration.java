@@ -6,5 +6,5 @@ import lombok.Data;
 public class SubflowConfiguration {
   String startScreen;
   String reviewScreen;
-  String deleteWarningScreen;
+  String deleteConfirmationScreen;
 }
