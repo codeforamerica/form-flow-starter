@@ -27,6 +27,10 @@ public class Ubi {
   String money;
   // /firstPage
 
+  String languageRead;
+  String languageSpoken;
+  String needInterpreter;
+
   String birthDay;
   String birthMonth;
   String birthYear;
