@@ -23,10 +23,10 @@ import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -181,11 +181,7 @@ public class ScreenController {
 			ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
 			subflow.add(formDataSubmission);
 
-//			inputData.putAll(formDataSubmission);
-//			submission.setInputData(formDataSubmission);
-
 			submissionRepositoryService.save(submission);
-			var test = "test";
 		} else {
 			submission.setFlow(flow);
 			submission.setInputData(formDataSubmission);
@@ -196,12 +192,23 @@ public class ScreenController {
 		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
 	}
 
-	@DeleteMapping("{flow}/{subflow}/{iteration}")
-	ModelAndView deleteSubflowIteration(
-			@RequestParam(required = false) MultiValueMap<String, String> formData,
+	@GetMapping("{flow}/{subflow}/{iteration}/deleteWarning")
+	ModelAndView deleteWarning(
 			@PathVariable String flow,
 			@PathVariable String subflow,
-			@PathVariable String iteration,
+			@PathVariable int iteration
+	) {
+		String deleteWarningScreen = getFlowConfigurationByName(flow)
+				.getSubflows().get(subflow).getDeleteWarningScreen();
+		return new ModelAndView(String.format("redirect:/%s/%s/" + deleteWarningScreen + "?iterationIndex=" + iteration, flow, subflow));
+	}
+
+	@PostMapping("{flow}/{subflow}/{iteration}/delete")
+	ModelAndView deleteSubflowIteration(
+			@RequestHeader("Referer") String referer,
+			@PathVariable String flow,
+			@PathVariable String subflow,
+			@PathVariable int iteration,
 			HttpSession httpSession
 	) {
 		Long id = (Long) httpSession.getAttribute("id");
@@ -212,8 +219,11 @@ public class ScreenController {
 		if (submissionOptional.isPresent()) {
 			Submission submission = submissionOptional.get();
 			var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflow);
+			subflowArr.remove(iteration);
+			submission.getInputData().put(subflow, subflowArr);
+			submissionRepositoryService.save(submission);
 		}
-		return new ModelAndView();
+		return new ModelAndView(referer);
 	}
 
 	@PostMapping("{flow}/{screen}/submit")
@@ -289,10 +299,14 @@ public class ScreenController {
 	}
 
 	private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
-		FlowConfiguration currentFlowConfiguration = flowConfigurations.stream().filter(
+		FlowConfiguration currentFlowConfiguration = getFlowConfigurationByName(flow);
+		return currentFlowConfiguration.getScreenNavigation(screen);
+	}
+
+	private FlowConfiguration getFlowConfigurationByName(String flow) {
+		return flowConfigurations.stream().filter(
 				flowConfiguration -> flowConfiguration.getName().equals(flow)
 		).toList().get(0);
-		return currentFlowConfiguration.getScreenNavigation(screen);
 	}
 
 	private Boolean isConditionalNavigation(ScreenNavigationConfiguration currentScreen) {

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}">
+<head th:replace="fragments/head :: head(title=#{household-delete-warning.title})"></head>
+<body>
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <section class="slab">
+    <div class="grid">
+      <div th:replace="fragments/goBack :: goBackLink"></div>
+      <main id="content" role="main" class="form-card spacing-above-35">
+        <th:block
+            th:replace="'fragments/cardHeader' :: cardHeader(title=#{household-delete-warning.header})"/>
+        <h2 th:text="#{household-delete-warning.is-that-okay}"></h2>
+        <div class="form-card__footer">
+          <form method="post" th:action="'/' + flow + '/' + subflow + '/' + ${param.iterationIndex} + '/delete'">
+            <th:block th:replace="fragments/inputs/submitButton :: submitButton(
+                  text=#{household-delete-warning.yes})"/>
+          </form>
+          <a th:href="'/' + flow + '/householdList'" th:text="#{household-delete-warning.no}"></a>
+        </div>
+      </main>
+    </div>
+  </section>
+</div>
+<th:block th:replace="fragments/footer :: footer"/>
+</body>
+</html>
