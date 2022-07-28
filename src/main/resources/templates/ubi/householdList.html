@@ -16,19 +16,25 @@
           <div class="boxed-content text--centered">
             <strong th:text="#{household-list.your-household}"></strong>
             <ul class="subflow-list list--bulleted">
-              <li class="spacing-below-15" th:text="${inputData.firstName} + ' ' + ${inputData.lastName}"></li>
-              <li th:each="householdMember, iter: ${inputData.household}" class="spacing-below-15">
-                <span class="space-between">
-                  <span>
-                    <span th:text="${householdMember.householdMemberFirstName}"></span>
-                    <span th:text="${householdMember.householdMemberLastName}"></span>
-                  </span>
-                  <span class="text--small spacing-below-0">
-                    <a href="" th:text="#{general.edit}"></a>
-                    <a th:href="'/ubi/household/' + ${iter.index} + '/deleteConfirmation'" th:text="#{general.delete}"></a>
-                  </span>
-                </span>
-              </li>
+              <li class="spacing-below-15"
+                  th:text="${inputData.firstName} + ' ' + ${inputData.lastName}"></li>
+              <th:block th:if="${inputData.containsKey('household')}">
+                <li th:each="householdMember, iter: ${inputData.household}"
+                    class="spacing-below-15">
+                              <span class="space-between">
+                                <span>
+                                  <span
+                                      th:text="${householdMember.householdMemberFirstName}"></span>
+                                  <span th:text="${householdMember.householdMemberLastName}"></span>
+                                </span>
+                                <span class="text--small spacing-below-0">
+                                  <a href="" th:text="#{general.edit}"></a>
+                                  <a th:href="'/ubi/household/' + ${iter.index} + '/deleteConfirmation'"
+                                     th:text="#{general.delete}"></a>
+                                </span>
+                              </span>
+                </li>
+              </th:block>
             </ul>
             <!--  TODO: Show added folks from db -->
             <a th:href="'/' + ${flow} + '/housemateInfo/new'" class="button spacing-above-15"

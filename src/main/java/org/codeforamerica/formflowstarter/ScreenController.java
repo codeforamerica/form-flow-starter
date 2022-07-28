@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
 import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
 import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
+import org.codeforamerica.formflowstarter.app.config.SubflowConfiguration;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
@@ -77,11 +79,6 @@ public class ScreenController {
 			}
 		}
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
-		var flashMap = RequestContextUtils.getInputFlashMap(request);
-		if (flashMap != null) {
-			String subflow = (String) flashMap.get("subflow");
-			model.put(subflow, subflow);
-		}
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 	}
 
@@ -90,16 +87,17 @@ public class ScreenController {
 		model.put("flow", flow);
 		model.put("screen", screen);
 
-		// Put subflow if on subflow delete confirmation screen
-		// TODO: need to make optional, then put it in the model if there
-		String deleteConfirmationScreens = getFlowConfigurationByName(flow).getSubflows()
-				.entrySet().stream().filter(entry ->
-						entry.getValue().getDeleteConfirmationScreen().equals(screen)).map(Entry::getKey).toList().get(0);
+		// Put subflow on model if on subflow delete confirmation screen
+		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
+		if (subflows != null) {
+			List<String> subflowFromDeleteConfirmationConfig = subflows
+					.entrySet().stream().filter(entry ->
+							entry.getValue().getDeleteConfirmationScreen().equals(screen)).map(Entry::getKey).toList();
 
-		if (deleteConfirmationScreens.contains(screen)) {
-			model.put()
+			if (!subflowFromDeleteConfirmationConfig.isEmpty()) {
+				model.put("subflow", subflowFromDeleteConfirmationConfig.get(0));
+			}
 		}
-
 
 		// if there's formDataSubmission
 		if (httpSession.getAttribute("formDataSubmission") != null) {
@@ -191,6 +189,9 @@ public class ScreenController {
 			return new ModelAndView(String.format("redirect:/%s/%s", flow, screen));
 		}
 
+		UUID uuid = UUID.randomUUID();
+		formDataSubmission.put("uuid", uuid);
+
 		// if there's already a session
 		if (submission.getId() != null) {
 			Map<String, Object> inputData = submission.getInputData();
@@ -237,14 +238,22 @@ public class ScreenController {
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		if (submissionOptional.isPresent()) {
 			Submission submission = submissionOptional.get();
-			var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflow);
+			var existingInputData = submission.getInputData();
+			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
+
 			subflowArr.remove(iteration);
-			submission.getInputData().put(subflow, subflowArr);
+			existingInputData.put(subflow, subflowArr);
+
+			if (subflowArr.isEmpty()) {
+				existingInputData.remove(subflow);
+				// ??? delete hasHousehold and change condition to if `household` is populated, but then does the template have links instead of input field `hasHousehold`?
+			}
+
 			submissionRepositoryService.save(submission);
 		}
 		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getReviewScreen();
 
-		// TODO: if else with taking you to review or start depending on if you just deleted the last iteration
+		// TODO: If deleting full thing, redirect to ___ instead
 		return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
 	}
 
