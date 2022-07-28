@@ -45,9 +45,12 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.enter("householdMemberFirstName", "Jane");
     testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
-    // TODO: uncomment when working on feature to save to db
-//    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("John Doe");
-//    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
+    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("John Doe");
+    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
+    testPage.findElementById("delete-iteration-1").click();
+    testPage.clickButton("Yes, remove them");
+    assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("Jane Doe");
+    assertThat(testPage.findElementsByClass("subflow-delete")).hasSize(1);
   }
 
 // Assert intercom button is present on landing page

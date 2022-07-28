@@ -30,7 +30,9 @@
                                 <span class="text--small spacing-below-0">
                                   <a href="" th:text="#{general.edit}"></a>
                                   <a th:href="'/ubi/household/' + ${iter.index} + '/deleteConfirmation'"
-                                     th:text="#{general.delete}"></a>
+                                     th:text="#{general.delete}"
+                                     class="subflow-delete"
+                                     th:id="'delete-iteration-' + ${iter.index}"></a>
                                 </span>
                               </span>
                 </li>
