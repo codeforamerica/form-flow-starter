@@ -60,7 +60,6 @@ public class ScreenController {
 	ModelAndView getScreen(
 			@PathVariable String flow,
 			@PathVariable String screen,
-			HttpServletRequest request,
 			HttpServletResponse response,
 			HttpSession httpSession,
 			Locale locale
@@ -90,6 +89,18 @@ public class ScreenController {
 		Map<String, Object> model = new HashMap<>();
 		model.put("flow", flow);
 		model.put("screen", screen);
+
+		// Put subflow if on subflow delete confirmation screen
+		// TODO: need to make optional, then put it in the model if there
+		String deleteConfirmationScreens = getFlowConfigurationByName(flow).getSubflows()
+				.entrySet().stream().filter(entry ->
+						entry.getValue().getDeleteConfirmationScreen().equals(screen)).map(Entry::getKey).toList().get(0);
+
+		if (deleteConfirmationScreens.contains(screen)) {
+			model.put()
+		}
+
+
 		// if there's formDataSubmission
 		if (httpSession.getAttribute("formDataSubmission") != null) {
 			model.put("submission", submission);
@@ -204,12 +215,10 @@ public class ScreenController {
 	RedirectView deleteConfirmation(
 			@PathVariable String flow,
 			@PathVariable String subflow,
-			@PathVariable int iteration,
-			RedirectAttributes redirectAttributes
+			@PathVariable int iteration
 	) {
 		String deleteConfirmationScreen = getFlowConfigurationByName(flow)
 				.getSubflows().get(subflow).getDeleteConfirmationScreen();
-		redirectAttributes.addFlashAttribute("subflow", subflow);
 		return new RedirectView(String.format("/%s/" + deleteConfirmationScreen + "?iterationIndex=" + iteration, flow));
 	}
 

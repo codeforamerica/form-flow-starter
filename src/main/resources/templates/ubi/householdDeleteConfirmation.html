@@ -15,11 +15,11 @@
         <div class="form-card__footer">
           <!-- TODO: can we not hardcode the household subflow part of the path here? -->
           <form method="post"
-                th:action="'/' + ${flow} + ${subflow} + ${param.iterationIndex} + '/delete'">
+                th:action="'/' + ${flow} + '/' + ${subflow} + '/' + ${param.iterationIndex} + '/delete'">
             <th:block th:replace="fragments/inputs/submitButton :: submitButton(
                   text=#{household-delete-confirmation.yes})"/>
           </form>
-          <a class="button spacing-above-35" th:href="'/' + flow + '/householdList'"
+          <a class="button spacing-above-35" th:href="'/' + ${flow} + '/householdList'"
              th:text="#{household-delete-confirmation.no}"></a>
         </div>
       </main>
