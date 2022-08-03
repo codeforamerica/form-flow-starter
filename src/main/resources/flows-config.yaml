@@ -37,7 +37,8 @@ flow:
     nextScreens:
 subflows:
   household:
-    startScreen: housemateInfo
+    entryScreen: housemates
+    iterationStartScreen: housemateInfo
     reviewScreen: householdList
     deleteConfirmationScreen: householdDeleteConfirmation
 ---
