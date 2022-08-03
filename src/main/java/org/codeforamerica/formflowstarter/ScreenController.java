@@ -187,7 +187,7 @@ public class ScreenController {
 		}
 
 		UUID uuid = UUID.randomUUID();
-		formDataSubmission.put(String.format("%sUuid",subflowName), uuid);
+		formDataSubmission.put("uuid", uuid);
 
 		// if there's already a session
 		if (submission.getId() != null) {
@@ -228,7 +228,7 @@ public class ScreenController {
 			Submission submission = submissionOptional.get();
 			var existingInputData = submission.getInputData();
 			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
-			var entryToDelete = subflowArr.stream().filter(entry -> entry.get(subflow + "Uuid").equals(uuid)).findFirst();
+			var entryToDelete = subflowArr.stream().filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
 			entryToDelete.ifPresent(entry -> httpSession.setAttribute("entryToDelete", entry));
 		}
 
@@ -252,23 +252,21 @@ public class ScreenController {
 			Submission submission = submissionOptional.get();
 			var existingInputData = submission.getInputData();
 			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
-
 			subflowArr.remove(httpSession.getAttribute("entryToDelete"));
-			existingInputData.put(subflow, subflowArr);
-
-			if (subflowArr.isEmpty()) {
+			httpSession.removeAttribute("entryToDelete");
+			if (!subflowArr.isEmpty()) {
+				existingInputData.put(subflow, subflowArr);
+				submission.setInputData(existingInputData);
+				submissionRepositoryService.save(submission);
+			} else {
 				existingInputData.remove(subflow);
-				// ??? delete hasHousehold and change condition to if `household` is populated, but then does the template have links instead of input field `hasHousehold`?
+				submission.setInputData(existingInputData);
+				submissionRepositoryService.save(submission);
+				String subflowEntryScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getEntryScreen();
+				return new ModelAndView("/%s/%s".formatted(flow, subflowEntryScreen));
 			}
-
-			submissionRepositoryService.save(submission);
 		}
-
-		httpSession.removeAttribute("entryToDelete");
-
 		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getReviewScreen();
-
-		// TODO: If deleting full thing, redirect to ___ instead
 		return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
 	}
 
