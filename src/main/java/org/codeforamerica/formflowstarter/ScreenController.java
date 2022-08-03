@@ -244,29 +244,32 @@ public class ScreenController {
 			HttpSession httpSession
 	) {
 		Long id = (Long) httpSession.getAttribute("id");
-		if (id == null) {
-			// we should throw an error here?
-		}
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+		String subflowEntryScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow)
+				.getEntryScreen();
 		if (submissionOptional.isPresent()) {
 			Submission submission = submissionOptional.get();
 			var existingInputData = submission.getInputData();
-			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
-			subflowArr.remove(httpSession.getAttribute("entryToDelete"));
-			httpSession.removeAttribute("entryToDelete");
-			if (!subflowArr.isEmpty()) {
-				existingInputData.put(subflow, subflowArr);
-				submission.setInputData(existingInputData);
-				submissionRepositoryService.save(submission);
+			if (existingInputData.containsKey(subflow)) {
+				var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
+				subflowArr.remove(httpSession.getAttribute("entryToDelete"));
+				httpSession.removeAttribute("entryToDelete");
+				if (!subflowArr.isEmpty()) {
+					existingInputData.put(subflow, subflowArr);
+					submission.setInputData(existingInputData);
+					submissionRepositoryService.save(submission);
+				} else {
+					existingInputData.remove(subflow);
+					submission.setInputData(existingInputData);
+					submissionRepositoryService.save(submission);
+					return new ModelAndView("redirect:/%s/%s".formatted(flow, subflowEntryScreen));
+				}
 			} else {
-				existingInputData.remove(subflow);
-				submission.setInputData(existingInputData);
-				submissionRepositoryService.save(submission);
-				String subflowEntryScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getEntryScreen();
-				return new ModelAndView("/%s/%s".formatted(flow, subflowEntryScreen));
+				return new ModelAndView("redirect:/%s/%s".formatted(flow, subflowEntryScreen));
 			}
 		}
-		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getReviewScreen();
+		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow)
+				.getReviewScreen();
 		return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
 	}
 
