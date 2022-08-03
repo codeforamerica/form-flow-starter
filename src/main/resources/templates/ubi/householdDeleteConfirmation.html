@@ -7,14 +7,14 @@
   <section class="slab">
     <div class="grid">
       <div th:replace="fragments/goBack :: goBackLink"></div>
-      <main th:with="name=${inputData.household[param.iterationIndex].householdMemberFirstName + ' ' +
-                             inputData.household[param.iterationIndex].householdMemberLastName}"
+      <main th:with="name=${session.entryToDelete.get(subflow + 'MemberFirstName') + ' ' +
+                             session.entryToDelete.get(subflow + 'MemberLastName')}"
             id="content" role="main" class="form-card spacing-above-35">
         <h1 class="h2" th:text="#{household-delete-confirmation.header(${name})}"></h1>
         <h2 th:text="#{household-delete-confirmation.is-that-okay}"></h2>
         <div class="form-card__footer">
           <form method="post"
-                th:action="'/' + ${flow} + '/' + ${subflow} + '/' + ${param.iterationIndex} + '/delete'">
+                th:action="'/' + ${flow} + '/' + ${subflow} + '/' + ${param.uuid} + '/delete'">
             <th:block th:replace="fragments/inputs/submitButton :: submitButton(
                   text=#{household-delete-confirmation.yes})"/>
           </form>

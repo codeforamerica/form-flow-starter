@@ -29,10 +29,10 @@
                                 </span>
                                 <span class="text--small spacing-below-0">
                                   <a href="" th:text="#{general.edit}"></a>
-                                  <a th:href="'/ubi/household/' + ${iter.index} + '/deleteConfirmation'"
+                                  <a th:href="'/ubi/household/' + ${householdMember.householdUuid} + '/deleteConfirmation'"
                                      th:text="#{general.delete}"
                                      class="subflow-delete"
-                                     th:id="'delete-iteration-' + ${iter.index}"></a>
+                                     th:id="'delete-iteration-' + ${householdMember.householdUuid}"></a>
                                 </span>
                               </span>
                 </li>

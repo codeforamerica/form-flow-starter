@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
@@ -32,8 +31,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -190,7 +187,7 @@ public class ScreenController {
 		}
 
 		UUID uuid = UUID.randomUUID();
-		formDataSubmission.put("uuid", uuid);
+		formDataSubmission.put(String.format("%sUuid",subflowName), uuid);
 
 		// if there's already a session
 		if (submission.getId() != null) {
@@ -212,23 +209,38 @@ public class ScreenController {
 		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
 	}
 
-	@GetMapping("{flow}/{subflow}/{iteration}/deleteConfirmation")
+	@GetMapping("{flow}/{subflow}/{uuid}/deleteConfirmation")
 	RedirectView deleteConfirmation(
 			@PathVariable String flow,
 			@PathVariable String subflow,
-			@PathVariable int iteration
-	) {
+			@PathVariable String uuid,
+      HttpSession httpSession
+  ) {
 		String deleteConfirmationScreen = getFlowConfigurationByName(flow)
 				.getSubflows().get(subflow).getDeleteConfirmationScreen();
-		return new RedirectView(String.format("/%s/" + deleteConfirmationScreen + "?iterationIndex=" + iteration, flow));
+		Long id = (Long) httpSession.getAttribute("id");
+		if (id == null) {
+			// we should throw an error here?
+		}
+		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+
+		if (submissionOptional.isPresent()) {
+			Submission submission = submissionOptional.get();
+			var existingInputData = submission.getInputData();
+			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
+			var entryToDelete = subflowArr.stream().filter(entry -> entry.get(subflow + "Uuid").equals(uuid)).findFirst();
+			entryToDelete.ifPresent(entry -> httpSession.setAttribute("entryToDelete", entry));
+		}
+
+		return new RedirectView(String.format("/%s/" + deleteConfirmationScreen + "?uuid=" + uuid, flow));
 	}
 
-	@PostMapping("{flow}/{subflow}/{iteration}/delete")
+	@PostMapping("{flow}/{subflow}/{uuid}/delete")
 	ModelAndView deleteSubflowIteration(
 			@RequestHeader("Referer") String referer,
 			@PathVariable String flow,
 			@PathVariable String subflow,
-			@PathVariable int iteration,
+			@PathVariable String uuid,
 			HttpSession httpSession
 	) {
 		Long id = (Long) httpSession.getAttribute("id");
@@ -241,7 +253,7 @@ public class ScreenController {
 			var existingInputData = submission.getInputData();
 			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
 
-			subflowArr.remove(iteration);
+			subflowArr.remove(httpSession.getAttribute("entryToDelete"));
 			existingInputData.put(subflow, subflowArr);
 
 			if (subflowArr.isEmpty()) {
@@ -251,6 +263,9 @@ public class ScreenController {
 
 			submissionRepositoryService.save(submission);
 		}
+
+		httpSession.removeAttribute("entryToDelete");
+
 		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow).getReviewScreen();
 
 		// TODO: If deleting full thing, redirect to ___ instead
