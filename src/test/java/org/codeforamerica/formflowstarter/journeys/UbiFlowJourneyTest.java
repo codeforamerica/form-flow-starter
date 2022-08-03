@@ -47,7 +47,8 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
     assertThat(testPage.getCssSelectorText(".form-card__content")).contains("John Doe");
     assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
-    testPage.findElementById("delete-iteration-1").click();
+    // Delete Jane Doe
+    testPage.findElementsByClass("subflow-delete").get(1).click();
     testPage.clickButton("Yes, remove them");
     assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("Jane Doe");
     assertThat(testPage.findElementsByClass("subflow-delete")).hasSize(1);
