@@ -45,6 +45,7 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.enter("householdMemberFirstName", "Jane");
     testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
+    // Two household members are present
     assertThat(testPage.getCssSelectorText(".form-card__content")).contains("John Doe");
     assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
     // Delete Jane Doe
@@ -52,6 +53,28 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickButton("Yes, remove them");
     assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("Jane Doe");
     assertThat(testPage.findElementsByClass("subflow-delete")).hasSize(1);
+    // Go back to delete confirmation and make sure someone else isn't deleted
+    testPage.goBack();
+    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
+    testPage.clickButton("Yes, remove them");
+    assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("Jane Doe");
+    assertThat(testPage.findElementsByClass("subflow-delete")).hasSize(1);
+    // Delete final household member to go back to householdList
+    testPage.findElementsByClass("subflow-delete").get(0).click();
+    testPage.clickButton("Yes, remove them");
+    assertThat(testPage.getTitle()).isEqualTo("Housemates");
+    // Add back household members
+    testPage.enter("hasHousehold", YES.getDisplayValue());
+    // Housemate Info screen
+    testPage.enter("householdMemberFirstName", "John");
+    testPage.enter("householdMemberLastName", "Doe");
+    testPage.clickContinue();
+    // Household List screen
+    testPage.clickButton("+ Add a person");
+    // Housemate Info screen
+    testPage.enter("householdMemberFirstName", "Jane");
+    testPage.enter("householdMemberLastName", "Doe");
+    testPage.clickContinue();
   }
 
 // Assert intercom button is present on landing page

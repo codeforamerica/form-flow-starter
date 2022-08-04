@@ -10,8 +10,11 @@
       <main th:with="name=${session.entryToDelete.get(subflow + 'MemberFirstName') + ' ' +
                              session.entryToDelete.get(subflow + 'MemberLastName')}"
             id="content" role="main" class="form-card spacing-above-35">
-        <h1 class="h2" th:text="#{household-delete-confirmation.header(${name})}"></h1>
-        <h2 th:text="#{household-delete-confirmation.is-that-okay}"></h2>
+        <div class="form-card__content">
+          <h1 class="h2"
+              th:text="#{household-delete-confirmation.header(${name})}"></h1>
+          <h2 th:text="#{household-delete-confirmation.is-that-okay}"></h2>
+        </div>
         <div class="form-card__footer">
           <form method="post"
                 th:action="'/' + ${flow} + '/' + ${subflow} + '/' + ${param.uuid} + '/delete'">
