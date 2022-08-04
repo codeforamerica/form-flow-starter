@@ -75,6 +75,15 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.enter("householdMemberFirstName", "Jane");
     testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
+    // Edit a person
+//    takeSnapShot("test.png");
+    testPage.findElementsByClass("subflow-edit").get(0).click();
+    testPage.enter("householdMemberFirstName", "Anthony");
+    testPage.enter("householdMemberLastName", "Dee");
+    testPage.clickContinue();
+    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Anthony Dee");
+    assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("John Doe");
+    testPage.clickContinue();
   }
 
 // Assert intercom button is present on landing page

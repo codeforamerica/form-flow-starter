@@ -24,6 +24,7 @@ import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -271,6 +272,39 @@ public class ScreenController {
 		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow)
 				.getReviewScreen();
 		return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
+	}
+
+	// TODO: this only works for subflows with only one page to edit
+	// Could change to flow/subflow/screen/:uuid/edit to better handle advanced cases
+	// Potentially having a more generic end path to handle nested flow/subflows?
+	@GetMapping("{flow}/{subflow}/{uuid}/edit")
+	ModelAndView edit(
+			@PathVariable String flow,
+			@PathVariable String subflow,
+			@PathVariable String uuid,
+			HttpSession httpSession
+	) {
+		String iterationStartScreen = getFlowConfigurationByName(flow)
+				.getSubflows().get(subflow).getIterationStartScreen();
+		Long id = (Long) httpSession.getAttribute("id");
+		Map<String, Object> model;
+
+		if (id == null) {
+			// we should throw an error here?
+		}
+		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+
+		if (submissionOptional.isPresent()) {
+			Submission submission = submissionOptional.get();
+			 model = createModel(flow, iterationStartScreen, httpSession, submission);
+
+			var existingInputData = submission.getInputData();
+			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
+			var entryToEdit = subflowArr.stream().filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
+			entryToEdit.ifPresent(entry -> httpSession.setAttribute("entryToDelete", entry));
+		}
+
+		return new ModelAndView(String.format("/%s/" + iterationStartScreen + "?uuid=" + uuid, flow), model);
 	}
 
 	@PostMapping("{flow}/{screen}/submit")

@@ -28,7 +28,10 @@
                                   <span th:text="${householdMember.householdMemberLastName}"></span>
                                 </span>
                                 <span class="text--small spacing-below-0">
-                                  <a href="" th:text="#{general.edit}"></a>
+                                  <a th:href="'/ubi/household/' + ${householdMember.uuid} + '/edit'"
+                                     th:text="#{general.edit}"
+                                     th:id="'edit-iteration-' + ${householdMember.uuid}"
+                                     class="subflow-edit"></a>
                                   <a th:href="'/ubi/household/' + ${householdMember.uuid} + '/deleteConfirmation'"
                                      th:text="#{general.delete}"
                                      class="subflow-delete"
