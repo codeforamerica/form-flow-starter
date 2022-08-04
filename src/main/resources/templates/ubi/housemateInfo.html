@@ -7,12 +7,16 @@
   <section class="slab">
     <div class="grid">
       <div th:replace="fragments/goBack :: goBackLink"></div>
-      <main id="content" role="main" class="form-card spacing-above-35">
+      <main id="content" role="main" class="form-card spacing-above-35"
+            th:with="
+            newAction=${'/' + flow + '/' + screen + '/new'},
+            editAction=${'/' + flow + '/' + subflow + '/' + uuid + '/edit'}">
         <th:block th:replace="'fragments/icons' :: person"/>
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{housemate-info.add-a-person})"/>
+        <div th:text="${inputData}"></div>
         <th:block
-            th:replace="'fragments/form' :: form(action=${'/' + flow + '/' + screen + '/new'}, content=~{::formContent})">
+            th:replace="'fragments/form' :: form(action=${isEditScreen != null ? editAction : newAction}, content=~{::formContent})">
           <th:block th:ref="formContent">
             <div class="form-card__content">
               <th:block th:replace="'fragments/inputs/text' ::
