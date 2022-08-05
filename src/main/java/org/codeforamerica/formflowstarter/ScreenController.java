@@ -278,7 +278,7 @@ public class ScreenController {
 	// Could change to flow/subflow/screen/:uuid/edit to better handle advanced cases
 	// Potentially having a more generic end path to handle nested flow/subflows?
 	@GetMapping("{flow}/{subflow}/{uuid}/edit")
-	ModelAndView edit(
+	ModelAndView getEditScreen(
 			@PathVariable String flow,
 			@PathVariable String subflow,
 			@PathVariable String uuid,
@@ -305,6 +305,44 @@ public class ScreenController {
 		}
 
 		return new ModelAndView(String.format("%s/" + iterationStartScreen, flow), model);
+	}
+
+	@PostMapping("{flow}/{subflow}/{uuid}/edit")
+	ModelAndView edit(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String subflow,
+			@PathVariable String uuid,
+			HttpSession httpSession
+	) {
+		String iterationStartScreen = getFlowConfigurationByName(flow)
+				.getSubflows().get(subflow).getIterationStartScreen();
+		Long id = (Long) httpSession.getAttribute("id");
+		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
+
+		if (submissionOptional.isPresent()) {
+			Submission submission = submissionOptional.get();
+			var existingInputData = submission.getInputData();
+			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
+			var iterationToEdit = subflowArr.stream()
+					.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
+			if (iterationToEdit.isPresent()) {
+				Map<String, Object> iteration = iterationToEdit.get();
+				iteration.forEach((key, value) -> {
+					formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
+				});
+				int indexToUpdate = subflowArr.indexOf(iteration);
+				subflowArr.set(indexToUpdate, formDataSubmission);
+				existingInputData.replace(subflow, subflowArr);
+				submission.setInputData(existingInputData);
+				submissionRepositoryService.save(submission);
+			}
+		} else {
+			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
+		}
+
+		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, iterationStartScreen));
 	}
 
 	@PostMapping("{flow}/{screen}/submit")
