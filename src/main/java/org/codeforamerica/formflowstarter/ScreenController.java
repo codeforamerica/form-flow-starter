@@ -156,6 +156,7 @@ public class ScreenController {
 		}
 	}
 
+	// TODO: do we actually need this endpoint? How is is different from GET flow/screen?
 	@GetMapping("{flow}/{screen}/new")
 	ModelAndView getNewSubflow(
 			@RequestParam(required = false) MultiValueMap<String, String> formData,

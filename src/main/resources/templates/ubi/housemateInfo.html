@@ -14,7 +14,6 @@
         <th:block th:replace="'fragments/icons' :: person"/>
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{housemate-info.add-a-person})"/>
-        <div th:text="${inputData}"></div>
         <th:block
             th:replace="'fragments/form' :: form(action=${isEditScreen != null ? editAction : newAction}, content=~{::formContent})">
           <th:block th:ref="formContent">
