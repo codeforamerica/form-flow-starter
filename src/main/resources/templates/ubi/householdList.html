@@ -28,7 +28,7 @@
                                   <span th:text="${householdMember.householdMemberLastName}"></span>
                                 </span>
                                 <span class="text--small spacing-below-0">
-                                  <a th:href="'/ubi/household/' + ${householdMember.uuid} + '/edit'"
+                                  <a th:href="'/ubi/household/' + ${iterationStartScreen} + '/' + ${householdMember.uuid} + '/edit'"
                                      th:text="#{general.edit}"
                                      th:id="'edit-iteration-' + ${householdMember.uuid}"
                                      class="subflow-edit"></a>

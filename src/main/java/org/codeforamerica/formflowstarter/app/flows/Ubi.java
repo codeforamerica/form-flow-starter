@@ -45,4 +45,6 @@ public class Ubi {
   String householdMemberLastName;
   String householdMemberRelationship;
   String householdMemberRecentlyMovedToUS;
+
+  String testInput;
 }

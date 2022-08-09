@@ -20,6 +20,10 @@ flow:
   housemateInfo:
     subflow: household
     nextScreens:
+      - name: testPage
+  testPage:
+    subflow: household
+    nextScreens:
       - name: householdList
   householdList:
     nextScreens:

@@ -92,6 +92,14 @@ public class ScreenController {
 					.entrySet().stream().filter(entry ->
 							entry.getValue().getDeleteConfirmationScreen().equals(screen)).map(Entry::getKey).toList();
 
+			// Add the iteration start page to the model if we are on the review page for a subflow so we have it for the edit button
+			subflows.forEach((key, value) -> {
+				if (value.getReviewScreen().equals(screen)) {
+					model.put("iterationStartScreen", value.getIterationStartScreen());
+				}
+			});
+
+
 			if (!subflowFromDeleteConfirmationConfig.isEmpty()) {
 				model.put("subflow", subflowFromDeleteConfirmationConfig.get(0));
 			}
@@ -159,7 +167,6 @@ public class ScreenController {
 	// TODO: do we actually need this endpoint? How is is different from GET flow/screen?
 	@GetMapping("{flow}/{screen}/new")
 	ModelAndView getNewSubflow(
-			@RequestParam(required = false) MultiValueMap<String, String> formData,
 			@PathVariable String flow,
 			@PathVariable String screen,
 			HttpSession httpSession
@@ -278,10 +285,11 @@ public class ScreenController {
 	// TODO: this only works for subflows with only one page to edit
 	// Could change to flow/subflow/screen/:uuid/edit to better handle advanced cases
 	// Potentially having a more generic end path to handle nested flow/subflows?
-	@GetMapping("{flow}/{subflow}/{uuid}/edit")
+	@GetMapping("{flow}/{subflow}/{screen}/{uuid}/edit")
 	ModelAndView getEditScreen(
 			@PathVariable String flow,
 			@PathVariable String subflow,
+			@PathVariable String screen,
 			@PathVariable String uuid,
 			HttpSession httpSession
 	) {
