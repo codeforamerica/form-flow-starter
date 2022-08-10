@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfigurati
 import org.codeforamerica.formflowstarter.app.config.SubflowConfiguration;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -210,7 +214,9 @@ public class ScreenController {
 		return new ModelAndView(String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid), model);
 	}
 
-	@GetMapping("{flow}/{screen}/{uuid}")
+	// 😭 If we could use a method: <string>.replaceFirst("\\{([^}]*)}", "flow:(?!assets).*")
+	// We have to put the regex inline because spring boot must have a compile-time available string
+	@GetMapping("{flow:(?!assets).*}/{screen}/{uuid}")
 	ModelAndView getSubflowScreen(
 			@PathVariable String flow,
 			@PathVariable String screen,
@@ -219,7 +225,7 @@ public class ScreenController {
 	) {
 		Submission submission = getSubmission(httpSession);
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
-		return new ModelAndView(String.format("/%s/%s/%s", flow, screen, uuid), model);
+		return new ModelAndView(String.format("/%s/%s", flow, screen), model);
 	}
 
 	@GetMapping("{flow}/{subflow}/{uuid}/deleteConfirmation")
