@@ -25,6 +25,7 @@ import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,13 +70,7 @@ public class ScreenController {
 		if (currentScreen == null) {
 			return new ModelAndView("redirect:/error");
 		}
-		if (currentScreen.getSubflow() != null) {
-			String subflow = currentScreen.getSubflow();
-			// Is subworkflow currently null? []
-			if (!submission.getInputData().containsKey(subflow)) {
-				return new ModelAndView("redirect:/%s/%s/new".formatted(flow, screen));
-			}
-		}
+
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 	}
@@ -98,7 +93,6 @@ public class ScreenController {
 					model.put("iterationStartScreen", value.getIterationStartScreen());
 				}
 			});
-
 
 			if (!subflowFromDeleteConfirmationConfig.isEmpty()) {
 				model.put("subflow", subflowFromDeleteConfirmationConfig.get(0));
@@ -164,20 +158,7 @@ public class ScreenController {
 		}
 	}
 
-	// TODO: do we actually need this endpoint? How is is different from GET flow/screen?
-	@GetMapping("{flow}/{screen}/new")
-	ModelAndView getNewSubflow(
-			@PathVariable String flow,
-			@PathVariable String screen,
-			HttpSession httpSession
-	) {
-		Submission submission = getSubmission(httpSession);
-		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
-
-		return new ModelAndView(String.format("/%s/%s", flow, screen), model);
-	}
-
-	@PostMapping("{flow}/{screen}/new")
+	@PostMapping("{flow}/{screen}/new") //{flow}/{screen}/{uuid}
 	ModelAndView postNewSubflow(
 			@RequestParam(required = false) MultiValueMap<String, String> formData,
 			@PathVariable String flow,
@@ -188,7 +169,10 @@ public class ScreenController {
 		var formDataSubmission = removeEmptyValuesAndFlatten(formData);
 		var submission = getSubmission(httpSession);
 		var currentScreen = getCurrentScreen(flow, screen);
-		var subflowName = getCurrentScreen(flow, screen).getSubflow();
+		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
+		String subflowName = subflows.entrySet().stream().filter(subflow ->
+						subflow.getValue().getIterationStartScreen().equals(screen))
+				.map(Entry::getKey).findFirst().orElse(null);
 		var errorMessages = validationService.validate(flow, formDataSubmission);
 		handleErrors(httpSession, errorMessages, formDataSubmission);
 		if (errorMessages.size() > 0) {
@@ -200,7 +184,6 @@ public class ScreenController {
 
 		// if there's already a session
 		if (submission.getId() != null) {
-			Map<String, Object> inputData = submission.getInputData();
 			if (!submission.getInputData().containsKey(subflowName)) {
 				submission.getInputData().put(subflowName, new ArrayList<Map<String, Object>>());
 			}
@@ -215,8 +198,67 @@ public class ScreenController {
 			httpSession.setAttribute("id", submission.getId());
 		}
 
-		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
+		String nextScreen = getNextScreenName(httpSession, currentScreen);
+
+		ModelMap model = new ModelMap();
+		model.put("uuid", formDataSubmission.get("uuuid"));
+
+		return new ModelAndView(String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid), model);
 	}
+
+	// 😭 If we could use a method: <string>.replaceFirst("\\{([^}]*)}", "flow:(?!assets).*")
+	// We have to put the regex inline because spring boot must have a compile-time available string
+	@GetMapping("{flow:(?!assets).*}/{screen}/{uuid}")
+	ModelAndView getSubflowScreen(
+			@PathVariable String flow,
+			@PathVariable String screen,
+			@PathVariable String uuid,
+			HttpSession httpSession
+	) {
+		Submission submission = getSubmission(httpSession);
+		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
+		return new ModelAndView(String.format("/%s/%s", flow, screen), model);
+	}
+
+	@PostMapping("{flow:(?!assets).*}/{screen}/{uuid}")
+	ModelAndView addToIteration(
+			@RequestParam(required = false) MultiValueMap<String, String> formData,
+			@PathVariable String flow,
+			@PathVariable String screen,
+			@PathVariable String uuid,
+			HttpSession httpSession
+	) {
+		Long id = (Long) httpSession.getAttribute("id");
+		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
+		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
+		ScreenNavigationConfiguration currentScreen = getCurrentScreen(flow, screen);
+		String subflow = currentScreen.getSubflow();
+
+		if (submissionOptional.isPresent()) {
+			// TODO can we refactor this to a method for less code duplication?
+			Submission submission = submissionOptional.get();
+			var existingInputData = submission.getInputData();
+			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
+			var iterationToEdit = subflowArr.stream()
+					.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
+			if (iterationToEdit.isPresent()) {
+				Map<String, Object> iteration = iterationToEdit.get();
+				iteration.forEach((key, value) -> {
+					formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
+				});
+				int indexToUpdate = subflowArr.indexOf(iteration);
+				subflowArr.set(indexToUpdate, formDataSubmission);
+				existingInputData.replace(subflow, subflowArr);
+				submission.setInputData(existingInputData);
+				submissionRepositoryService.save(submission);
+			}
+		} else {
+			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
+		}
+		String nextScreen = getNextScreenName(httpSession, currentScreen);
+		return new ModelAndView(String.format("redirect:/%s/%s", flow, nextScreen));
+	}
+
 
 	@GetMapping("{flow}/{subflow}/{uuid}/deleteConfirmation")
 	RedirectView deleteConfirmation(
@@ -285,23 +327,22 @@ public class ScreenController {
 	// TODO: this only works for subflows with only one page to edit
 	// Could change to flow/subflow/screen/:uuid/edit to better handle advanced cases
 	// Potentially having a more generic end path to handle nested flow/subflows?
-	@GetMapping("{flow}/{subflow}/{screen}/{uuid}/edit")
+	@GetMapping("{flow}/{screen}/{uuid}/edit")
 	ModelAndView getEditScreen(
 			@PathVariable String flow,
-			@PathVariable String subflow,
 			@PathVariable String screen,
 			@PathVariable String uuid,
 			HttpSession httpSession
 	) {
-		String iterationStartScreen = getFlowConfigurationByName(flow)
-				.getSubflows().get(subflow).getIterationStartScreen();
+		ScreenNavigationConfiguration currentScreenConfig = getCurrentScreen(flow, screen);
+		String subflow = currentScreenConfig.getSubflow();
 		Long id = (Long) httpSession.getAttribute("id");
 		Map<String, Object> model;
 
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		if (submissionOptional.isPresent()) {
 			Submission submission = submissionOptional.get();
-			model = createModel(flow, iterationStartScreen, httpSession, submission);
+			model = createModel(flow, screen, httpSession, submission);
 
 			var existingInputData = submission.getInputData();
 			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
@@ -313,19 +354,19 @@ public class ScreenController {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
 		}
 
-		return new ModelAndView(String.format("%s/" + iterationStartScreen, flow), model);
+		return new ModelAndView(String.format("%s/%s", flow, screen), model);
 	}
 
-	@PostMapping("{flow}/{subflow}/{uuid}/edit")
+	@PostMapping("{flow}/{screen}/{uuid}/edit")
 	ModelAndView edit(
 			@RequestParam(required = false) MultiValueMap<String, String> formData,
 			@PathVariable String flow,
-			@PathVariable String subflow,
+			@PathVariable String screen,
 			@PathVariable String uuid,
 			HttpSession httpSession
 	) {
-		String iterationStartScreen = getFlowConfigurationByName(flow)
-				.getSubflows().get(subflow).getIterationStartScreen();
+		ScreenNavigationConfiguration currentScreen = getCurrentScreen(flow, screen);
+		String subflow = currentScreen.getSubflow();
 		Long id = (Long) httpSession.getAttribute("id");
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
@@ -350,8 +391,8 @@ public class ScreenController {
 		} else {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
 		}
-
-		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, iterationStartScreen));
+		String nextScreen = getNextScreenName(httpSession, currentScreen);
+		return new ModelAndView(String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid));
 	}
 
 	@PostMapping("{flow}/{screen}/submit")
@@ -414,6 +455,14 @@ public class ScreenController {
 		if (currentScreen == null) {
 			return new RedirectView("/error");
 		}
+		String nextScreen = getNextScreenName(httpSession,
+				currentScreen);
+
+		return new RedirectView("/%s/%s".formatted(flow, nextScreen));
+	}
+
+	private String getNextScreenName(HttpSession httpSession,
+			ScreenNavigationConfiguration currentScreen) {
 		NextScreen nextScreen;
 		if (isConditionalNavigation(currentScreen)
 				&& getConditionalNextScreen(currentScreen, httpSession).size() > 0) {
@@ -422,8 +471,7 @@ public class ScreenController {
 			// TODO this needs to throw an error if there are more than 1 next screen that don't have a condition or more than one evaluate to true
 			nextScreen = getNonConditionalNextScreen(currentScreen);
 		}
-
-		return new RedirectView("/%s/%s".formatted(flow, nextScreen.getName()));
+		return nextScreen.getName();
 	}
 
 	private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
