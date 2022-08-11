@@ -10,7 +10,7 @@
       <main id="content" role="main" class="form-card spacing-above-35"
             th:with="
             newAction=${'/' + flow + '/' + screen + '/new'},
-            editAction=${'/' + flow + '/' + subflow + '/' + uuid + '/edit'}">
+            editAction=${'/' + flow + '/' + screen + '/' + uuid + '/edit'}">
         <th:block th:replace="'fragments/icons' :: person"/>
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{housemate-info.add-a-person})"/>
