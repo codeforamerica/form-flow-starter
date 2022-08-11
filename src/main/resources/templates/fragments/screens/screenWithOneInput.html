@@ -2,6 +2,7 @@
     th:fragment="screenWithOneInput"
     th:assert="
       ${!#strings.isEmpty(title)},
+      ${!#strings.isEmpty(header)},
       ${!#strings.isEmpty(formAction)},
       ${inputContent != null}">
   <!DOCTYPE html>
@@ -15,7 +16,7 @@
         <div th:replace="fragments/goBack :: goBackLink"></div>
         <main id="content" role="main" class="form-card spacing-above-35">
           <th:block
-              th:replace="'fragments/cardHeader' :: cardHeader(title=${title}, subtext=${subtext})"/>
+              th:replace="'fragments/cardHeader' :: cardHeader(header=${header}, subtext=${subtext})"/>
           <th:block
               th:replace="'fragments/form' :: form(action=${formAction}, content=~{::formContent})">
             <th:block th:ref="formContent">
