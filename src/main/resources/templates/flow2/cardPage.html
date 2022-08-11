@@ -10,7 +10,7 @@
       <div th:replace="fragments/aboveCard :: aboveCard"></div>
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block th:replace="'fragments/icons' :: authorizedRepContextFragment" />
-        <th:block th:replace="'fragments/cardHeader' :: cardHeader(title=#{card-page.title})" />
+        <th:block th:replace="'fragments/cardHeader' :: cardHeader(header=#{card-page.title})" />
 
 
 <!--        <th:block th:if="${pageNameContext != null}">-->

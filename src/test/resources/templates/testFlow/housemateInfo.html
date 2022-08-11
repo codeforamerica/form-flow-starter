@@ -9,7 +9,7 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block th:replace="'fragments/icons' :: person"/>
         <th:block
-            th:replace="'fragments/cardHeader' :: cardHeader(title=#{housemate-info.add-a-person})"/>
+            th:replace="'fragments/cardHeader' :: cardHeader(header=#{housemate-info.add-a-person})"/>
         <th:block
             th:replace="'fragments/form' :: form(action=${'/' + flow + '/' + screen}, content=~{::formContent})">
           <th:block th:ref="formContent">

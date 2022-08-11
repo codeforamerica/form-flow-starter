@@ -328,9 +328,6 @@ public class ScreenController {
 		return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
 	}
 
-	// TODO: this only works for subflows with only one page to edit
-	// Could change to flow/subflow/screen/:uuid/edit to better handle advanced cases
-	// Potentially having a more generic end path to handle nested flow/subflows?
 	@GetMapping("{flow}/{screen}/{uuid}/edit")
 	ModelAndView getEditScreen(
 			@PathVariable String flow,
@@ -532,6 +529,9 @@ public class ScreenController {
 
 	private Boolean isIterationStartScreen(String flow, String screen) {
 		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
+		if (subflows == null) {
+			return false;
+		}
 		return subflows.entrySet().stream().anyMatch(subflowConfig ->
 				subflowConfig.getValue().getIterationStartScreen().equals(screen));
 	}

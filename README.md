@@ -154,7 +154,7 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
       <div class="grid">
          <main id="content" role="main" class="form-card spacing-above-35">
             <th:block th:replace="'icons' :: 'clipboard'"></th:block>
-            <th:block th:replace="'content' :: cardHeader(title='Tell us about yourself')" />
+            <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')" />
             <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')" />
             <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')" />
             <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')" />

@@ -8,7 +8,7 @@
     <div class="grid">
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
-            th:replace="'fragments/cardHeader' :: cardHeader(title='Next Page', subtext='This is the next page!')"/>
+            th:replace="'fragments/cardHeader' :: cardHeader(header='Next Page', subtext='This is the next page!')"/>
           <th:block th:replace="'fragments/form' :: form(action='/testFlow/next', content=~{::formContent})">
             <th:block th:ref="formContent">
               <div class="form-card__content">
