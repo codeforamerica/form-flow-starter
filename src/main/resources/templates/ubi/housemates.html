@@ -10,7 +10,7 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <th:block
             th:replace="'fragments/cardHeader' :: cardHeader(title=#{housemates.do-you})"/>
-          <th:block th:replace="'fragments/form' :: form(action=${'/' + flow + '/' + screen}, content=~{::formContent})">
+          <th:block th:replace="'fragments/form' :: form(action=${formAction}, content=~{::formContent})">
             <th:block th:ref="formContent">
               <div class="form-card__content">
                 <ul class="list--bulleted spacing-below-60">

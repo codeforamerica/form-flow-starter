@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
@@ -61,9 +59,7 @@ public class ScreenController {
 	ModelAndView getScreen(
 			@PathVariable String flow,
 			@PathVariable String screen,
-			HttpServletResponse response,
-			HttpSession httpSession,
-			Locale locale
+			HttpSession httpSession
 	) {
 		var currentScreen = getCurrentScreen(flow, screen);
 		var submission = getSubmission(httpSession);
@@ -72,7 +68,14 @@ public class ScreenController {
 		}
 
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
+		String formAction = createFormActionString(flow, screen);
+		model.put("formAction", formAction);
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
+	}
+
+	private String createFormActionString(String flow, String screen) {
+		return isIterationStartScreen(flow, screen) ?
+				"/%s/%s/new".formatted(flow, screen) : "/%s/%s".formatted(flow, screen);
 	}
 
 	private Map<String, Object> createModel(String flow, String screen, HttpSession httpSession, Submission submission) {
@@ -217,6 +220,7 @@ public class ScreenController {
 	) {
 		Submission submission = getSubmission(httpSession);
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
+		model.put("formAction", String.format("/%s/%s/%s", flow, screen, uuid));
 		return new ModelAndView(String.format("/%s/%s", flow, screen), model);
 	}
 
@@ -349,7 +353,7 @@ public class ScreenController {
 			var entryToEdit = subflowArr.stream()
 					.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
 			entryToEdit.ifPresent(stringObjectMap -> model.put("inputData", stringObjectMap));
-			model.put("isEditScreen", true);
+			model.put("formAction", String.format("/%s/%s/%s/edit", flow, screen, uuid));
 		} else {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
 		}
@@ -524,5 +528,11 @@ public class ScreenController {
 		} else {
 			return new Submission();
 		}
+	}
+
+	private Boolean isIterationStartScreen(String flow, String screen) {
+		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
+		return subflows.entrySet().stream().anyMatch(subflowConfig ->
+				subflowConfig.getValue().getIterationStartScreen().equals(screen));
 	}
 }
