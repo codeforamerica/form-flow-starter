@@ -6,13 +6,14 @@
     th:with="
       hasHelpText=${!#strings.isEmpty(helpText)},
       hasLabel=${!#strings.isEmpty(label)},
+      hasAriaLabel=${!#strings.isEmpty(ariaLabel)},
       hasError=${
         errorMessages != null &&
         errorMessages.get(inputName) != null &&
         (#arrays.length(errorMessages.get(inputName)) > 0) }"
     th:assert="
       ${!#strings.isEmpty(inputName)},
-      ${hasLabel},
+      ${hasLabel || hasAriaLabel},
       ${content != null}">
   <div th:class="'form-group' + ${(hasError ? ' form-group--error' : '')}">
     <style>
@@ -21,8 +22,11 @@
         font-weight: 400;
       }
     </style>
-    <fieldset th:attr="aria-describedby=${hasHelpText ? inputName + '-help-text' : ''}">
+    <fieldset th:attr="
+      aria-describedby=${hasHelpText ? inputName + '-help-text' : ''},
+      aria-labelledby=${hasAriaLabel ? ariaLabel : ''}">
       <legend class="form-question"
+              th:if="${hasLabel}"
               th:id="${inputName + '-legend'}"
               th:inline="text">
         [[${label}]]

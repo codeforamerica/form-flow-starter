@@ -84,17 +84,7 @@
   <option name="HTML" value="true" />
 </context>
 </template>
-<template name="cfa:inputFieldset" value="&lt;th:block th:replace=&quot;'fragments/inputs/fieldset' ::&#10;  fieldset(inputName='$INPUT_NAME$',&#10;  label=#{$LABEL$},&#10;  fieldsetHelpText=#{$FIELDSET_HELP_TEXT$},&#10;  content=~{::$REF_CONTENT$})&quot;&gt;&#10;    &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;      $INSERT_CONTENT$&#10;    &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="A fieldset with label, name, optional help text and no content" toReformat="false" toShortenFQNames="true">
-<variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
-<variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
-<variable name="FIELDSET_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
-<variable name="REF_CONTENT" expression="" defaultValue="" alwaysStopAt="true" />
-<variable name="INSERT_CONTENT" expression="" defaultValue="" alwaysStopAt="true" />
-<context>
-  <option name="HTML" value="true" />
-</context>
-</template>
-<template name="cfa:inputFieldsetWithCheckbox" value="&lt;th:block th:replace=&quot;'fragments/inputs/fieldset' ::&#10;  fieldset(inputName='$INPUT_NAME$',&#10;  label=#{$LABEL$},&#10;  fieldsetHelpText=#{$FIELDSET_HELP_TEXT$},&#10;  content=~{::$REF_CONTENT$})&quot;&gt;&#10;    &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;      &lt;!-- Copy the below input if you want to add more --&gt;&#10;      &lt;th:block&#10;        th:replace=&quot;'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='$INPUT_NAME$',value='$VALUE$', label=#{$CHECKBOX_LABEL$})&quot;/&gt;&#10;    &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="A fieldset with label, name, optional help text and a checkbox with label, name, value, optional help text and optional icon" toReformat="false" toShortenFQNames="true">
+<template name="cfa:inputFieldsetWithCheckbox" value="&lt;th:block th:replace=&quot;'fragments/inputs/checkboxFieldset' ::&#10;  checkboxFieldset(inputName='$INPUT_NAME$',&#10;  label=#{$LABEL$},&#10;  helpText=#{$FIELDSET_HELP_TEXT$},&#10;  content=~{::$REF_CONTENT$})&quot;&gt;&#10;    &lt;th:block th:ref=&quot;$REF_CONTENT$&quot;&gt;&#10;      &lt;!-- Copy the below input if you want to add more --&gt;&#10;      &lt;th:block&#10;        th:replace=&quot;'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='$INPUT_NAME$',value='$VALUE$', label=#{$CHECKBOX_LABEL$})&quot;/&gt;&#10;    &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="A fieldset with label, name, optional help text and a checkbox with label, name, value, optional help text and optional icon" toReformat="false" toShortenFQNames="true">
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="FIELDSET_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
@@ -105,7 +95,7 @@
   <option name="HTML" value="true" />
 </context>
 </template>
-<template name="cfa:inputFieldsetWithRadio" value="&lt;th:block th:replace=&quot;'fragments/inputs/radioFieldset' ::&#10;              radioFieldset(inputName='$INPUT_NAME$',&#10;              label=#{$LABEL$},&#10;              fieldsetHelpText=#{$OPTIONAL_HELP_TEXT$},&#10;              content=~{::$CONTENTREF$})&quot;&gt;&#10;              &lt;th:block th:ref=&quot;$CONTENTREF$&quot;&gt;&#10;                &lt;!-- Copy the below input if you want to add more --&gt;&#10;                &lt;th:block&#10;                    th:replace=&quot;'fragments/inputs/radio' :: radio(inputName='$INPUT_NAME$',value='$VALUE$', label=#{$VALUE_LABEL$})&quot;/&gt;&#10;              &lt;/th:block&gt;&#10;            &lt;/th:block&gt;" description="A fieldset with legend and radio input(s) with optional help text." toReformat="false" toShortenFQNames="true">
+<template name="cfa:inputFieldsetWithRadio" value="&lt;th:block th:replace=&quot;'fragments/inputs/radioFieldset' ::&#10;              radioFieldset(inputName='$INPUT_NAME$',&#10;              label=#{$LABEL$},&#10;              helpText=#{$OPTIONAL_HELP_TEXT$},&#10;              content=~{::$CONTENTREF$})&quot;&gt;&#10;              &lt;th:block th:ref=&quot;$CONTENTREF$&quot;&gt;&#10;                &lt;!-- Copy the below input if you want to add more --&gt;&#10;                &lt;th:block&#10;                    th:replace=&quot;'fragments/inputs/radio' :: radio(inputName='$INPUT_NAME$',value='$VALUE$', label=#{$VALUE_LABEL$})&quot;/&gt;&#10;              &lt;/th:block&gt;&#10;            &lt;/th:block&gt;" description="A fieldset with legend and radio input(s) with optional help text." toReformat="false" toShortenFQNames="true">
 <variable name="INPUT_NAME" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="LABEL" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="OPTIONAL_HELP_TEXT" expression="" defaultValue="" alwaysStopAt="true" />
@@ -206,7 +196,7 @@
   <option name="HTML" value="true" />
 </context>
 </template>
-<template name="cfa:screenWithOneInput" value="&lt;th:block&#10;  th:replace=&quot;fragments/screens/screenWithOneInput ::&#10;  screenWithOneInput(&#10;    title=#{$TITLE$},&#10;    title=#{$HEADER$},&#10;    subtext=#{$SUBTEXT$},&#10;    formAction=${formAction},&#10;    inputContent=~{::inputContent})&quot;&gt;&#10;  &lt;th:block th:ref=&quot;inputContent&quot;&gt;&#10;    &lt;!-- Be sure to have `ariaLabel='header'` to label the input with the header --&gt;&#10;    &lt;th:block th:replace=&quot;'fragments/inputs/text' ::&#10;      text(inputName='$INPUT_NAME$',&#10;      ariaLabel='header')&quot;/&gt;&#10;  &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="An entire screen that has one input and is labelled by the page header." toReformat="false" toShortenFQNames="true">
+<template name="cfa:screenWithOneInput" value="&lt;th:block&#10;  th:replace=&quot;fragments/screens/screenWithOneInput ::&#10;  screenWithOneInput(&#10;    title=#{$TITLE$},&#10;    header=#{$HEADER$},&#10;    subtext=#{$SUBTEXT$},&#10;    formAction=${formAction},&#10;    inputContent=~{::inputContent})&quot;&gt;&#10;  &lt;th:block th:ref=&quot;inputContent&quot;&gt;&#10;    &lt;!-- Be sure to have `ariaLabel='header'` to label the input with the header --&gt;&#10;    &lt;th:block th:replace=&quot;'fragments/inputs/text' ::&#10;      text(inputName='$INPUT_NAME$',&#10;      ariaLabel='header')&quot;/&gt;&#10;  &lt;/th:block&gt;&#10;&lt;/th:block&gt;" description="An entire screen that has one input and is labelled by the page header." toReformat="false" toShortenFQNames="true">
 <variable name="TITLE" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="HEADER" expression="" defaultValue="" alwaysStopAt="true" />
 <variable name="SUBTEXT" expression="" defaultValue="" alwaysStopAt="true" />

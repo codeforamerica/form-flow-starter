@@ -46,5 +46,7 @@ public class Ubi {
   String householdMemberRelationship;
   String householdMemberRecentlyMovedToUS;
 
-  String testInput;
+  String householdMember;
+
+  ArrayList<String> incomeTypes;
 }

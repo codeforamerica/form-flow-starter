@@ -20,20 +20,27 @@ flow:
   housemateInfo:
     subflow: household
     nextScreens:
-      - name: testPage
-  testPage:
-    subflow: household
-    nextScreens:
       - name: householdList
   householdList:
     nextScreens:
-      - name: success
+      - name: income
   householdDeleteConfirmation:
     nextScreens:
   income:
     nextScreens:
-      - name: housemateIncome
+      - name: householdMemberIncome
         condition: hasHousehold
+  householdMemberIncome:
+    subflow: income
+    nextScreens:
+      - name: incomeTypes
+  incomeTypes:
+    subflow: income
+    nextScreens:
+      - name: incomeAmounts
+  incomeAmounts:
+    subflow: income
+    nextScreens:
   reportedAnnualHouseholdIncome:
     nextScreens:
       - name: AnnualHouseholdIncome
@@ -45,6 +52,11 @@ subflows:
     iterationStartScreen: housemateInfo
     reviewScreen: householdList
     deleteConfirmationScreen: householdDeleteConfirmation
+  income:
+    entryScreen: income
+    iterationStartScreen: householdMemberIncome
+    reviewScreen: foo
+    deleteConfirmationScreen: bar
 ---
 name: flow2
 flow:

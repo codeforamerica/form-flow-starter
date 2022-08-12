@@ -472,6 +472,8 @@ public class ScreenController {
 			// TODO this needs to throw an error if there are more than 1 next screen that don't have a condition or more than one evaluate to true
 			nextScreen = getNonConditionalNextScreen(currentScreen);
 		}
+
+		// TODO throw a better error if the next screen doesn't exist (incorrect name / name is not in flow config)
 		return nextScreen.getName();
 	}
 
