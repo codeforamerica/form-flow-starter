@@ -61,7 +61,7 @@ public class ScreenController {
 			@PathVariable String screen,
 			HttpSession httpSession
 	) {
-		var currentScreen = getCurrentScreen(flow, screen);
+		var currentScreen = getScreenConfig(flow, screen);
 		var submission = getSubmission(httpSession);
 		if (currentScreen == null) {
 			return new ModelAndView("redirect:/error");
@@ -123,7 +123,6 @@ public class ScreenController {
 	) {
 		var formDataSubmission = removeEmptyValuesAndFlatten(formData);
 		var submission = getSubmission(httpSession);
-		var currentScreen = getCurrentScreen(flow, screen);
 		var errorMessages = validationService.validate(flow, formDataSubmission);
 		handleErrors(httpSession, errorMessages, formDataSubmission);
 
@@ -161,7 +160,7 @@ public class ScreenController {
 		}
 	}
 
-	@PostMapping("{flow}/{screen}/new") //{flow}/{screen}/{uuid}
+	@PostMapping("{flow}/{screen}/new")
 	ModelAndView postNewSubflow(
 			@RequestParam(required = false) MultiValueMap<String, String> formData,
 			@PathVariable String flow,
@@ -171,7 +170,7 @@ public class ScreenController {
 //    Copy from OG /post request
 		var formDataSubmission = removeEmptyValuesAndFlatten(formData);
 		var submission = getSubmission(httpSession);
-		var currentScreen = getCurrentScreen(flow, screen);
+		var currentScreen = getScreenConfig(flow, screen);
 		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
 		String subflowName = subflows.entrySet().stream().filter(subflow ->
 						subflow.getValue().getIterationStartScreen().equals(screen))
@@ -200,13 +199,12 @@ public class ScreenController {
 			submissionRepositoryService.save(submission);
 			httpSession.setAttribute("id", submission.getId());
 		}
-
-		String nextScreen = getNextScreenName(httpSession, currentScreen);
-
 		ModelMap model = new ModelMap();
 		model.put("uuid", formDataSubmission.get("uuuid"));
-
-		return new ModelAndView(String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid), model);
+		String nextScreen = getNextScreenName(httpSession, currentScreen);
+		String viewString = isNextScreenInSubflow(flow, httpSession, currentScreen) ?
+				String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid) : String.format("redirect:/%s/%s", flow, nextScreen);
+		return new ModelAndView(viewString, model);
 	}
 
 	// 😭 If we could use a method: <string>.replaceFirst("\\{([^}]*)}", "flow:(?!assets).*")
@@ -235,7 +233,7 @@ public class ScreenController {
 		Long id = (Long) httpSession.getAttribute("id");
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
-		ScreenNavigationConfiguration currentScreen = getCurrentScreen(flow, screen);
+		ScreenNavigationConfiguration currentScreen = getScreenConfig(flow, screen);
 		String subflow = currentScreen.getSubflow();
 
 		if (submissionOptional.isPresent()) {
@@ -260,7 +258,9 @@ public class ScreenController {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
 		}
 		String nextScreen = getNextScreenName(httpSession, currentScreen);
-		return new ModelAndView(String.format("redirect:/%s/%s", flow, nextScreen));
+		String viewString = isNextScreenInSubflow(flow, httpSession, currentScreen) ?
+				String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid) : String.format("redirect:/%s/%s", flow, nextScreen);
+		return new ModelAndView(viewString);
 	}
 
 
@@ -335,7 +335,7 @@ public class ScreenController {
 			@PathVariable String uuid,
 			HttpSession httpSession
 	) {
-		ScreenNavigationConfiguration currentScreenConfig = getCurrentScreen(flow, screen);
+		ScreenNavigationConfiguration currentScreenConfig = getScreenConfig(flow, screen);
 		String subflow = currentScreenConfig.getSubflow();
 		Long id = (Long) httpSession.getAttribute("id");
 		Map<String, Object> model;
@@ -366,7 +366,7 @@ public class ScreenController {
 			@PathVariable String uuid,
 			HttpSession httpSession
 	) {
-		ScreenNavigationConfiguration currentScreen = getCurrentScreen(flow, screen);
+		ScreenNavigationConfiguration currentScreen = getScreenConfig(flow, screen);
 		String subflow = currentScreen.getSubflow();
 		Long id = (Long) httpSession.getAttribute("id");
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
@@ -393,7 +393,9 @@ public class ScreenController {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
 		}
 		String nextScreen = getNextScreenName(httpSession, currentScreen);
-		return new ModelAndView(String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid));
+		String viewString = isNextScreenInSubflow(flow, httpSession, currentScreen) ?
+				String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid) : String.format("redirect:/%s/%s", flow, nextScreen);
+		return new ModelAndView(viewString);
 	}
 
 	@PostMapping("{flow}/{screen}/submit")
@@ -452,7 +454,7 @@ public class ScreenController {
 			@RequestParam(required = false, defaultValue = "0") Integer option,
 			HttpSession httpSession
 	) {
-		var currentScreen = getCurrentScreen(flow, screen);
+		var currentScreen = getScreenConfig(flow, screen);
 		if (currentScreen == null) {
 			return new RedirectView("/error");
 		}
@@ -477,7 +479,7 @@ public class ScreenController {
 		return nextScreen.getName();
 	}
 
-	private ScreenNavigationConfiguration getCurrentScreen(String flow, String screen) {
+	private ScreenNavigationConfiguration getScreenConfig(String flow, String screen) {
 		FlowConfiguration currentFlowConfiguration = getFlowConfigurationByName(flow);
 		return currentFlowConfiguration.getScreenNavigation(screen);
 	}
@@ -536,5 +538,10 @@ public class ScreenController {
 		}
 		return subflows.entrySet().stream().anyMatch(subflowConfig ->
 				subflowConfig.getValue().getIterationStartScreen().equals(screen));
+	}
+
+	private Boolean isNextScreenInSubflow(String flow, HttpSession session, ScreenNavigationConfiguration currentScreen) {
+		String nextScreenName = getNextScreenName(session, currentScreen);
+		return getScreenConfig(flow, nextScreenName).getSubflow() != null;
 	}
 }
