@@ -49,4 +49,22 @@ public class Ubi {
   String householdMember;
 
   ArrayList<String> incomeTypes;
+  String incomeJob;
+  String incomeSelf;
+  String incomeUnemployment;
+  String incomeSocialSecurity;
+  String incomeRetirement;
+  String incomeChildOrSpousalSupport;
+  String incomePension;
+  String incomeInvestment;
+  String incomeCapitalGains;
+  String incomeRentalOrRoyalty;
+  String incomeFarmOrFish;
+  String incomeAlimony;
+  String incomeTaxableScholarship;
+  String incomeCancelledDebt;
+  String incomeCourtAwards;
+  String incomeGambling;
+  String incomeJuryDutyPay;
+  String incomeOther;
 }
