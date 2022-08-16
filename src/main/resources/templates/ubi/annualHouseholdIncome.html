@@ -17,17 +17,17 @@
               <th:block th:if="${inputData.containsKey('income')}">
                 <li th:each="personsIncome: ${T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).sortIncomeNamesWithApplicantFirst(submission)}"
                     class="spacing-below-15">
-                              <span class="space-between">
-                                <span>
+                              <span class="grid">
+                                <span class="grid__item width-one-third">
                                   <span
                                       th:with="selectedSelf=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).incomeSelectedSelf(submission, personsIncome.uuid)}"
                                       th:text="${selectedSelf ? #messages.msg('general.you') : personsIncome.householdMember.split(' ')[0]}"></span>
                                 </span>
-                                <span class="space-between"
+                                <span class="grid__item width-one-third text--right padding-right-10"
                                     th:with="personsTotalIncome=${T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).getIndividualsTotalIncome(submission, personsIncome.uuid)}"
                                     th:text="${'$' + personsTotalIncome}"></span>
-                                <span class="text--small spacing-below-0">
-                                  <a th:href="'/ubi/' + ${iterationStartScreen} + '/' + ${personsIncome.uuid} + '/edit'"
+                                <span class="grid__item width-one-third text--small spacing-below-0">
+                                  <a th:href="'/ubi/incomeTypes/' + ${personsIncome.uuid} + '/edit'"
                                      th:text="#{general.edit}"
                                      th:id="'edit-iteration-' + ${personsIncome.uuid}"
                                      class="subflow-edit"></a>
@@ -40,6 +40,7 @@
                 </li>
               </th:block>
             </ul>
+            <hr />
             <a th:href="'/' + ${flow} + '/' + ${iterationStartScreen}"
                class="button spacing-above-15"
                th:text="#{household-list.add}"></a>

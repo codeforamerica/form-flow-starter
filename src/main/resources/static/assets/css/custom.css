@@ -260,3 +260,7 @@ body,
   justify-content: space-between;
 }
 
+.boxed-content hr {
+  margin: 3rem 0 3rem 0;
+}
+
