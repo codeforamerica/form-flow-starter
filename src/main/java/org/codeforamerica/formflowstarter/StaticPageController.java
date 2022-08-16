@@ -12,6 +12,7 @@ public class StaticPageController {
   String getIndex(
       HttpSession httpSession
   ) {
+    // For dev, reset session if you visit home
     httpSession.invalidate();
 
     return "index";

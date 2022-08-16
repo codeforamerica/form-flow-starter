@@ -44,7 +44,9 @@ public class Ubi {
   String movedFromCountry;
 
   String hasHousehold;
+  @NotBlank
   String householdMemberFirstName;
+  @NotBlank
   String householdMemberLastName;
   String householdMemberRelationship;
   String householdMemberRecentlyMovedToUS;

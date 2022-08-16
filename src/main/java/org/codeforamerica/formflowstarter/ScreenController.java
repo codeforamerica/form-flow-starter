@@ -73,46 +73,6 @@ public class ScreenController {
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 	}
 
-	private String createFormActionString(String flow, String screen) {
-		return isIterationStartScreen(flow, screen) ?
-				"/%s/%s/new".formatted(flow, screen) : "/%s/%s".formatted(flow, screen);
-	}
-
-	private Map<String, Object> createModel(String flow, String screen, HttpSession httpSession, Submission submission) {
-		Map<String, Object> model = new HashMap<>();
-		model.put("flow", flow);
-		model.put("screen", screen);
-
-		// Put subflow on model if on subflow delete confirmation screen
-		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
-		if (subflows != null) {
-			List<String> subflowFromDeleteConfirmationConfig = subflows
-					.entrySet().stream().filter(entry ->
-							entry.getValue().getDeleteConfirmationScreen().equals(screen)).map(Entry::getKey).toList();
-
-			// Add the iteration start page to the model if we are on the review page for a subflow so we have it for the edit button
-			subflows.forEach((key, value) -> {
-				if (value.getReviewScreen().equals(screen)) {
-					model.put("iterationStartScreen", value.getIterationStartScreen());
-				}
-			});
-
-			if (!subflowFromDeleteConfirmationConfig.isEmpty()) {
-				model.put("subflow", subflowFromDeleteConfirmationConfig.get(0));
-			}
-		}
-
-		// if there's formDataSubmission
-		if (httpSession.getAttribute("formDataSubmission") != null) {
-			model.put("submission", submission);
-			model.put("inputData", httpSession.getAttribute("formDataSubmission"));
-		} else {
-			model.put("submission", submission);
-			model.put("inputData", submission.getInputData());
-		}
-		model.put("errorMessages", httpSession.getAttribute("errorMessages"));
-		return model;
-	}
 
 	@PostMapping("{flow}/{screen}")
 	ModelAndView postScreen(
@@ -134,6 +94,7 @@ public class ScreenController {
 		if (submission.getId() != null) {
 			Map<String, Object> inputData = submission.getInputData();
 
+			// TODO: potential helper function
 			inputData.forEach((key, value) -> {
 				formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
 			});
@@ -150,15 +111,6 @@ public class ScreenController {
 		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
 	}
 
-	private void handleErrors(HttpSession httpSession, HashMap<String, ArrayList<String>> errorMessages, Map<String, Object> formDataSubmission) {
-		if (errorMessages.size() > 0) {
-			httpSession.setAttribute("errorMessages", errorMessages);
-			httpSession.setAttribute("formDataSubmission", formDataSubmission);
-		} else {
-			httpSession.removeAttribute("errorMessages");
-			httpSession.removeAttribute("formDataSubmission");
-		}
-	}
 
 	@PostMapping("{flow}/{screen}/new")
 	ModelAndView postNewSubflow(
@@ -235,6 +187,11 @@ public class ScreenController {
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
 		ScreenNavigationConfiguration currentScreen = getScreenConfig(flow, screen);
 		String subflow = currentScreen.getSubflow();
+		var errorMessages = validationService.validate(flow, formDataSubmission);
+		handleErrors(httpSession, errorMessages, formDataSubmission);
+		if (errorMessages.size() > 0) {
+			return new ModelAndView(String.format("redirect:/%s/%s/%s", flow, screen, uuid));
+		}
 
 		if (submissionOptional.isPresent()) {
 			// TODO can we refactor this to a method for less code duplication?
@@ -371,6 +328,11 @@ public class ScreenController {
 		Long id = (Long) httpSession.getAttribute("id");
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
+		var errorMessages = validationService.validate(flow, formDataSubmission);
+		handleErrors(httpSession, errorMessages, formDataSubmission);
+		if (errorMessages.size() > 0) {
+			return new ModelAndView(String.format("/%s/%s/%s/edit", flow, screen, uuid));
+		}
 
 		if (submissionOptional.isPresent()) {
 			Submission submission = submissionOptional.get();
@@ -424,27 +386,6 @@ public class ScreenController {
 		}
 		// Fire async events: send email, generate PDF, send to API, etc...
 		return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
-	}
-
-	@NotNull
-	private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
-		return formData.entrySet().stream()
-				.map(entry -> {
-					// An empty checkboxSet has a hidden value of "" which needs to be removed
-					if (entry.getKey().contains("[]") && entry.getValue().size() == 1) {
-						entry.setValue(new ArrayList<>());
-					}
-					if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
-						entry.getValue().remove(0);
-					}
-					return entry;
-				})
-				// Flatten arrays to be single values if the array contains one item
-				.collect(Collectors.toMap(
-						Entry::getKey,
-						entry -> entry.getValue().size() == 1 && !entry.getKey().contains("[]")
-								? entry.getValue().get(0) : entry.getValue()
-				));
 	}
 
 	@GetMapping("{flow}/{screen}/navigation")
@@ -543,5 +484,90 @@ public class ScreenController {
 	private Boolean isNextScreenInSubflow(String flow, HttpSession session, ScreenNavigationConfiguration currentScreen) {
 		String nextScreenName = getNextScreenName(session, currentScreen);
 		return getScreenConfig(flow, nextScreenName).getSubflow() != null;
+	}
+// TODO: update name
+	private Map<String, Object> mergeFormDataWithSubmissionData(Submission submission, Map<String, Object> formDataSubmission) {
+		Map<String, Object> inputData = submission.getInputData();
+
+		inputData.forEach((key, value) -> {
+			formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+		});
+//		submission.setInputData(formDataSubmission);
+
+		return formDataSubmission;
+	}
+
+	private String createFormActionString(String flow, String screen) {
+		return isIterationStartScreen(flow, screen) ?
+				"/%s/%s/new".formatted(flow, screen) : "/%s/%s".formatted(flow, screen);
+	}
+
+	private Map<String, Object> createModel(String flow, String screen, HttpSession httpSession, Submission submission) {
+		Map<String, Object> model = new HashMap<>();
+		model.put("flow", flow);
+		model.put("screen", screen);
+
+		// Put subflow on model if on subflow delete confirmation screen
+		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
+		if (subflows != null) {
+			List<String> subflowFromDeleteConfirmationConfig = subflows
+					.entrySet().stream().filter(entry ->
+							entry.getValue().getDeleteConfirmationScreen().equals(screen)).map(Entry::getKey).toList();
+
+			// Add the iteration start page to the model if we are on the review page for a subflow so we have it for the edit button
+			subflows.forEach((key, value) -> {
+				if (value.getReviewScreen().equals(screen)) {
+					model.put("iterationStartScreen", value.getIterationStartScreen());
+				}
+			});
+
+			if (!subflowFromDeleteConfirmationConfig.isEmpty()) {
+				model.put("subflow", subflowFromDeleteConfirmationConfig.get(0));
+			}
+		}
+
+		// If there are errors, merge form data that was submitted, with already existing inputData
+		if (httpSession.getAttribute("formDataSubmission") != null) {
+			var updatedFormData = mergeFormDataWithSubmissionData(submission,
+					(Map<String, Object>) httpSession.getAttribute("formDataSubmission"));
+			model.put("submission", submission);
+			model.put("inputData", updatedFormData);
+		} else {
+			model.put("submission", submission);
+			model.put("inputData", submission.getInputData());
+		}
+		model.put("errorMessages", httpSession.getAttribute("errorMessages"));
+		return model;
+	}
+
+	private void handleErrors(HttpSession httpSession, HashMap<String, ArrayList<String>> errorMessages, Map<String, Object> formDataSubmission) {
+		if (errorMessages.size() > 0) {
+			httpSession.setAttribute("errorMessages", errorMessages);
+			httpSession.setAttribute("formDataSubmission", formDataSubmission);
+		} else {
+			httpSession.removeAttribute("errorMessages");
+			httpSession.removeAttribute("formDataSubmission");
+		}
+	}
+
+	@NotNull
+	private Map<String, Object> removeEmptyValuesAndFlatten(MultiValueMap<String, String> formData) {
+		return formData.entrySet().stream()
+				.map(entry -> {
+					// An empty checkboxSet has a hidden value of "" which needs to be removed
+					if (entry.getKey().contains("[]") && entry.getValue().size() == 1) {
+						entry.setValue(new ArrayList<>());
+					}
+					if (entry.getValue().size() > 1 && entry.getValue().get(0).equals("")) {
+						entry.getValue().remove(0);
+					}
+					return entry;
+				})
+				// Flatten arrays to be single values if the array contains one item
+				.collect(Collectors.toMap(
+						Entry::getKey,
+						entry -> entry.getValue().size() == 1 && !entry.getKey().contains("[]")
+								? entry.getValue().get(0) : entry.getValue()
+				));
 	}
 }
