@@ -1,54 +1,58 @@
 <th:block
-  th:replace="fragments/screens/screenWithOneInput ::
+    th:with="selectedSelf=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).incomeSelectedSelf(submission, uuid)},
+             houseHoldMemberName=${T(org.codeforamerica.formflowstarter.app.data.Submission).getSubflowEntryByUuid('income', uuid, submission).householdMember}">
+  <th:block
+      th:replace="fragments/screens/screenWithOneInput ::
   screenWithOneInput(
     title=#{income-types.title},
-    header=#{income-types.header},
+    header=${selectedSelf ? #messages.msg('income-types.headerYou') : #messages.msg('income-types.headerPerson', houseHoldMemberName)},
     subtext=#{income-types.sub-header},
     formAction=${formAction},
     inputContent=~{::inputContent})">
-  <th:block th:ref="inputContent">
-    <th:block th:replace="'fragments/inputs/checkboxFieldset' ::
+    <th:block th:ref="inputContent">
+      <th:block th:replace="'fragments/inputs/checkboxFieldset' ::
       checkboxFieldset(inputName='incomeTypes',
       ariaLabel='header',
       content=~{::checkboxContent})">
         <th:block th:ref="checkboxContent">
           <th:block
-            th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.job}, label=#{income-types.job})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeJob', label=#{income-shared.incomeJob})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.self}, label=#{income-types.self})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeSelf', label=#{income-shared.incomeSelf})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.unemployment}, label=#{income-types.unemployment})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeUnemployment', label=#{income-shared.incomeUnemployment})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.social-security}, label=#{income-types.social-security})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeSocialSecurity', label=#{income-shared.incomeSocialSecurity})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.retirement}, label=#{income-types.retirement})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeRetirement', label=#{income-shared.incomeRetirement})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.child-or-spousal-support}, label=#{income-types.child-or-spousal-support})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeChildOrSpousalSupport', label=#{income-shared.incomeChildOrSpousalSupport})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.pension}, label=#{income-types.pension})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomePension', label=#{income-shared.incomePension})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.investment}, label=#{income-types.investment})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeInvestment', label=#{income-shared.incomeInvestment})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.capital-gains}, label=#{income-types.capital-gains})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeCapitalGains', label=#{income-shared.incomeCapitalGains})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.rental-or-royalty}, label=#{income-types.rental-or-royalty})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeRentalOrRoyalty', label=#{income-shared.incomeRentalOrRoyalty})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.farm-or-fish}, label=#{income-types.farm-or-fish})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeFarmOrFish', label=#{income-shared.incomeFarmOrFish})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.alimony}, label=#{income-types.alimony})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeAlimony', label=#{income-shared.incomeAlimony})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.taxable-scholarship}, label=#{income-types.taxable-scholarship})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeTaxableScholarship', label=#{income-shared.incomeTaxableScholarship})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.cancelled-debt}, label=#{income-types.cancelled-debt})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeCancelledDebt', label=#{income-shared.incomeCancelledDebt})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.court-awards}, label=#{income-types.court-awards})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeCourtAwards', label=#{income-shared.incomeCourtAwards})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.gambling}, label=#{income-types.gambling})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeGambling', label=#{income-shared.incomeGambling})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.jury-duty-pay}, label=#{income-types.jury-duty-pay})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeJuryDutyPay', label=#{income-shared.incomeJuryDutyPay})"/>
           <th:block
-              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes',value=#{income-types.other}, label=#{income-types.other})"/>
+              th:replace="'fragments/inputs/checkboxInSet' :: checkboxInSet(inputName='incomeTypes', value='incomeOther', label=#{income-shared.incomeOther})"/>
         </th:block>
+      </th:block>
     </th:block>
   </th:block>
 </th:block>

@@ -1,6 +1,7 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
 import java.util.ArrayList;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -10,8 +11,10 @@ public class Ubi {
   // TODO: Delete when more "real" inputs are made
   // firstPage - test page for all inputs
 //  @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
-//  @Size(min = 2, message = "{validations.test}")
+//  @Size(min = 2, message = "{validations.test}")\
+  @NotBlank(message = "{personal-info.provide-first-name}")
   String firstName;
+  @NotBlank(message = "{personal-info.provide-last-name}")
   String lastName;
   String emailAddress;
   String phoneNumber;
@@ -49,22 +52,41 @@ public class Ubi {
   String householdMember;
 
   ArrayList<String> incomeTypes;
-  String incomeJob;
-  String incomeSelf;
-  String incomeUnemployment;
-  String incomeSocialSecurity;
-  String incomeRetirement;
-  String incomeChildOrSpousalSupport;
-  String incomePension;
-  String incomeInvestment;
-  String incomeCapitalGains;
-  String incomeRentalOrRoyalty;
-  String incomeFarmOrFish;
-  String incomeAlimony;
-  String incomeTaxableScholarship;
-  String incomeCancelledDebt;
-  String incomeCourtAwards;
-  String incomeGambling;
-  String incomeJuryDutyPay;
-  String incomeOther;
+
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeJobAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeSelfAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeUnemploymentAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeSocialSecurityAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeRetirementAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeChildOrSpousalSupportAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomePensionAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeInvestmentAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeCapitalGainsAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeRentalOrRoyaltyAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeFarmOrFishAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeAlimonyAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeTaxableScholarshipAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeCancelledDebtAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeCourtAwardsAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeGamblingAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeJuryDutyPayAmount;
+  @NotBlank(message = "{income-amounts.error}")
+  String incomeOtherAmount;
 }

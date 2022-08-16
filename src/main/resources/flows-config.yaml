@@ -41,6 +41,9 @@ flow:
   incomeAmounts:
     subflow: income
     nextScreens:
+      - name: annualHouseholdIncome
+  annualHouseholdIncome:
+    nextScreens:
   reportedAnnualHouseholdIncome:
     nextScreens:
       - name: AnnualHouseholdIncome
@@ -55,7 +58,7 @@ subflows:
   income:
     entryScreen: income
     iterationStartScreen: householdMemberIncome
-    reviewScreen: foo
+    reviewScreen: annualHouseholdIncome
     deleteConfirmationScreen: bar
 ---
 name: flow2

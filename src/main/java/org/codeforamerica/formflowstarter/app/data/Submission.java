@@ -3,6 +3,7 @@ package org.codeforamerica.formflowstarter.app.data;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,4 +61,12 @@ public class Submission {
   @Temporal(TIMESTAMP)
   @Column(name = "submitted_at")
   private Date submittedAt;
+
+  public static Map<String, Object> getSubflowEntryByUuid(String subflowName, String uuid, Submission submission) {
+    if (submission.getInputData().containsKey(subflowName)) {
+      ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+      return subflow.stream().filter(entry -> entry.get("uuid").equals(uuid)).toList().get(0);
+    }
+    return null;
+  }
 }
