@@ -147,6 +147,7 @@ public class ScreenController {
 			submissionRepositoryService.save(submission);
 		} else {
 			submission.setFlow(flow);
+			// TODO: create the subflow here and add formDataSubmission to that
 			submission.setInputData(formDataSubmission);
 			submissionRepositoryService.save(submission);
 			httpSession.setAttribute("id", submission.getId());
