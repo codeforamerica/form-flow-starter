@@ -8,4 +8,7 @@ import lombok.Data;
 public class ScreenNavigationConfiguration {
   private List<NextScreen> nextScreens = Collections.emptyList();
   private String subflow;
+  //TODO: Implement callback
+  private String callback;
+  private String beforeSave;
 }

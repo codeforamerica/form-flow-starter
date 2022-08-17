@@ -12,12 +12,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
-import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
-import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
-import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
-import org.codeforamerica.formflowstarter.app.config.NextScreen;
-import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
-import org.codeforamerica.formflowstarter.app.config.SubflowConfiguration;
+
+import org.codeforamerica.formflowstarter.app.config.*;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
@@ -41,18 +37,21 @@ public class ScreenController {
 	private final ConditionHandler conditionHandler;
 	private final SubmissionRepositoryService submissionRepositoryService;
 	private final ValidationService validationService;
+	private final SubmissionHandler submissionHandler;
 
 	public ScreenController(
 			List<FlowConfiguration> flowConfigurations,
 			InputsConfiguration inputsConfiguration,
 			SubmissionRepositoryService submissionRepositoryService,
 			ConditionHandler conditionHandler,
-			ValidationService validationService) {
+			ValidationService validationService,
+			SubmissionHandler submissionHandler) {
 		this.flowConfigurations = flowConfigurations;
 		this.inputsConfiguration = inputsConfiguration;
 		this.submissionRepositoryService = submissionRepositoryService;
 		this.conditionHandler = conditionHandler;
 		this.validationService = validationService;
+		this.submissionHandler = submissionHandler;
 	}
 
 	@GetMapping("{flow}/{screen}")
@@ -182,7 +181,7 @@ public class ScreenController {
 			@PathVariable String screen,
 			@PathVariable String uuid,
 			HttpSession httpSession
-	) {
+	) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		Long id = (Long) httpSession.getAttribute("id");
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
@@ -210,6 +209,8 @@ public class ScreenController {
 				subflowArr.set(indexToUpdate, formDataSubmission);
 				existingInputData.replace(subflow, subflowArr);
 				submission.setInputData(existingInputData);
+				//TODO: Implement handleBeforeSaveAction
+				handleBeforeSaveAction(currentScreen);
 				submissionRepositoryService.save(submission);
 			}
 		} else {
@@ -456,6 +457,25 @@ public class ScreenController {
 			}
 			return false;
 		}).toList();
+	}
+
+	/**
+	 * [] is before action defined
+	 * call submissionhandler with the before action
+	 * [] if beforeaction has been called
+	 * @param currentScreen
+	 * @return
+	 */
+	private void handleBeforeSaveAction(ScreenNavigationConfiguration currentScreen) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
+		if (currentScreen.getBeforeSave() != null){
+			// [x] go and get name of before action
+			// take he name of the before action and call the method assigned to that name
+			//that will call the submissionhandler that will invoke the submission action if the method is found
+			var beforeSaveAction = currentScreen.getBeforeSave();
+			submissionHandler.handleSubmission(beforeSaveAction);
+
+		}
 	}
 
 	private NextScreen getNonConditionalNextScreen(ScreenNavigationConfiguration currentScreen) {

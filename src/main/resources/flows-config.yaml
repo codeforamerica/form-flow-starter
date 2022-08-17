@@ -39,6 +39,7 @@ flow:
     nextScreens:
       - name: incomeAmounts
   incomeAmounts:
+    beforeSave: clearIncomeAmountsBeforeSaving
     subflow: income
     nextScreens:
       - name: annualHouseholdIncome
