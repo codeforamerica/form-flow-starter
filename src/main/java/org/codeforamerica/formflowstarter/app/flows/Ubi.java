@@ -3,6 +3,8 @@ package org.codeforamerica.formflowstarter.app.flows;
 import java.util.ArrayList;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Pattern.Flag;
 import lombok.Data;
 
 @Data
@@ -53,9 +55,10 @@ public class Ubi {
 
   String householdMember;
 
+  @NotEmpty(message = "{income-types.error}")
   ArrayList<String> incomeTypes;
-
   @NotBlank(message = "{income-amounts.error}")
+  @Pattern(regexp = "[0-9,\\.]", flags = {Flag.DOTALL})
   String incomeJobAmount;
   @NotBlank(message = "{income-amounts.error}")
   String incomeSelfAmount;

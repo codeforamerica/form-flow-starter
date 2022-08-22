@@ -333,7 +333,7 @@ public class ScreenController {
 		var errorMessages = validationService.validate(flow, formDataSubmission);
 		handleErrors(httpSession, errorMessages, formDataSubmission);
 		if (errorMessages.size() > 0) {
-			return new ModelAndView(String.format("/%s/%s/%s/edit", flow, screen, uuid));
+			return new ModelAndView(String.format("redirect:/%s/%s/%s/edit", flow, screen, uuid));
 		}
 
 		if (submissionOptional.isPresent()) {
