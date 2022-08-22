@@ -1,10 +1,9 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
 import java.util.ArrayList;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Pattern.Flag;
 import lombok.Data;
 
 @Data
@@ -57,41 +56,59 @@ public class Ubi {
 
   @NotEmpty(message = "{income-types.error}")
   ArrayList<String> incomeTypes;
-  @NotBlank(message = "{income-amounts.error}")
-  @Pattern(regexp = "[0-9,\\.]", flags = {Flag.DOTALL})
+
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeJobAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeSelfAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeUnemploymentAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeSocialSecurityAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeRetirementAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeChildOrSpousalSupportAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomePensionAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeInvestmentAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeCapitalGainsAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeRentalOrRoyaltyAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeFarmOrFishAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeAlimonyAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeTaxableScholarshipAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeCancelledDebtAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeCourtAwardsAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeGamblingAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeJuryDutyPayAmount;
-  @NotBlank(message = "{income-amounts.error}")
+  @NotBlank(message = "{income-amounts.must-select-one}")
+  @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeOtherAmount;
 }
