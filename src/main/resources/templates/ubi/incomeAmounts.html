@@ -16,16 +16,17 @@
         <th:block
             th:replace="'fragments/form' :: form(action=${formAction}, content=~{::incomeAmounts})">
           <div th:ref="incomeAmounts">
-            <div class="form-card__content">
-              <th:block th:each="personsIncome: ${inputData.income}"
-                        th:if="${personsIncome.uuid.equals(uuid)}">
-                <th:block th:each="incomeType: ${personsIncome['incomeTypes[]']}">
-                  <th:block
-                      th:replace="'fragments/inputs/money' :: money(inputName=${incomeType + 'Amount'},
-                      label=#{'income-shared.' + ${incomeType}},
-                      helpText=#{income-amounts.yearly})"/>
-                </th:block>
-              </th:block>
+            <div class="form-card__content" th:with="testing=${inputData.containsKey('income')}">
+              <div th:text="${testing}"></div>
+<!--              <th:block th:each="personsIncome: ${testing}"-->
+<!--                        th:if="${personsIncome.uuid.equals(uuid)}">-->
+<!--                <th:block th:each="incomeType: ${personsIncome['incomeTypes[]']}">-->
+<!--                  <th:block-->
+<!--                      th:replace="'fragments/inputs/money' :: money(inputName=${incomeType + 'Amount'},-->
+<!--                      label=#{'income-shared.' + ${incomeType}},-->
+<!--                      helpText=#{income-amounts.yearly})"/>-->
+<!--                </th:block>-->
+<!--              </th:block>-->
             </div>
             <div class="form-card__footer">
               <th:block th:replace="fragments/inputs/submitButton :: submitButton(

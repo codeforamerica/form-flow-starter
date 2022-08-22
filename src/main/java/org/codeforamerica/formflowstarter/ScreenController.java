@@ -210,7 +210,7 @@ public class ScreenController {
 				existingInputData.replace(subflow, subflowArr);
 				submission.setInputData(existingInputData);
 				//TODO: Implement handleBeforeSaveAction
-				handleBeforeSaveAction(currentScreen);
+				handleBeforeSaveAction(currentScreen, submission, uuid);
 				submissionRepositoryService.save(submission);
 			}
 		} else {
@@ -358,7 +358,7 @@ public class ScreenController {
 		}
 		String nextScreen = getNextScreenName(httpSession, currentScreen);
 		String viewString = isNextScreenInSubflow(flow, httpSession, currentScreen) ?
-				String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid) : String.format("redirect:/%s/%s", flow, nextScreen);
+				String.format("redirect:/%s/%s/%s/edit", flow, nextScreen, uuid) : String.format("redirect:/%s/%s", flow, nextScreen);
 		return new ModelAndView(viewString);
 	}
 
@@ -466,14 +466,14 @@ public class ScreenController {
 	 * @param currentScreen
 	 * @return
 	 */
-	private void handleBeforeSaveAction(ScreenNavigationConfiguration currentScreen) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+	private void handleBeforeSaveAction(ScreenNavigationConfiguration currentScreen, Submission submission, String uuid) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 
 		if (currentScreen.getBeforeSave() != null){
 			// [x] go and get name of before action
 			// take he name of the before action and call the method assigned to that name
 			//that will call the submissionhandler that will invoke the submission action if the method is found
 			var beforeSaveAction = currentScreen.getBeforeSave();
-			submissionHandler.handleSubmission(beforeSaveAction);
+			submissionHandler.handleSubmission(beforeSaveAction, submission, uuid);
 
 		}
 	}
