@@ -13,7 +13,7 @@
         <div class="form-card__content">
           <div class="boxed-content text--centered">
             <strong th:text="#{annual-household-income.box-header}"></strong>
-            <ul class="subflow-list list--bulleted">
+            <ul class="subflow-list list--bulleted padding-left-25">
               <th:block th:if="${inputData.containsKey('income')}">
                 <li th:each="personsIncome: ${T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).sortIncomeNamesWithApplicantFirst(submission)}"
                     class="spacing-below-15">
@@ -41,20 +41,18 @@
               </th:block>
             </ul>
             <hr />
-            <div>
-              <strong>
-                <span th:text="#{annual-household-income.total}"></span>
-                <span th:text="${T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).getHouseholdTotalIncome(submission)}"></span>
-              </strong>
+            <div class="grid">
+                <strong class="grid__item width-one-third text--left padding-left-25" th:text="#{annual-household-income.total}"></strong>
+                <strong class="grid__item width-one-third text--right" th:text="${'$' + T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).getHouseholdTotalIncome(submission)}"></strong>
             </div>
             <a th:href="'/' + ${flow} + '/' + ${iterationStartScreen}"
-               class="button spacing-above-15"
-               th:text="#{household-list.add}"></a>
+               class="button spacing-above-25 spacing-below-0 spacing-right-0"
+               th:text="#{annual-household-income.add-income}"></a>
           </div>
         </div>
         <div class="form-card__footer">
           <th:block
-              th:replace="'fragments/continueButton' :: continue(text=#{household-list.continue})"/>
+              th:replace="'fragments/continueButton' :: continue(text=#{annual-household-income.continue-button})"/>
         </div>
       </main>
     </div>

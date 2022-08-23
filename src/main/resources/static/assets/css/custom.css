@@ -187,6 +187,14 @@ body,
   padding-right: 1rem;
 }
 
+.padding-left-25 {
+  padding-left: 2.5rem;
+}
+
+.spacing-right-0 {
+  margin-right: 0;
+}
+
 .button--primary {
   color: #FFFFFF;
   background-color: #003865;
@@ -261,6 +269,14 @@ body,
 }
 
 .boxed-content hr {
-  margin: 3rem 0 3rem 0;
+  margin: 2.5rem 0 3rem 0;
 }
 
+.radio-button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.radio-button.disabled:hover {
+  background: none;
+}

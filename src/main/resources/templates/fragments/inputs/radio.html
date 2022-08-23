@@ -9,12 +9,14 @@
       ${!#strings.isEmpty(label)}">
   <label th:for="${inputName} + '-' + ${value}"
          th:id="${inputName} + '-' + ${value} + '-label'"
+         th:classappend="${disabled ? 'disabled' : ''}"
          class="radio-button">
     <input type="radio"
            th:id="${inputName} + '-' + ${value}"
            th:value="${value}"
            th:name="${inputName}"
            th:checked="${inputData.getOrDefault(inputName, '').equals(value)}"
+           th:disabled="${disabled}"
            th:attr="aria-invalid=${hasError}">
     <span th:text="${label}"></span>
   </label>

@@ -23,7 +23,6 @@ public class ConditionDefinitions {
 	}
 
 	public static Boolean incomeSelectedSelf(Submission submission, String uuid) {
-		Map<String, Object> inputData = submission.getInputData();
 		if (submission.getInputData().containsKey("income")) {
 			// Change logic to suit your needs
 			var incomeArr = (ArrayList<Map<String, Object>>) submission.getInputData().get("income");
@@ -31,6 +30,14 @@ public class ConditionDefinitions {
 					.filter(entry -> entry.get("uuid").equals(uuid)).toList().get(0);
 			return personsIncome.get("householdMember")
 					.equals("applicant");
+		}
+		return false;
+	}
+
+	public static Boolean householdMemberAlreadyHasIncome(Submission submission, String householdMemberName) {
+		if (submission.getInputData().containsKey("income")) {
+			var incomeArr = (ArrayList<Map<String, Object>>) submission.getInputData().get("income");
+			return incomeArr.stream().anyMatch(entry -> entry.get("householdMember").equals(householdMemberName));
 		}
 		return false;
 	}

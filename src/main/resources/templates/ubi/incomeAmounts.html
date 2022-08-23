@@ -19,7 +19,6 @@
                  so put it in an array to be used for th:each  -->
             <div class="form-card__content"
                  th:with="iterator=${inputData.getOrDefault('income', {inputData})}">
-              <div th:text="${iterator}"></div>
               <th:block th:each="personsIncome: ${iterator}"
                         th:if="${personsIncome.uuid.equals(uuid)}">
                 <th:block th:each="incomeType: ${personsIncome['incomeTypes[]']}">
