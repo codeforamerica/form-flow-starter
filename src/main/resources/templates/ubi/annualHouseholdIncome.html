@@ -41,6 +41,12 @@
               </th:block>
             </ul>
             <hr />
+            <div>
+              <strong>
+                <span th:text="#{annual-household-income.total}"></span>
+                <span th:text="${T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).getHouseholdTotalIncome(submission)}"></span>
+              </strong>
+            </div>
             <a th:href="'/' + ${flow} + '/' + ${iterationStartScreen}"
                class="button spacing-above-15"
                th:text="#{household-list.add}"></a>

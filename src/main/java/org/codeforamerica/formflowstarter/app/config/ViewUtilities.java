@@ -42,4 +42,25 @@ public class ViewUtilities {
 
 		return null;
 	}
+
+	public static String getHouseholdTotalIncome(Submission submission) {
+		DecimalFormat df = new DecimalFormat("0.00");
+
+		if (submission.getInputData().containsKey("income")) {
+			ArrayList<Map<String, Object>> incomeSubflow = (ArrayList<Map<String, Object>>) submission.getInputData()
+					.get("income");
+			ArrayList<BigDecimal> amounts = new ArrayList<>();
+			incomeSubflow.forEach(iteration -> {
+				iteration.forEach((key, value) -> {
+					if (key.contains("Amount")) {
+						amounts.add(new BigDecimal((String) value));
+					}
+				});
+			});
+
+			return df.format(amounts.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
+		}
+
+		return null;
+	}
 }
