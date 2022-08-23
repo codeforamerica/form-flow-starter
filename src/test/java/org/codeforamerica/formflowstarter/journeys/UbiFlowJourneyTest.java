@@ -25,6 +25,8 @@ public class UbiFlowJourneyTest extends JourneyTest {
     // Language preference
     testPage.clickContinue();
     // Personal info
+    testPage.enter("firstName", "Testy");
+    testPage.enter("lastName", "McTesterson");
     testPage.clickContinue();
     // Eligibility screen
     testPage.clickContinue();
@@ -39,15 +41,11 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.enter("householdMemberFirstName", "John");
     testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
-    testPage.enter("testInput", "test value");
-    testPage.clickContinue();
     // Household List screen
     testPage.clickButton("+ Add a person");
     // Housemate Info screen
     testPage.enter("householdMemberFirstName", "Jane");
     testPage.enter("householdMemberLastName", "Doe");
-    testPage.clickContinue();
-    testPage.enter("testInput", "test value 2");
     testPage.clickContinue();
     // Two household members are present
     assertThat(testPage.getCssSelectorText(".form-card__content")).contains("John Doe");
@@ -73,22 +71,16 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.enter("householdMemberFirstName", "John");
     testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
-    testPage.enter("testInput", "test value");
-    testPage.clickContinue();
     // Household List screen
     testPage.clickButton("+ Add a person");
     // Housemate Info screen
     testPage.enter("householdMemberFirstName", "Jane");
     testPage.enter("householdMemberLastName", "Doe");
     testPage.clickContinue();
-    testPage.enter("testInput", "test value 2");
-    testPage.clickContinue();
     // Edit a person
     testPage.findElementsByClass("subflow-edit").get(0).click();
     testPage.enter("householdMemberFirstName", "Anthony");
     testPage.enter("householdMemberLastName", "Dee");
-    testPage.clickContinue();
-    testPage.enter("testInput", "test value new");
     testPage.clickContinue();
     assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Anthony Dee");
     assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("John Doe");

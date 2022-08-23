@@ -1,5 +1,7 @@
 package org.codeforamerica.formflowstarter.app.config;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,18 +26,18 @@ public class ViewUtilities {
 	}
 
 	public static String getIndividualsTotalIncome(Submission submission, String uuid) {
+		DecimalFormat df = new DecimalFormat("0.00");
+
 		if (submission.getInputData().containsKey("income")) {
 			ArrayList<Map<String, Object>> incomeSubflow = (ArrayList<Map<String, Object>>) submission.getInputData()
 					.get("income");
 			Map<String, Object> individualsIncomeEntry = incomeSubflow.stream()
 					.filter(entry -> entry.get("uuid").equals(uuid)).toList().get(0);
 			ArrayList<String> incomeTypes = (ArrayList<String>) individualsIncomeEntry.get("incomeTypes[]");
-			List<Integer> incomeTypeAmounts = incomeTypes.stream()
-					.map(type -> Integer.parseInt((String) individualsIncomeEntry.get(type + "Amount")))
+			List<BigDecimal> incomeTypeAmounts = incomeTypes.stream()
+					.map(type -> new BigDecimal((String) individualsIncomeEntry.get(type + "Amount")))
 					.toList();
-			if (incomeTypeAmounts.stream().reduce(Integer::sum).isPresent()) {
-				return String.valueOf(incomeTypeAmounts.stream().reduce(Integer::sum).get());
-			}
+			return df.format(incomeTypeAmounts.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
 		}
 
 		return null;
