@@ -111,4 +111,8 @@ public class Ubi {
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeOtherAmount;
+
+  @NotBlank(message = "{household-reported-annual-pre-tax-income.please-enter-a-value}")
+  @DecimalMin(value = "0.0", message = "{household-reported-annual-pre-tax-income.must-be-a-valid-amount}")
+  String reportedTotalAnnualHouseholdIncome;
 }

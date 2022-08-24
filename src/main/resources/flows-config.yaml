@@ -49,7 +49,10 @@ flow:
     nextScreens:
   reportedAnnualHouseholdIncome:
     nextScreens:
-      - name: AnnualHouseholdIncome
+      - name: incomeComplete
+  incomeComplete:
+    nextScreens:
+      - name: success
   success:
     nextScreens:
 subflows:
