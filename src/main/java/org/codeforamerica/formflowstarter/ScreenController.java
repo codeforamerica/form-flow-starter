@@ -151,12 +151,10 @@ public class ScreenController {
 			submissionRepositoryService.save(submission);
 			httpSession.setAttribute("id", submission.getId());
 		}
-		ModelMap model = new ModelMap();
-		model.put("uuid", formDataSubmission.get("uuuid"));
 		String nextScreen = getNextScreenName(httpSession, currentScreen);
 		String viewString = isNextScreenInSubflow(flow, httpSession, currentScreen) ?
 				String.format("redirect:/%s/%s/%s", flow, nextScreen, uuid) : String.format("redirect:/%s/%s", flow, nextScreen);
-		return new ModelAndView(viewString, model);
+		return new ModelAndView(viewString);
 	}
 
 	// 😭 If we could use a method: <string>.replaceFirst("\\{([^}]*)}", "flow:(?!assets).*")
