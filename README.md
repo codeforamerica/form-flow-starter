@@ -52,6 +52,8 @@ erDiagram
 
 ## Defining Flows ##
 
+TODO: Update to YAML
+
 To start, define a new flow by creating a Java class that extends the `Flow` class and defines 
 an empty `screens` instance variable:
 
@@ -66,6 +68,8 @@ class Apply extends Flow {
 We'll add to this more as we define our screens and inputs! 
 
 ## Defining Screens and Inputs ##
+
+TODO: Update
 
 Screens follow the classic MVC (model-view-controller) pattern:
 
@@ -167,6 +171,62 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
 </body>
 </html>
 ```
+
+## Defining Subflows ##
+
+What do you need to do to create a subflow?
+- In flow config:
+  - You need to define `subflow`
+  - You need to create a name for your subflow
+  - You need to define `entryScreen`, `iterationStartScreen`, `reviewScreen`, `deleteConfirmationScreen`
+  - Add all subflow screens into the `flow`, with `subflow: <subflow-name>`
+  - Note for `entryScreen`, `reviewScreen`, and `deleteConfirmationScreen`, they don't have to have `subflow: <subflow-name>`
+  - Note for screens that aren't ever defined in `NextScreens` (delete confirmation screen), they still need to be somewhere in the `flow` 
+- Define fields that appear in subflow screens just like you would in a `screen`, in your flow Java Class
+- Define `screen` templates in `resources/templates/<flow-name>`
+
+### Example `flow-config.yaml` with a docs subflow ###
+
+```yaml
+name: docFlow
+flow:
+  first:
+    nextScreens:
+      - name: second
+  second:
+    nextScreens:
+      - name: docsEntry
+  docsEntry:
+    nextScreens:
+      - name: docsStart
+  docsStart:
+    subflow: docs
+    nextScreens:
+      - name: docsInfo
+  docsInfo:
+    subflow: docs
+    nextScreens:
+      - name: docsReview
+  docsReview:
+    nextScreens:
+      - name: success
+  success:
+    nextScreens:
+  # NOTE: this screen still needs to be defined in `flow` to be rendered even though
+  # it isn't the nextScreen of any other Screen
+  docsDeleteConfirmation:
+    nextScreens:
+subflow:
+  docs:
+    entryScreen: docsEntry
+    iterationStartScreen: docsStart
+    reviewScreen: docsReview
+    deleteConfirmationScreen: docsDeleteConfirmation
+```
+
+### When do you need to define `subflow` on a screen? ###
+
+![Diagram showing screens that are in iteration loops to have the subflow key](readme-assets/subflow-stickies.png)
 
 ## About Submissions ##
 
