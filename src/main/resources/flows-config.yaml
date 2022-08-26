@@ -45,6 +45,7 @@ flow:
       - name: annualHouseholdIncome
   annualHouseholdIncome:
     nextScreens:
+      - name: incomeComplete
   incomeDeleteConfirmation:
     nextScreens:
   reportedAnnualHouseholdIncome:

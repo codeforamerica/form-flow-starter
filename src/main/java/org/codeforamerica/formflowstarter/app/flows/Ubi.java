@@ -1,6 +1,7 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
 import java.util.ArrayList;
+import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -8,33 +9,24 @@ import lombok.Data;
 
 @Data
 public class Ubi {
-
+  // TODO: Is there a better way to ignore CSRF here?
+  @Transient
+  String _csrf;
   // TODO: Delete when more "real" inputs are made
   // firstPage - test page for all inputs
 //  @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
-//  @Size(min = 2, message = "{validations.test}")\
+//  @Size(min = 2, message = "{validations.test}")
   @NotBlank(message = "{personal-info.provide-first-name}")
   String firstName;
   @NotBlank(message = "{personal-info.provide-last-name}")
   String lastName;
-  String emailAddress;
-  String phoneNumber;
-  String area;
-  String dateDay;
-  String dateMonth;
-  String dateYear;
-  String age2;
-  @NotEmpty(message = "Please select at least one")
-  ArrayList<String> gender;
-  String favoriteColor;
-  String favoriteFruit;
-  String money;
-  // /firstPage
 
+  // Language Preferences Screen
   String languageRead;
   String languageSpoken;
   String needInterpreter;
 
+  // Personal Info Screen
   String birthDay;
   String birthMonth;
   String birthYear;
@@ -44,7 +36,10 @@ public class Ubi {
   String movedToUSAMonth;
   String movedFromCountry;
 
+  // Housemates Screen
   String hasHousehold;
+
+  // Housemate Info Screen
   @NotBlank
   String householdMemberFirstName;
   @NotBlank
@@ -52,11 +47,14 @@ public class Ubi {
   String householdMemberRelationship;
   String householdMemberRecentlyMovedToUS;
 
+  // Household Member Income Screen
   String householdMember;
 
+  // Income Types Screen
   @NotEmpty(message = "{income-types.error}")
   ArrayList<String> incomeTypes;
 
+  // Income Amounts Screen
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeJobAmount;
@@ -112,6 +110,7 @@ public class Ubi {
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
   String incomeOtherAmount;
 
+  // Reported Household Annual Income Screen
   @NotBlank(message = "{household-reported-annual-pre-tax-income.please-enter-a-value}")
   @DecimalMin(value = "0.0", message = "{household-reported-annual-pre-tax-income.must-be-a-valid-amount}")
   String reportedTotalAnnualHouseholdIncome;

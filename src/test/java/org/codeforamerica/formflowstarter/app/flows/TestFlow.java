@@ -2,6 +2,7 @@ package org.codeforamerica.formflowstarter.app.flows;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -9,6 +10,9 @@ import org.springframework.boot.test.context.TestConfiguration;
 
 @TestConfiguration
 public class TestFlow {
+  // Ignore csrf for validation
+  @Transient
+  String _csrf;
 
   @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
   String firstName;

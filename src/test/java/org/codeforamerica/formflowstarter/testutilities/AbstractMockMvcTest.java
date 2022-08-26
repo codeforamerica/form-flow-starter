@@ -168,15 +168,12 @@ public class AbstractMockMvcTest {
     return postToUrlExpectingSuccess(postUrl, postUrl + "/navigation", Map.of(inputName, values));
   }
 
-  //TODO Implement CSRF and comment these with(csrf) calls back in
   protected ResultActions postToUrlExpectingSuccess(String postUrl, String redirectUrl,
       Map<String, List<String>> params) throws
       Exception {
-    var test = "test";
     return mockMvc.perform(
         post(postUrl)
-//
-//            .with(csrf())
+            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(params))
     ).andExpect(redirectedUrl(redirectUrl));
@@ -280,8 +277,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-//
-//            .with(csrf())
+            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .param(inputName, value)
     ).andExpect(redirectedUrl(postUrl));
@@ -299,8 +295,7 @@ public class AbstractMockMvcTest {
     var paramsWithProperInputNames = fixInputNamesForParams(params);
     return mockMvc.perform(
         post(postUrl)
-//
-//            .with(csrf())
+            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
     ).andExpect(redirectedUrl(postUrl));
@@ -370,8 +365,7 @@ public class AbstractMockMvcTest {
     String postUrl = getUrlForPageName(pageName);
     return mockMvc.perform(
         post(postUrl)
-//
-//            .with(csrf())
+            .with(csrf())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     );
   }
