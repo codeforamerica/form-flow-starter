@@ -362,3 +362,21 @@ Live Templates by typing `cfa:` and a list of templates to autofill will show it
 5. Paste at the bottom of the file
 6. Commit to GitHub
 7. Now others can copy/paste your Live Templates
+
+## Connect flows config schema with IntelliJ IDE ##
+
+We use [JSON schema](https://json-schema.org/understanding-json-schema/index.html) to autocomplete and validate the `flows-config.yaml` file.
+
+You must manually connect the schema to the local file in your instance of IntelliJ IDE.
+
+1. Open IntelliJ preferences (`Cmd + ,` on mac)
+2. Navigate to "JSON Schema Mappings"
+3. se the "+" in the top left to add a new mapping
+4. Name can be anything (I use "flow config")
+5. "Schema file or URL" needs to be set to the `src/main/resources/flows-config-schema.json`
+6. "Schema version" set to "JSON Schema version 7"
+7. Use the "+" to add a new file and connect to `src/main/resources/flows-config.yaml`
+
+To confirm that the connection is work, go into `flows-config.yaml` and see if autocomplete is appearing for you.
+
+![IntelliJ JSON Schema Mappings menu](readme-assets/intellij-json-schema-mappings.png)
