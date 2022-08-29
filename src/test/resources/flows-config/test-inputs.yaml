@@ -5,13 +5,12 @@ flow:
       - name: test
   test:
     nextScreens:
-      - name: housemateInfo
-  housemateInfo:
-    subflow: household
-    nextScreens:
-      - name: householdList
-  householdList:
-    nextScreens:
       - name: success
   success:
     nextScreens:
+subflows:
+  testSubflow:
+    entryScreen: testEntryScreen
+    iterationStartScreen: testIterationStartScreen
+    reviewScreen: testReviewScreen
+    deleteConfirmationScreen: testDeleteConfirmationScreen

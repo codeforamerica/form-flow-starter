@@ -601,8 +601,12 @@ public class ScreenController {
 	}
 
 	private Boolean isDeleteConfirmationScreen(String flow, String screen) {
-		return getFlowConfigurationByName(flow).getSubflows().entrySet().stream()
-				.anyMatch(subflow -> subflow.getValue().getDeleteConfirmationScreen().equals(screen));
+		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
+		if (subflows != null) {
+			return subflows.entrySet().stream()
+					.anyMatch(subflow -> subflow.getValue().getDeleteConfirmationScreen().equals(screen));
+		}
+		return false;
 	}
 
 	@Nullable
