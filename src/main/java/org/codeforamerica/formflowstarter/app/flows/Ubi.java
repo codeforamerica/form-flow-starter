@@ -1,7 +1,6 @@
 package org.codeforamerica.formflowstarter.app.flows;
 
 import java.util.ArrayList;
-import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -9,13 +8,11 @@ import lombok.Data;
 
 @Data
 public class Ubi {
-  // TODO: Is there a better way to ignore CSRF here?
-  @Transient
+
+  // Needs to be declared since Spring Security inserts _csrf as a hidden field to all forms
   String _csrf;
   // TODO: Delete when more "real" inputs are made
   // firstPage - test page for all inputs
-//  @NotBlank(message = "{validations.make-sure-to-provide-a-first-name}")
-//  @Size(min = 2, message = "{validations.test}")
   @NotBlank(message = "{personal-info.provide-first-name}")
   String firstName;
   @NotBlank(message = "{personal-info.provide-last-name}")

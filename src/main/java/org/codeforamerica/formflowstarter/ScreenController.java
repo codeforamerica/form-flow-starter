@@ -12,11 +12,17 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
-
-import org.codeforamerica.formflowstarter.app.config.*;
+import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
+import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
+import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
+import org.codeforamerica.formflowstarter.app.config.NextScreen;
+import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
+import org.codeforamerica.formflowstarter.app.config.SubflowConfiguration;
+import org.codeforamerica.formflowstarter.app.config.SubmissionHandler;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 import org.codeforamerica.formflowstarter.app.data.SubmissionRepositoryService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,7 +30,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -58,6 +63,7 @@ public class ScreenController {
 	ModelAndView getScreen(
 			@PathVariable String flow,
 			@PathVariable String screen,
+			@RequestParam(value = "uuid", required = false) String uuid,
 			HttpSession httpSession
 	) {
 		var currentScreen = getScreenConfig(flow, screen);
@@ -65,13 +71,17 @@ public class ScreenController {
 		if (currentScreen == null) {
 			return new ModelAndView("redirect:/error");
 		}
-
 		Map<String, Object> model = createModel(flow, screen, httpSession, submission);
 		String formAction = createFormActionString(flow, screen);
 		model.put("formAction", formAction);
+		if (isDeleteConfirmationScreen(flow, screen)) {
+			ModelAndView nothingToDeleteModelAndView = handleDeleteBackBehavior(flow, screen, uuid, submission);
+			if (nothingToDeleteModelAndView != null) {
+				return nothingToDeleteModelAndView;
+			}
+		}
 		return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 	}
-
 
 	@PostMapping("{flow}/{screen}")
 	ModelAndView postScreen(
@@ -249,7 +259,6 @@ public class ScreenController {
 
 	@PostMapping("{flow}/{subflow}/{uuid}/delete")
 	ModelAndView deleteSubflowIteration(
-			@RequestHeader("Referer") String referer,
 			@PathVariable String flow,
 			@PathVariable String subflow,
 			@PathVariable String uuid,
@@ -264,8 +273,9 @@ public class ScreenController {
 			var existingInputData = submission.getInputData();
 			if (existingInputData.containsKey(subflow)) {
 				var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
-				subflowArr.remove(httpSession.getAttribute("entryToDelete"));
-				httpSession.removeAttribute("entryToDelete");
+				Optional<Map<String, Object>> entryToDelete = subflowArr.stream()
+						.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
+				entryToDelete.ifPresent(subflowArr::remove);
 				if (!subflowArr.isEmpty()) {
 					existingInputData.put(subflow, subflowArr);
 					submission.setInputData(existingInputData);
@@ -588,5 +598,31 @@ public class ScreenController {
 						entry -> entry.getValue().size() == 1 && !entry.getKey().contains("[]")
 								? entry.getValue().get(0) : entry.getValue()
 				));
+	}
+
+	private Boolean isDeleteConfirmationScreen(String flow, String screen) {
+		return getFlowConfigurationByName(flow).getSubflows().entrySet().stream()
+				.anyMatch(subflow -> subflow.getValue().getDeleteConfirmationScreen().equals(screen));
+	}
+
+	@Nullable
+	private ModelAndView handleDeleteBackBehavior(String flow, String screen, String uuid,
+			Submission submission) {
+		ModelMap model = new ModelMap();
+		String subflowName = getFlowConfigurationByName(
+				flow).getSubflows().entrySet().stream()
+				.filter(entry -> entry.getValue().getDeleteConfirmationScreen().equals(screen))
+				.toList().get(0).getKey();
+		ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+		if (subflow == null || subflow.stream().noneMatch(entry -> entry.get("uuid").equals(uuid))) {
+			model.put("noEntryToDelete", true);
+			model.put("reviewScreen", getFlowConfigurationByName(flow).getSubflows().get(subflowName).getReviewScreen());
+			if (subflow == null) {
+				model.put("subflowIsEmpty", true);
+				model.put("entryScreen", getFlowConfigurationByName(flow).getSubflows().get(subflowName).getEntryScreen());
+			}
+			return new ModelAndView("/%s/%s".formatted(flow, screen), model);
+		}
+		return null;
 	}
 }

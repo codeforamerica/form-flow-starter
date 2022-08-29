@@ -1,6 +1,5 @@
 package org.codeforamerica.formflowstarter.journeys;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.formflowstarter.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.formflowstarter.testutilities.YesNoAnswer.YES;
@@ -58,9 +57,9 @@ public class UbiFlowJourneyTest extends JourneyTest {
     assertThat(testPage.findElementsByClass("subflow-delete")).hasSize(1);
     // Go back to delete confirmation and make sure someone else isn't deleted
     testPage.goBack();
-    assertThat(testPage.getCssSelectorText(".form-card__content")).contains("Jane Doe");
-    testPage.clickButton("Yes, remove them");
-    assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("Jane Doe");
+    assertThat(testPage.getHeader()).contains("This entry has already been deleted");
+    testPage.clickButton("Return to the screen I was on before");
+    assertThat(testPage.getHeader()).contains("Is this everyone that lives with you?");
     assertThat(testPage.findElementsByClass("subflow-delete")).hasSize(1);
     // Delete final household member to go back to householdList
     testPage.findElementsByClass("subflow-delete").get(0).click();
