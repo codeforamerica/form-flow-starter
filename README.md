@@ -371,11 +371,11 @@ You must manually connect the schema to the local file in your instance of Intel
 
 1. Open IntelliJ preferences (`Cmd + ,` on mac)
 2. Navigate to "JSON Schema Mappings"
-3. se the "+" in the top left to add a new mapping
+3. Select the "+" in the top left to add a new mapping
 4. Name can be anything (I use "flow config")
 5. "Schema file or URL" needs to be set to the `src/main/resources/flows-config-schema.json`
 6. "Schema version" set to "JSON Schema version 7"
-7. Use the "+" to add a new file and connect to `src/main/resources/flows-config.yaml`
+7. Use the "+" under schema version to add a new file and connect to `src/main/resources/flows-config.yaml`
 
 To confirm that the connection is work, go into `flows-config.yaml` and see if autocomplete is appearing for you.
 
