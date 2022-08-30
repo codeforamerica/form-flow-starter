@@ -375,7 +375,9 @@ You must manually connect the schema to the local file in your instance of Intel
 4. Name can be anything (I use "flow config")
 5. "Schema file or URL" needs to be set to the `src/main/resources/flows-config-schema.json`
 6. "Schema version" set to "JSON Schema version 7"
-7. Use the "+" under schema version to add a new file and connect to `src/main/resources/flows-config.yaml`
+7. Use the "+" under schema version to add:
+   - a new file and connect to `src/main/resources/flows-config.yaml`
+   - a folder and connect to `src/test/resources/flows-config`
 
 To confirm that the connection is work, go into `flows-config.yaml` and see if autocomplete is appearing for you.
 
