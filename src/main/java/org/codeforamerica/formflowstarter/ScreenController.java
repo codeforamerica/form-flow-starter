@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
-import org.codeforamerica.formflowstarter.app.config.InputsConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
 import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
 import org.codeforamerica.formflowstarter.app.config.SubflowConfiguration;
@@ -38,7 +37,6 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ScreenController {
 
 	private final List<FlowConfiguration> flowConfigurations;
-	private final InputsConfiguration inputsConfiguration;
 	private final ConditionHandler conditionHandler;
 	private final SubmissionRepositoryService submissionRepositoryService;
 	private final ValidationService validationService;
@@ -46,13 +44,11 @@ public class ScreenController {
 
 	public ScreenController(
 			List<FlowConfiguration> flowConfigurations,
-			InputsConfiguration inputsConfiguration,
 			SubmissionRepositoryService submissionRepositoryService,
 			ConditionHandler conditionHandler,
 			ValidationService validationService,
 			SubmissionHandler submissionHandler) {
 		this.flowConfigurations = flowConfigurations;
-		this.inputsConfiguration = inputsConfiguration;
 		this.submissionRepositoryService = submissionRepositoryService;
 		this.conditionHandler = conditionHandler;
 		this.validationService = validationService;
@@ -602,11 +598,11 @@ public class ScreenController {
 
 	private Boolean isDeleteConfirmationScreen(String flow, String screen) {
 		HashMap<String, SubflowConfiguration> subflows = getFlowConfigurationByName(flow).getSubflows();
-		if (subflows != null) {
-			return subflows.entrySet().stream()
-					.anyMatch(subflow -> subflow.getValue().getDeleteConfirmationScreen().equals(screen));
+		if (subflows == null) {
+			return false;
 		}
-		return false;
+		return subflows.entrySet().stream()
+				.anyMatch(subflow -> subflow.getValue().getDeleteConfirmationScreen().equals(screen));
 	}
 
 	@Nullable
