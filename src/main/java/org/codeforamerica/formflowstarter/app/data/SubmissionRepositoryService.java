@@ -1,5 +1,7 @@
 package org.codeforamerica.formflowstarter.app.data;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +22,17 @@ public class SubmissionRepositoryService {
     return repository.findById(id);
   }
 
+  public void removeFlowCSRF(Submission submission) {
+    submission.getInputData().remove("_csrf");
+  }
 
+  public void removeSubflowCSRF(Submission submission, String subflowName) {
+    var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+
+    if (subflowArr != null) {
+      for (var entry : subflowArr) {
+        entry.remove("_csrf");
+      }
+    }
+  }
 }
