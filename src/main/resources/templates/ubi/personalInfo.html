@@ -40,17 +40,29 @@
                       th:replace="'fragments/inputs/radio' :: radio(inputName='genderIdentity',value='Non-Binary', label=#{personal-info.gender-non-binary})"/>
                 </th:block>
               </th:block>
-              <th:block th:replace="'fragments/inputs/radioFieldset' ::
-                            radioFieldset(inputName='movedToUSA',
-                            label=#{personal-info.moved-label},
-                            content=~{::movedToContent})">
-                <th:block th:ref="movedToContent">
-                  <th:block
-                      th:replace="'fragments/inputs/radio' :: radio(inputName='movedToUSA',value='Yes', label=#{general.inputs.yes})"/>
-                  <th:block
-                      th:replace="'fragments/inputs/radio' :: radio(inputName='movedToUSA',value='No', label=#{general.inputs.no})"/>
-                </th:block>
-              </th:block>
+              <div class="question-with-follow-up">
+                <div class="question-with-follow-up__question">
+                  <th:block th:replace="'fragments/inputs/radioFieldset' ::
+                                                        radioFieldset(inputName='movedToUSA',
+                                                        label=#{personal-info.moved-label},
+                                                        content=~{::movedToContent})">
+                    <th:block th:ref="movedToContent">
+                      <th:block
+                          th:replace="'fragments/inputs/radio' :: radio(inputName='movedToUSA',value='No', label=#{general.inputs.no})"/>
+                      <th:block
+                          th:replace="'fragments/inputs/radio' :: radio(inputName='movedToUSA',value='Yes', label=#{general.inputs.yes}, followUpId='#moved-to-usa-follow-up')"/>
+                    </th:block>
+                  </th:block>
+                </div>
+                <div class="question-with-follow-up__follow-up" id="moved-to-usa-follow-up">
+                  <th:block th:replace="'fragments/inputs/date' ::
+                                            date(inputName='movedToUSA',
+                                            label=#{personal-info.moved-when-label})"/>
+                  <th:block th:replace="'fragments/inputs/text' ::
+                                text(inputName='movedFromCountry',
+                                label=#{personal-info.moved-from-label})"/>
+                </div>
+              </div>
               <div class="form-card__footer">
                 <th:block th:replace="fragments/inputs/submitButton :: submitButton(
                   text=#{general.inputs.continue})"/>

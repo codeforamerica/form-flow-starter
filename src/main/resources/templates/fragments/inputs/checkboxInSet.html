@@ -26,7 +26,9 @@
            th:value="${value}"
            th:name="${name}"
            th:checked="${checked}"
-           th:attr="aria-invalid=${hasError}">
+           th:attr="
+            aria-invalid=${hasError},
+            data-follow-up=${followUpId}">
     <div th:if="${hasIcon}">
       <i th:class="${'icon-' + checkboxIcon}" style="margin-right: 0.5rem"></i>
     </div>

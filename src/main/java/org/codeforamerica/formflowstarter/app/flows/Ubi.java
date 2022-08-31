@@ -31,6 +31,8 @@ public class Ubi {
   String movedToUSA;
   String movedToUSADay;
   String movedToUSAMonth;
+  // TODO: figure out how to only have day & month for a date fragment
+  String movedToUSAYear;
   String movedFromCountry;
 
   // Housemates Screen

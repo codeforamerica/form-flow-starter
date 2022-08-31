@@ -18,7 +18,9 @@
            th:checked="${inputData.getOrDefault(inputName, '').equals(value)}"
            th:disabled="${disabled}"
            th:aria-disabled="${disabled}"
-           th:attr="aria-invalid=${hasError}">
+           th:attr="
+            aria-invalid=${hasError},
+            data-follow-up=${followUpId}">
     <span th:text="${label}"></span>
   </label>
 </th:block>
