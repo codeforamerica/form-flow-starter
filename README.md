@@ -172,17 +172,97 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
 </html>
 ```
 
-## Defining Subflows ##
+## About Submissions ##
+
+Submission data is stored in the `Submission` object, persisted to PostgreSQL via the Hibernate ORM.
+
+```java
+class Submission {
+  
+  @Id
+  @GeneratedValue
+  private Long id;
+  
+  private String flow;
+  
+  @CreationTimestamp
+  @Temporal(TIMESTAMP)
+  private Timestamp createdAt;
+
+  @UpdateTimestamp
+  @Temporal(TIMESTAMP)
+  private Timestamp updatedAt;
+
+  @Temporal(TIMESTAMP)
+  private Timestamp submittedAt;
+   
+  @Type(JsonType.class)
+  private Map<String, String> inputData = new HashMap<>();
+  
+}
+```
+
+The `inputData` field is a JSON object that stores input data from the inputs as a given
+flow progresses. It can be used for defining conditions.
+
+An instance variable `currentSubmission` is available for use in the `ScreenController` and
+`inputData` is placed on the Thymeleaf model.
+
+## Subflows ##
+
+Subflows are repeating sections of one or more screens within a regular flow. These can be things like household builders
+that ask a repeating set of questions about members of a household. Subflows represent an array of
+screens and their respective inputs (represented as a HashMap) where each item in the array is one iteration.
+
+### Dedicated Subflow Screens ###
+
+These are screens that every subflow must have.
+
+#### Entry Screen ####
+This screen represents the entry point to a subflow, it is usually the point at which a user makes a
+decision to enter the subflow or not. Example: a screen that asks "Would you like to add household members?"
+could be the entry screen for a household based subflow. 
+
+The entry screen is not part of the repeating
+set of pages internal to the subflow and as such does not need to be demarked with `subflow: subflowName`
+in the `flows-config.yaml`.
+
+#### Iteration Start Screen ####
+This screen is the first screen in a subflows set of repeating screens. When this screen is submitted, 
+it creates a new iteration which is then saved to the subflow array within the Submission object.
+
+Because this screen is part of the repeating screens within the subfow, it **should** be denoted with
+`subflow: subflowName` in the `flows-config.yaml`.
+
+#### Review Screen ####
+This is the last screen in a subflow. This screen lists each iteration completed within a subflow, and provides options to edit or delete
+a single iteration.
+
+This screen does not need to be demarked with `subflow: subflowName`
+in the `flows-config.yaml`. It is not technically part of the repeating screens within a subflow, however, 
+you do visit this screen at the end of each iteration to show iterations completed so far and ask the 
+user if they would like to add another?
+
+#### Delete Confirmation Screen ####
+This screen appears when a user selects `delete` on a iteration listed on the review screen. It asks
+the user to confirm their deletion before submitting the actual deletion request to the server.
+
+This page is not technically part of the subflow and as such, does not need to be demarked with `subflow: subflowName`
+in the `flows-config.yaml`.
+
+### Defining Subflows ###
 
 What do you need to do to create a subflow?
-- In flow config:
-  - You need to define `subflow`
-  - You need to create a name for your subflow
-  - You need to define `entryScreen`, `iterationStartScreen`, `reviewScreen`, `deleteConfirmationScreen`
-  - Add all subflow screens into the `flow`, with `subflow: <subflow-name>`
-  - Note for `entryScreen`, `reviewScreen`, and `deleteConfirmationScreen`, they don't have to have `subflow: <subflow-name>`
+- In `flows-config.yaml`:
+  - Define a `subflow` section
+  - Create a name for your subflow in the `subflow` section
+  - Define `entryScreen`, `iterationStartScreen`, `reviewScreen`, and `deleteConfirmationScreen` in
+  the `subflow` section
+  - Add all subflow screens into the `flow`, with `subflow: <subflow-name>` unless otherwise noted above
+    (for dedicated subflow screens)
   - Note for screens that aren't ever defined in `NextScreens` (delete confirmation screen), they still need to be somewhere in the `flow` 
-- Define fields that appear in subflow screens just like you would in a `screen`, in your flow Java Class
+- Define `fields` that appear in subflow screens just like you would in a `screen`, in your flow Java Class
+  (e.g. Ubi.java in the starter app)
 - Define `screen` templates in `resources/templates/<flow-name>`
 
 ### Example `flow-config.yaml` with a docs subflow ###
@@ -227,42 +307,6 @@ subflow:
 ### When do you need to define `subflow` on a screen? ###
 
 ![Diagram showing screens that are in iteration loops to have the subflow key](readme-assets/subflow-stickies.png)
-
-## About Submissions ##
-
-Submission data is stored in the `Submission` object, persisted to PostgreSQL via the Hibernate ORM.
-
-```java
-class Submission {
-  
-  @Id
-  @GeneratedValue
-  private Long id;
-  
-  private String flow;
-  
-  @CreationTimestamp
-  @Temporal(TIMESTAMP)
-  private Timestamp createdAt;
-
-  @UpdateTimestamp
-  @Temporal(TIMESTAMP)
-  private Timestamp updatedAt;
-
-  @Temporal(TIMESTAMP)
-  private Timestamp submittedAt;
-   
-  @Type(JsonType.class)
-  private Map<String, String> inputData = new HashMap<>();
-  
-}
-```
-
-The `inputData` field is a JSON object that stores input data from the inputs as a given 
-flow progresses. It can be used for defining conditions.
-
-An instance variable `currentSubmission` is available for use in the `ScreenController` and 
-`inputData` is placed on the Thymeleaf model.
 
 ## Defining Conditions ##
 
