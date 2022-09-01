@@ -25,7 +25,7 @@ flow:
     nextScreens:
       - name: income
   householdDeleteConfirmation:
-    nextScreens:
+    nextScreens: null
   income:
     nextScreens:
       - name: householdMemberIncome
@@ -47,7 +47,7 @@ flow:
     nextScreens:
       - name: incomeComplete
   incomeDeleteConfirmation:
-    nextScreens:
+    nextScreens: null
   reportedAnnualHouseholdIncome:
     nextScreens:
       - name: incomeComplete
@@ -55,7 +55,7 @@ flow:
     nextScreens:
       - name: success
   success:
-    nextScreens:
+    nextScreens: null
 subflows:
   household:
     entryScreen: housemates
@@ -77,4 +77,4 @@ flow:
     nextScreens:
       - name: cardPage
   cardPage:
-    nextScreens:
+    nextScreens: null
