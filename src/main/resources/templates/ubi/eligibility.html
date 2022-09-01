@@ -10,7 +10,7 @@
       <main id="content" role="main" class="form-card spacing-above-35">
         <div class="text--centered">
           <th:block th:replace="'fragments/icons' :: household" />
-          <p th:text="#{eligibility.step}"></p>
+          <p class="text--grey-dark" th:text="#{eligibility.step}"></p>
           <th:block th:replace="'fragments/cardHeader' :: cardHeader(header=#{eligibility.eligibility})" />
         </div>
         <div class="boxed-content">

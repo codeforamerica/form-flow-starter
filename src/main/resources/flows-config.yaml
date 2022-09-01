@@ -5,6 +5,9 @@ flow:
       - name: languagePreference
   languagePreference:
     nextScreens:
+      - name: gettingToKnowYou
+  gettingToKnowYou:
+    nextScreens:
       - name: personalInfo
   personalInfo:
     nextScreens:
