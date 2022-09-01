@@ -105,11 +105,11 @@ public class ScreenController {
 			});
 			submission.setInputData(formDataSubmission);
 
-			submissionRepositoryService.save(submission);
+			saveToRepository(submission);
 		} else {
 			submission.setFlow(flow);
 			submission.setInputData(formDataSubmission);
-			submissionRepositoryService.save(submission);
+			saveToRepository(submission);
 			httpSession.setAttribute("id", submission.getId());
 		}
 
@@ -149,12 +149,12 @@ public class ScreenController {
 			ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
 			subflow.add(formDataSubmission);
 
-			submissionRepositoryService.save(submission);
+			saveToRepository(submission, subflowName);
 		} else {
 			submission.setFlow(flow);
 			// TODO: create the subflow here and add formDataSubmission to that
 			submission.setInputData(formDataSubmission);
-			submissionRepositoryService.save(submission);
+			saveToRepository(submission, subflowName);
 			httpSession.setAttribute("id", submission.getId());
 		}
 		String nextScreen = getNextScreenName(httpSession, currentScreen);
@@ -215,7 +215,7 @@ public class ScreenController {
 				submission.setInputData(existingInputData);
 				//TODO: Implement handleBeforeSaveAction
 				handleBeforeSaveAction(currentScreen, submission, uuid);
-				submissionRepositoryService.save(submission);
+				saveToRepository(submission, subflow);
 			}
 		} else {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
@@ -275,11 +275,11 @@ public class ScreenController {
 				if (!subflowArr.isEmpty()) {
 					existingInputData.put(subflow, subflowArr);
 					submission.setInputData(existingInputData);
-					submissionRepositoryService.save(submission);
+					saveToRepository(submission, subflow);
 				} else {
 					existingInputData.remove(subflow);
 					submission.setInputData(existingInputData);
-					submissionRepositoryService.save(submission);
+					saveToRepository(submission, subflow);
 					return new ModelAndView("redirect:/%s/%s".formatted(flow, subflowEntryScreen));
 				}
 			} else {
@@ -355,7 +355,7 @@ public class ScreenController {
 				subflowArr.set(indexToUpdate, formDataSubmission);
 				existingInputData.replace(subflow, subflowArr);
 				submission.setInputData(existingInputData);
-				submissionRepositoryService.save(submission);
+				saveToRepository(submission, subflow);
 			}
 		} else {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
@@ -387,7 +387,7 @@ public class ScreenController {
 				});
 				submission.setInputData(formDataSubmission);
 				submission.setSubmittedAt(Date.from(Instant.now()));
-				submissionRepositoryService.save(submission);
+				saveToRepository(submission);
 			}
 		}
 		// Fire async events: send email, generate PDF, send to API, etc...
@@ -624,5 +624,16 @@ public class ScreenController {
 			return new ModelAndView("/%s/%s".formatted(flow, screen), model);
 		}
 		return null;
+	}
+
+	private void saveToRepository(Submission submission) {
+		submissionRepositoryService.removeFlowCSRF(submission);
+		submissionRepositoryService.save(submission);
+	}
+
+	private void saveToRepository(Submission submission, String subflowName) {
+		submissionRepositoryService.removeFlowCSRF(submission);
+		submissionRepositoryService.removeSubflowCSRF(submission, subflowName);
+		submissionRepositoryService.save(submission);
 	}
 }
