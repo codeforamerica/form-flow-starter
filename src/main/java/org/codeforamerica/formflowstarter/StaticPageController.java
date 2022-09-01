@@ -23,4 +23,9 @@ public class StaticPageController {
     return "faq";
   }
 
+  @GetMapping("/icons")
+  String getIcons() {
+    return "/fragments/icons";
+  }
+
 }
