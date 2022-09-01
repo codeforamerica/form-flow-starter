@@ -183,7 +183,7 @@ public class ScreenController {
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
 		ScreenNavigationConfiguration currentScreen = getScreenConfig(flow, screen);
-		String subflow = currentScreen.getSubflow();
+		String subflowName = currentScreen.getSubflow();
 		var errorMessages = validationService.validate(flow, formDataSubmission);
 		handleErrors(httpSession, errorMessages, formDataSubmission);
 		if (errorMessages.size() > 0) {
@@ -191,23 +191,12 @@ public class ScreenController {
 		}
 
 		if (submissionOptional.isPresent()) {
-			// TODO can we refactor this to a method for less code duplication?
 			Submission submission = submissionOptional.get();
-			var existingInputData = submission.getInputData();
-			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
-			var iterationToEdit = subflowArr.stream()
-					.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
-			if (iterationToEdit.isPresent()) {
-				Map<String, Object> iteration = iterationToEdit.get();
-				iteration.forEach((key, value) -> {
-					formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
-				});
-				int indexToUpdate = subflowArr.indexOf(iteration);
-				subflowArr.set(indexToUpdate, formDataSubmission);
-				existingInputData.replace(subflow, subflowArr);
-				submission.setInputData(existingInputData);
-				handleBeforeSaveAction(currentScreen, submission, uuid);
-				saveToRepository(submission, subflow);
+			var iterationToEdit = Submission.getSubflowEntryByUuid(subflowName, uuid, submission);
+			if (iterationToEdit != null) {
+				var updatedSubmission = mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
+				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
+				saveToRepository(updatedSubmission, subflowName);
 			}
 		} else {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
@@ -277,6 +266,8 @@ public class ScreenController {
 			} else {
 				return new ModelAndView("redirect:/%s/%s".formatted(flow, subflowEntryScreen));
 			}
+		} else {
+			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
 		}
 		String reviewScreen = getFlowConfigurationByName(flow).getSubflows().get(subflow)
 				.getReviewScreen();
@@ -320,9 +311,9 @@ public class ScreenController {
 			@PathVariable String screen,
 			@PathVariable String uuid,
 			HttpSession httpSession
-	) {
+	) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		ScreenNavigationConfiguration currentScreen = getScreenConfig(flow, screen);
-		String subflow = currentScreen.getSubflow();
+		String subflowName = currentScreen.getSubflow();
 		Long id = (Long) httpSession.getAttribute("id");
 		Optional<Submission> submissionOptional = submissionRepositoryService.findById(id);
 		Map<String, Object> formDataSubmission = removeEmptyValuesAndFlatten(formData);
@@ -334,20 +325,11 @@ public class ScreenController {
 
 		if (submissionOptional.isPresent()) {
 			Submission submission = submissionOptional.get();
-			var existingInputData = submission.getInputData();
-			var subflowArr = (ArrayList<Map<String, Object>>) existingInputData.get(subflow);
-			var iterationToEdit = subflowArr.stream()
-					.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
-			if (iterationToEdit.isPresent()) {
-				Map<String, Object> iteration = iterationToEdit.get();
-				iteration.forEach((key, value) -> {
-					formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
-				});
-				int indexToUpdate = subflowArr.indexOf(iteration);
-				subflowArr.set(indexToUpdate, formDataSubmission);
-				existingInputData.replace(subflow, subflowArr);
-				submission.setInputData(existingInputData);
-				saveToRepository(submission, subflow);
+			var iterationToEdit = Submission.getSubflowEntryByUuid(subflowName, uuid, submission);
+			if (iterationToEdit != null) {
+				var updatedSubmission = mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
+				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
+				saveToRepository(updatedSubmission, subflowName);
 			}
 		} else {
 			return new ModelAndView("/error", HttpStatus.BAD_REQUEST);
@@ -372,7 +354,6 @@ public class ScreenController {
 				Submission submission = submissionOptional.get();
 				var formDataSubmission = removeEmptyValuesAndFlatten(formData);
 				mergeFormDataWithSubmissionData(submission, formDataSubmission);
-				submission.setInputData(formDataSubmission);
 				submission.setSubmittedAt(Date.from(Instant.now()));
 				saveToRepository(submission);
 			}
@@ -620,9 +601,16 @@ public class ScreenController {
 		submission.setInputData(formDataSubmission);
 	}
 
-	private void mergeFormDataWithSubflowIterationData(Map<String, Object> iteration, Map<String, Object> formDataSubmission) {
-		iteration.forEach((key, value) -> {
+	private Submission mergeFormDataWithSubflowIterationData(Submission submission, String subflowName, Map<String, Object> iterationToUpdate, Map<String, Object> formDataSubmission) {
+		iterationToUpdate.forEach((key, value) -> {
 			formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
 		});
+		var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+		var existingInputData = submission.getInputData();
+		int indexToUpdate = subflowArr.indexOf(iterationToUpdate);
+		subflowArr.set(indexToUpdate, formDataSubmission);
+		existingInputData.replace(subflowName, subflowArr);
+		submission.setInputData(existingInputData);
+		return submission;
 	}
 }
