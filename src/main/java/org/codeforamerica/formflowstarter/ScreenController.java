@@ -340,7 +340,9 @@ public class ScreenController {
 					.filter(entry -> entry.get("uuid").equals(uuid)).findFirst();
 			if (iterationToEdit.isPresent()) {
 				Map<String, Object> iteration = iterationToEdit.get();
-
+				iteration.forEach((key, value) -> {
+					formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
+				});
 				int indexToUpdate = subflowArr.indexOf(iteration);
 				subflowArr.set(indexToUpdate, formDataSubmission);
 				existingInputData.replace(subflow, subflowArr);
