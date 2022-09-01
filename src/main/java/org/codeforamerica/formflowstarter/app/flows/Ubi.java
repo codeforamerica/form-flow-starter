@@ -11,12 +11,6 @@ public class Ubi {
 
   // Needs to be declared since Spring Security inserts _csrf as a hidden field to all forms
   String _csrf;
-  // TODO: Delete when more "real" inputs are made
-  // firstPage - test page for all inputs
-  @NotBlank(message = "{personal-info.provide-first-name}")
-  String firstName;
-  @NotBlank(message = "{personal-info.provide-last-name}")
-  String lastName;
 
   // Language Preferences Screen
   String languageRead;
@@ -24,6 +18,10 @@ public class Ubi {
   String needInterpreter;
 
   // Personal Info Screen
+  @NotBlank(message = "{personal-info.provide-first-name}")
+  String firstName;
+  @NotBlank(message = "{personal-info.provide-last-name}")
+  String lastName;
   String birthDay;
   String birthMonth;
   String birthYear;
