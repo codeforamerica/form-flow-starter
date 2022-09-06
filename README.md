@@ -158,16 +158,16 @@ add a new HTML file `about-you.html` [in the flow's templates folder](src/main/r
         <div class="grid">
             <main id="content" role="main" class="form-card spacing-above-35">
                 <th:block th:replace="'icons' :: 'clipboard'"></th:block>
-                <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')" />
-                <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')" />
-                <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')" />
-                <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')" />
-                <th:block th:replace="'inputs' :: submitInput()" />
+                <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')"/>
+                <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')"/>
+                <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')"/>
+                <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')"/>
+                <th:block th:replace="'inputs' :: submitInput()"/>
             </main>
         </div>
     </section>
 </div>
-<th:block th:replace="fragments/footer :: footer" />
+<th:block th:replace="fragments/footer :: footer"/>
 </body>
 </html>
 ```
@@ -209,13 +209,11 @@ An instance variable `currentSubmission` is available for use in the `ScreenCont
 `inputData` is placed on the Thymeleaf model.
 
 ## Subflows ##
-
 Subflows are repeating sections of one or more screens within a regular flow. These can be things like household builders
 that ask a repeating set of questions about members of a household. Subflows represent an array of
 screens and their respective inputs (represented as a HashMap) where each item in the array is one iteration.
 
 ### Dedicated Subflow Screens ###
-
 These are screens that every subflow must have.
 
 #### Entry Screen ####
@@ -328,14 +326,12 @@ public class ApplyConditions extends FlowConditions {
 You can pull in conditions into a Thymeleaf with the T operator, then use the variable to define show logic:
 
 ```html
-<div
-        th:with="showCondition=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).<show-method>()}">
+<div th:with="showCondition=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).<show-method>()}">
     <h1 th:if="showCondition">Conditionally show this element</h1>
 </div>
 ```
 
 ## Defining Static Pages ##
-
 
 Unlike Screens, Static Pages are HTML content not part of a flow. Examples include the home page,
 privacy policy, or FAQ. This starter app contains a home page (`index.html`) and FAQ (`faq.html`)
@@ -354,8 +350,8 @@ The template HTML can look like:
 <head th:replace="fragments/head :: head(title='')"></head>
 <body>
 <div class="page-wrapper">
-    <th:block th:replace="fragments/toolbar :: toolbar" />
-    <th:block th:replace="fragments/demoBanner :: demoBanner" />
+    <th:block th:replace="fragments/toolbar :: toolbar"/>
+    <th:block th:replace="fragments/demoBanner :: demoBanner"/>
     <section class="slab">
         <div class="grid">
             <div class="grid__item">
@@ -367,7 +363,7 @@ The template HTML can look like:
 
     </main>
 </div>
-<th:block th:replace="fragments/footer :: footer" />
+<th:block th:replace="fragments/footer :: footer"/>
 </body>
 </html>
 ```
@@ -376,10 +372,13 @@ The IntelliJ Live Template for the above example can be generated with `cfa:stat
 
 ## About IntelliJ Live Templates ##
 
-As a team, we use [IntelliJ](https://www.jetbrains.com/idea/) and can use the [Live Templates](https://www.jetbrains.com/help/idea/using-live-templates.html) feature to quickly build
+As a team, we use [IntelliJ](https://www.jetbrains.com/idea/) and can use
+the [Live Templates](https://www.jetbrains.com/help/idea/using-live-templates.html) feature to quickly build
 Thymeleaf templates.
 
-Support for importing/exporting these Live Templates is a [buggy process](https://youtrack. jetbrains.com/issue/IDEA-184753) that can sometimes wipe away all of your previous settings. So we're going to use a copy/paste approach.
+Support for importing/exporting these Live Templates is
+a [buggy process](https://youtrack.jetbrains.com/issue/IDEA-184753) that can sometimes wipe away all of your previous
+settings. So we're going to use a copy/paste approach.
 
 ### Applying Live Templates to your IntelliJ IDE ###
 
