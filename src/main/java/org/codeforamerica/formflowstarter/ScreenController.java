@@ -97,7 +97,6 @@ public class ScreenController {
 
 		// if there's already a session
 		if (submission.getId() != null) {
-			// TODO: Should this be void? Is it clearer if it returns a submission?
 			mergeFormDataWithSubmissionData(submission, formDataSubmission);
 			saveToRepository(submission);
 		} else {
