@@ -9,11 +9,9 @@ can fill out screens with their basic info, upload supporting documents, then su
 Upon submission, they receive a simple SMS confirmation and a receipt email with a filled-in
 application PDF. The entire experience is in both English and Spanish.
 
-The example application can be viewed [here](https://example.com).
-
 To power the form flow logic, this app depends on the `form-flows` Java library. That library is
 included in `build.gradle` along with all other dependencies. The codebase for the `form-flows`
-package is [open source](https://example.com).
+package is [open source](https://example.com) (TBD).
 
 Out-of-the-box, integrations can be set up with common third-party services:
 
@@ -37,7 +35,7 @@ The relevant service keys and other settings are configurable in `application.ya
 Flows are the top-level construct. A flow has many inputs to accept user data (e.g. first name, zip
 code, email, file upload). Each input can have zero to many validations.
 
-A flow also has many screens. Each screen can be made up of one or more inputs. A flow has an
+A flow also has many screens. Each screen can be made up of zero or more inputs. A flow has an
 ordering of screens, and can use defined conditions to skip screens. Conditions are based on
 submitted inputs. Conditions can also be used on individual screens to show or hide content.
 
@@ -52,11 +50,9 @@ erDiagram
 
 ## Defining Flows ##
 
-TODO: Update to YAML
+To start, create a `flow-config.yaml` in `src/main/resources`.
 
-To start, define a new flow by creating a Java class that extends the `Flow` class and defines
-an empty `screens` instance variable:
-
+You can define multiple flows by [separating them with `---`](https://docs.spring.io/spring-boot/docs/1.2.0.M1/reference/html/boot-features-external-config.html#boot-features-external-config-multi-profile-yaml).
 ```java
 class Apply extends Flow {
 
@@ -369,6 +365,75 @@ The template HTML can look like:
 ```
 
 The IntelliJ Live Template for the above example can be generated with `cfa:staticPage`.
+
+## Development setup ##
+
+### Install the following system dependencies: ###
+
+_Note: these instructions are specific to macOS, but the same dependencies do need to be installed on Windows as well._
+
+#### Java Development Kit ####
+
+```
+brew install openjdk
+```
+
+#### Set up jenv to manage your jdk versions ####
+
+First run `brew install jenv`.
+
+Add the following to your `~/.bashrc` or `~/.zshrc`:
+
+```
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+```
+
+Reload your terminal, then finally run this from the repo's root directory:
+
+```
+jenv add /Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/
+```
+
+#### Gradle ####
+
+`brew install gradle`
+
+### Setup IntelliJ for the project: ###
+
+- Enable annotation processing in `Preferences -> Build, Execution, Deployment -> Compiler -> Annotation Processor`
+- Set the Gradle JVM version to 17 in `Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle`
+- Set the Project SDK to Java 17 in `File > Project Structure`
+- Run the application using the `FormflowstarterApplication` configuration
+
+### Start the local databases: ###
+
+- Install PostgreSQL 14 via an [official download](https://www.postgresql.org/download/)
+    - Or on macOS, through homebrew: `brew install postgresql@14`
+<!-- TODO: Is this the right way to create db/user? -->
+- Create the database using the command line:
+    - `$ createuser -s formflow`
+    - `$ createdb formflow`
+
+### Test: ###
+
+#### Terminal ####
+
+From the project root invoke
+```./gradlew clean test```
+
+#### IntelliJ ####
+
+You can run tests directly in IntelliJ by running tests from test folder (via right click or `ctrl + shift + r`).
+
+### Setup Fake Filler (optional, Chrome & Firefox): ###
+
+We use an automatic form filler to make manual test easier.
+- Install [Fake Filler for Chrome](https://chrome.google.com/webstore/detail/fake-filler/bnjjngeaknajbdcgpfkgnonkmififhfo) or [Fake Filler for FireFox](https://addons.mozilla.org/en-US/firefox/addon/fake-filler/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)
+- Go to [fakeFillerConfig.txt](fakeFIllerConfig.txt), click on "Raw", then save the file to your computer.
+- Open the Fake Filler Options then click on [Backup and Restore (chrome)](chrome-extension://bnjjngeaknajbdcgpfkgnonkmififhfo/options.html#/backup)
+- Click on "Import Settings" and upload the config file that you saved above.
+- Click on [Keyboard Shortcuts (chrome)](chrome-extension://bnjjngeaknajbdcgpfkgnonkmififhfo/options.html#/keyboard-shortcuts) to choose the shortcut you want to use to fill out the page.
 
 ## About IntelliJ Live Templates ##
 
