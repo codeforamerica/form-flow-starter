@@ -24,6 +24,8 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
     // Language preference
     testPage.clickContinue();
+    // Getting to know you
+    testPage.clickContinue();
     // Personal info
     testPage.enter("firstName", "Testy");
     testPage.enter("lastName", "McTesterson");
