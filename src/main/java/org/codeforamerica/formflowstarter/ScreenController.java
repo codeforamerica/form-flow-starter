@@ -97,7 +97,7 @@ public class ScreenController {
 
 		// if there's already a session
 		if (submission.getId() != null) {
-			mergeFormDataWithSubmissionData(submission, formDataSubmission);
+			Submission.mergeFormDataWithSubmissionData(submission, formDataSubmission);
 			saveToRepository(submission);
 		} else {
 			submission.setFlow(flow);
@@ -193,7 +193,7 @@ public class ScreenController {
 			Submission submission = submissionOptional.get();
 			var iterationToEdit = Submission.getSubflowEntryByUuid(subflowName, uuid, submission);
 			if (iterationToEdit != null) {
-				var updatedSubmission = mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
+				var updatedSubmission = Submission.mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
 				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
 				saveToRepository(updatedSubmission, subflowName);
 			}
@@ -326,7 +326,7 @@ public class ScreenController {
 			Submission submission = submissionOptional.get();
 			var iterationToEdit = Submission.getSubflowEntryByUuid(subflowName, uuid, submission);
 			if (iterationToEdit != null) {
-				var updatedSubmission = mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
+				var updatedSubmission = Submission.mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
 				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
 				saveToRepository(updatedSubmission, subflowName);
 			}
@@ -352,7 +352,7 @@ public class ScreenController {
 			if (submissionOptional.isPresent()) {
 				Submission submission = submissionOptional.get();
 				var formDataSubmission = removeEmptyValuesAndFlatten(formData);
-				mergeFormDataWithSubmissionData(submission, formDataSubmission);
+				Submission.mergeFormDataWithSubmissionData(submission, formDataSubmission);
 				submission.setSubmittedAt(Date.from(Instant.now()));
 				saveToRepository(submission);
 			}
@@ -509,7 +509,7 @@ public class ScreenController {
 
 		// If there are errors, merge form data that was submitted, with already existing inputData
 		if (httpSession.getAttribute("formDataSubmission") != null) {
-			mergeFormDataWithSubmissionData(submission, (Map<String, Object>) httpSession.getAttribute("formDataSubmission"));
+			Submission.mergeFormDataWithSubmissionData(submission, (Map<String, Object>) httpSession.getAttribute("formDataSubmission"));
 			model.put("submission", submission);
 			model.put("inputData", submission.getInputData());
 		} else {
@@ -590,26 +590,5 @@ public class ScreenController {
 		submissionRepositoryService.removeFlowCSRF(submission);
 		submissionRepositoryService.removeSubflowCSRF(submission, subflowName);
 		submissionRepositoryService.save(submission);
-	}
-
-	private void mergeFormDataWithSubmissionData(Submission submission, Map<String, Object> formDataSubmission) {
-		Map<String, Object> inputData = submission.getInputData();
-		inputData.forEach((key, value) -> {
-			formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
-		});
-		submission.setInputData(formDataSubmission);
-	}
-
-	private Submission mergeFormDataWithSubflowIterationData(Submission submission, String subflowName, Map<String, Object> iterationToUpdate, Map<String, Object> formDataSubmission) {
-		iterationToUpdate.forEach((key, value) -> {
-			formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
-		});
-		var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
-		var existingInputData = submission.getInputData();
-		int indexToUpdate = subflowArr.indexOf(iterationToUpdate);
-		subflowArr.set(indexToUpdate, formDataSubmission);
-		existingInputData.replace(subflowName, subflowArr);
-		submission.setInputData(existingInputData);
-		return submission;
 	}
 }

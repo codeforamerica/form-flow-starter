@@ -69,4 +69,25 @@ public class Submission {
     }
     return null;
   }
+
+  public static void mergeFormDataWithSubmissionData(Submission submission, Map<String, Object> formDataSubmission) {
+    Map<String, Object> inputData = submission.getInputData();
+    inputData.forEach((key, value) -> {
+      formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
+    });
+    submission.setInputData(formDataSubmission);
+  }
+
+  public static Submission mergeFormDataWithSubflowIterationData(Submission submission, String subflowName, Map<String, Object> iterationToUpdate, Map<String, Object> formDataSubmission) {
+    iterationToUpdate.forEach((key, value) -> {
+      formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
+    });
+    var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+    var existingInputData = submission.getInputData();
+    int indexToUpdate = subflowArr.indexOf(iterationToUpdate);
+    subflowArr.set(indexToUpdate, formDataSubmission);
+    existingInputData.replace(subflowName, subflowArr);
+    submission.setInputData(existingInputData);
+    return submission;
+  }
 }
