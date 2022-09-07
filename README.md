@@ -94,13 +94,87 @@ Example `/src/resources/templates/<flowName>/<templateName>`.
 We have provided a number of IntelliJ Live templates to make the creation of screens faster and easier.
 [More on Live Templates here](#about-intellij-live-templates).
 
+When setting up a new flow, create a folder in `src/main/resources/templates` to hold all HTML files.
+In the starter app, we name the respective template folders after their respective flows.
+
+For example, add an HTML file such as `about-you.html` [in the flow's templates folder](src/main/resources/templates). Here is an example using our [live templates for a form screen](#about-intellij-live-templates):
+
+```html
+<th:block th:replace="'fragments/form' :: form(action=${formAction}, content=~{::formContent})">
+  <th:block th:ref="formContent">
+    <div class="form-card__content">
+      <th:block th:replace="'icons' :: 'clipboard'"></th:block>
+      <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')"/>
+      <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')"/>
+      <th:block th:replace="'inputs' :: textInput(name='lastName', label='What's your last name?')"/>
+      <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')"/>
+    </div>
+    <div class="form-card__footer">
+      <th:block th:replace="'fragments/continueButton' :: continue" />
+    </div>
+  </th:block>
+</th:block>
+```
+
 ### Using Thymeleaf
 
-We use [fragments](TODO: link to official docs) to store complex mark up into simple reusable imports.
+We use Thymeleaf for frontend views. Thymeleaf is a Java based HTML framework for frontend templating.
+[You can learn more about Thymeleaf here.](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
 
-TODO: link to our fragments folder
+We use Thymeleaf's concept of  [fragments](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#fragments) to store 
+complex mark up into simple reusable imports.
 
-TODO: Using static methods, condition definitions and view utilities with T operator
+Fragments  simplify the process of creating more complex HTML pages. Some places we use fragments
+include input types, forms, page headers and footers, error handlers, etc. [You can view these fragments
+here.](src/main/resources/templates/fragments)
+
+Thymeleaf is also capable of making direct calls to Java class methods using what is known as the 
+Spring Expression Language T operator. This allows you to implement Java code in your Thymeleaf templates.
+We provide two classes for this purpose:
+- ConditionDefinitions
+  - Houses methods which should always return Booleans and can be used to conditionally show or hide 
+  sections of a Thymeleaf template
+- ViewUtilities
+  - Houses methods for general purpose manipulation of data to display on the frontend in Thymeleaf templates
+
+An example of using the T operator can be found in the `incomeAmounts` template from the starter app
+from the starter app.
+```html
+ <main id="content" role="main" class="form-card spacing-above-35"
+            th:with="selectedSelf=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).incomeSelectedSelf(submission, uuid)},
+                     houseHoldMemberName=${T(org.codeforamerica.formflowstarter.app.data.Submission).getSubflowEntryByUuid('income', uuid, submission).householdMember}">
+...
+</main>
+```
+
+#### Thymeleaf Model Data ####
+
+We provide some data to the model for ease of use access in Thymeleaf templates. Below are the data types
+we pass and when they are available.
+
+| Name               | Type       | Description                                                                                                                                                                                          |
+|--------------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| flow               | String     | Always available, the name of the flow the screen is contained within.                                                                                                                               |
+| screen             | String     | Always available, the name of the screen.                                                                                                                                                            |
+| inputData          | HashMap    | Always available, inputData is a HashMap of user submitted input data. If editing a subflow, inputData will only contain the data for that specific iteration within the subflow.                    |  
+| submission         | Submission | Always available, submission is the entire Submission object that contains a single users submission data.                                                                                           |  
+| subflow            | String     | Available on screens defined as delete confirmation screens within the `flows-config`, this is the name of the sublow the delete confirmation screen belongs to.                                     |  
+| errorMessages      | ArrayList  | An ArrayList of String error messages provided on screens containing forms, when one or more validation errors have occurred.                                                                        |  
+| formAction         | String     | Provided on all pages which contain a form, this can be used in place of the forms `action` attribute and should always be the correct endpoint for the action if `flows-config` is setup correctly. |  
+| noEntryToDelete    | Text       | Foo                                                                                                                                                                                                  |  
+| Paragraph          | Text       | Foo                                                                                                                                                                                                  |  
+| Paragraph          | Text       | Foo                                                                                                                                                                                                  |  
+
+
+WIP --> Things we put in the model:
+- noEntryToDelete is a special case which is used on the deleteConfirmationScreen for a subflow to conditionally
+  show a warning if the user has deleted a subflow iteration and then hit the back button after deleting
+- subflowIsEmpty is another special case which is used to decide where to send you on the aforementioned warning screen
+  depending on whether the subflow has iterations left within it or not
+- entryScreen and reviewScreen are provided on the aforementioned special case screen so that we can link you to the appropriate screen
+
+
+[For more information on the T Operator see section 6.5.8 here.](https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html)
 
 #### Icon reference
 
@@ -155,27 +229,6 @@ class Apply {
 
 Validations for inputs use the JSR-303 bean validation paradigm, more specifically, Hibernate validations. For a list of validation
 decorators, see [Hibernate's documentation.](https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints)
-
-When setting up a new flow, create a folder in `src/main/resources` to hold all HTML files.
-
-Then add a new HTML file `about-you.html` [in the flow's templates folder](src/main/resources/templates), here is an example using our [live templates for a form screen](#about-intellij-live-templates):
-
-```html
-<th:block th:replace="'fragments/form' :: form(action=${formAction}, content=~{::formContent})">
-  <th:block th:ref="formContent">
-    <div class="form-card__content">
-      <th:block th:replace="'icons' :: 'clipboard'"></th:block>
-      <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')"/>
-      <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')"/>
-      <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')"/>
-      <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')"/>
-    </div>
-    <div class="form-card__footer">
-      <th:block th:replace="'fragments/continueButton' :: continue" />
-    </div>
-  </th:block>
-</th:block>
-```
 
 ## About Submissions ##
 
