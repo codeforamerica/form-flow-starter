@@ -22,7 +22,7 @@
         name=${entryToDelete.householdMemberFirstName + ' ' + entryToDelete.householdMemberLastName}"
             id="content" role="main" class="form-card spacing-above-35">
           <div class="form-card__content">
-            <th:block th:replace="'fragments/icons' :: 'delete-document'"></th:block>
+            <th:block th:replace="'fragments/icons' :: 'deleteDocument'"></th:block>
             <h1 class="h2"
                 th:text="#{household-delete-confirmation.header(${name})}"></h1>
             <h2 th:text="#{household-delete-confirmation.is-that-okay}"></h2>
