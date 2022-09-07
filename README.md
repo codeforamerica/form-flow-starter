@@ -137,8 +137,7 @@ We provide two classes for this purpose:
 - ViewUtilities
   - Houses methods for general purpose manipulation of data to display on the frontend in Thymeleaf templates
 
-An example of using the T operator can be found in the `incomeAmounts` template from the starter app
-from the starter app.
+An example of using the T operator can be found in the `incomeAmounts` template from the starter app.
 ```html
  <main id="content" role="main" class="form-card spacing-above-35"
             th:with="selectedSelf=${T(org.codeforamerica.formflowstarter.app.config.ConditionDefinitions).incomeSelectedSelf(submission, uuid)},
