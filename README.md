@@ -152,27 +152,19 @@ from the starter app.
 We provide some data to the model for ease of use access in Thymeleaf templates. Below are the data types
 we pass and when they are available.
 
-| Name               | Type       | Description                                                                                                                                                                                          |
-|--------------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| flow               | String     | Always available, the name of the flow the screen is contained within.                                                                                                                               |
-| screen             | String     | Always available, the name of the screen.                                                                                                                                                            |
-| inputData          | HashMap    | Always available, inputData is a HashMap of user submitted input data. If editing a subflow, inputData will only contain the data for that specific iteration within the subflow.                    |  
-| submission         | Submission | Always available, submission is the entire Submission object that contains a single users submission data.                                                                                           |  
-| subflow            | String     | Available on screens defined as delete confirmation screens within the `flows-config`, this is the name of the sublow the delete confirmation screen belongs to.                                     |  
-| errorMessages      | ArrayList  | An ArrayList of String error messages provided on screens containing forms, when one or more validation errors have occurred.                                                                        |  
-| formAction         | String     | Provided on all pages which contain a form, this can be used in place of the forms `action` attribute and should always be the correct endpoint for the action if `flows-config` is setup correctly. |  
-| noEntryToDelete    | Text       | Foo                                                                                                                                                                                                  |  
-| Paragraph          | Text       | Foo                                                                                                                                                                                                  |  
-| Paragraph          | Text       | Foo                                                                                                                                                                                                  |  
-
-
-WIP --> Things we put in the model:
-- noEntryToDelete is a special case which is used on the deleteConfirmationScreen for a subflow to conditionally
-  show a warning if the user has deleted a subflow iteration and then hit the back button after deleting
-- subflowIsEmpty is another special case which is used to decide where to send you on the aforementioned warning screen
-  depending on whether the subflow has iterations left within it or not
-- entryScreen and reviewScreen are provided on the aforementioned special case screen so that we can link you to the appropriate screen
-
+| Name              | Type                    | Availability                                                                     | Description                                                                                                                                                         |
+|-------------------|-------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `flow`            | String                  | Always available                                                                 | The name of the flow the screen is contained within.                                                                                                                |
+| `screen`          | String                  | Always available                                                                 | the name of the screen.                                                                                                                                             |
+| `inputData`       | HashMap<String, Object> | Always available                                                                 | `inputData` is a HashMap of user submitted input data. If editing a subflow, `inputData` will only contain the data for that specific iteration within the subflow. |
+| `submission`      | Submission              | Always available                                                                 | `submission` is the entire Submission object that contains a single users submission data.                                                                          |
+| `formAction`      | String                  | Always available                                                                 | Is the correct endpoint for the forms `POST` action if `flows-config` is set up correctly.                                                                          |
+| `errorMessages`   | ArrayList<String>       | On screens that fail validation                                                  | A list of error messages for inputs that failed validation.                                                                                                         |
+| `subflow`         | String                  | On `deleteConfirmationScreen` screens                                            | This is the name of the subflow that the `deleteConfirmationScreen` screen belongs to.                                                                              |
+| `noEntryToDelete` | Boolean                 | On `deleteConfirmationScreen` screens if corresponding `uuid` is no longer there | Indicates that the subflow entry containing a `uuid` is no longer available.                                                                                        |
+| `reviewScreen`    | String                  | On `deleteConfirmationScreen` screens if corresponding `uuid` is no longer there | Name of the review screen for the subflow that the `deleteConfirmationScreen` belongs to.                                                                           |
+| `subflowIsEmpty`  | Boolean                 | On `deleteConfirmationScreen` screens if no entries in a subflow exist           | Indicates that the subflow being accessed no longer has entries.                                                                                                    |
+| `entryScreen`     | String                  | On `deleteConfirmationScreen` screens if no entries in a subflow exist           | Name of the entry screen for the subflow that the `deleteConfirmationScreen` belongs to.                                                                            |
 
 [For more information on the T Operator see section 6.5.8 here.](https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html)
 
