@@ -212,6 +212,16 @@ screens and their respective inputs (represented as a HashMap) where each item i
 ### Dedicated Subflow Screens ###
 These are screens that every subflow must have.
 
+Here is an example of a *subflow* yaml:
+```yaml
+subflow:
+  docs:
+    entryScreen: docsEntry
+    iterationStartScreen: docsStart
+    reviewScreen: docsReview
+    deleteConfirmationScreen: docsDeleteConfirmation
+```
+
 #### Entry Screen ####
 This screen represents the entry point to a subflow, it is usually the point at which a user makes a
 decision to enter the subflow or not. Example: a screen that asks "Would you like to add household members?"
