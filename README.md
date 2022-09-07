@@ -32,12 +32,13 @@ The relevant service keys and other settings are configurable in `application.ya
 * Conditions
 * Validations
 
-Flows are the top-level construct. A flow has many inputs to accept user data (e.g. first name, zip
+Flows are the top-level construct that define the navigation between a collection of screens. 
+A flow can have many inputs to accept user data (e.g. first name, zip
 code, email, file upload). Each input can have zero to many validations.
 
 A flow also has many screens. Each screen can be made up of zero or more inputs. A flow has an
-ordering of screens, and can use defined conditions to skip screens. Conditions are based on
-submitted inputs. Conditions can also be used on individual screens to show or hide content.
+ordering of screens, and can use defined conditions to control navigation. Conditions use 
+submitted inputs to make a logical decision about showing or not showing a screen / part of a screen.
 
 ```mermaid
 erDiagram      
@@ -53,69 +54,66 @@ erDiagram
 To start, create a `flow-config.yaml` in `src/main/resources`.
 
 You can define multiple flows by [separating them with `---`](https://docs.spring.io/spring-boot/docs/1.2.0.M1/reference/html/boot-features-external-config.html#boot-features-external-config-multi-profile-yaml).
-```java
-class Apply extends Flow {
 
-    public ArrayList<Screen> screens = List.of();
+At it's base a flow as defined in yaml has a name, a flow object, and a collection of screens, their next screens, any conditions for navigation between those screens, and optionally one or more subflows.
 
-}
+A basic  flow configuration could look like this:
+```yaml
+name: exampleFlow
+flow:
+  firstScreen:
+    nextScreens:
+      - name: secondScreen
+  secondScreen:
+    nextScreens:
+      - name: thirdScreen
+      - name: otherScreen
+        condition: userSelectedExample
+  thirdScreen:
+    nextScreens:
+      - name: success
+  otherScreen:
+    nextScreens:
+      - name: success
+  success:
+    nextScreens: null
+___
+name: someOtherFlow
+flow:
+  otherFlowScreen:
 ```
 
-We'll add to this more as we define our screens and inputs!
+[You can have autocomplete and validation for flows-config by connecting your intelliJ to the flows-config-schema.json](#connect-flows-config-schema-with-intellij-ide)
 
-## Defining Screens and Inputs ##
+## Defining Screens ##
 
-TODO: Update
+All screens must have an entry in the flows-config in order to be rendered. Additionally, each screen 
+should have its own template defined in a folder respective to the flow that screen is contained within.
+Example `/src/resources/templates/<flowName>/<templateName>`.
 
-Screens follow the classic MVC (model-view-controller) pattern:
+We have provided a number of IntelliJ Live templates to make the creation of screens faster and easier.
+[More on Live Templates here](#about-intellij-live-templates).
 
-1. A back-end **model** that's a Java class that extends `Screen`.
-2. A Thymeleaf HTML template as the **view**.
-3. A Spring **controller** called `ScreenController`. Generally, it won't need to be modified just
-   to add a new screen to the flow.
+### Using Thymeleaf
 
-Here's a new `Screen` class that represents the model:
+We use [fragments](TODO: link to official docs) to store complex mark up into simple reusable imports.
 
-```java
-class AboutYou extends Screen {
+TODO: link to our fragments folder
 
-    public boolean skip() {
-        return false;
-    }
+TODO: Using static methods, condition definitions and view utilities with T operator
 
-}
-```
+#### Icon reference
 
-The model implements a `skip()` method, which is `false` by default.
+There's `/icons` endpoint to view all available [icon fragments](src/main/resources/templates/fragments/icons.html)
 
-With the new `Screen` class, an instance can be now added to the `Apply` flow:
+## Defining Inputs ##
 
-```java
-class Apply extends Flow {
+Inputs are defined in two places - the template in which they are rendered, and in a separate class for validation.
+The inputs class is defined in `/src/main/java/app/inputs/<nameOfFlowAsNameOfInputsClass>`
 
-    public ArrayList<Screen> screens = List.of(
-            new AboutYou()
-    );
+[When defining inputs we have provided a suite of input based Live Templates, more on that here.](#about-intellij-live-templates)
 
-    @NotBlank
-    TextInput firstName;
-
-    @NotBlank
-    TextInput lastName;
-
-    EmailInput emailAddress;
-
-    PhoneInput phoneNumber;
-}
-```
-
-In addition to adding an instance of the `AboutYou` screen to the `screens` list, inputs are
-added to the flow as well. The name inputs have `@NotBlank` validations (via [Bean Validation](https://beanvalidation.org/))
-applied, while the email and phone inputs use validations built into the `EmailInput` and
-`PhoneInput` classes, respectively.
-
-The built-in input types are:
-
+Live templates are provided for the following input types:
 - `Checkbox`
 - `Date`
 - `Fieldset`
@@ -132,40 +130,51 @@ The built-in input types are:
 - `Submit`
 - `FileUpload` (TBD)
 
-Custom input types can be created by extending the `Input` class, while custom validations can
-be implemented through the [Bean Validation library](https://reflectoring.io/bean-validation-with-spring-boot/#a-custom-validator-with-spring-boot).
+An example inputs class can be seen below, with example validations.
 
+Please note that for single value inputs the type when defining the input is String. However, for input types
+that can contain more than one value, the type is ArrayList<String>.
 
-Then, screen views are defined as HTML with the [Thymeleaf templating engine](https://www.thymeleaf.org/).
-Thymeleaf fragments (building block components) are provided by the `form-flows` library to
-produce semantically-correct HTML and CSS from the [Honeycrisp design system](https://honeycrisp.herokuapp.com/).
+```java
+class Apply {
 
-When setting up a new flow, create a folder in `src/main/resources` to hold all HTML files. Then
-add a new HTML file `about-you.html` [in the flow's templates folder](src/main/resources/templates):
+    @NotBlank(message = "{personal-info.provide-first-name}")
+    String firstName;
+
+    @NotBlank(message = "{personal-info.provide-last-name}")
+    String lastName;
+
+    String emailAddress;
+
+    String phoneNumber;
+
+    @NotEmpty(message = "{personal-info.please-make-a-gender-selection}")
+    ArrayList<String> gender;
+}
+```
+
+Validations for inputs use the JSR-303 bean validation paradigm, more specifically, Hibernate validations. For a list of validation
+decorators, see [Hibernate's documentation.](https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints)
+
+When setting up a new flow, create a folder in `src/main/resources` to hold all HTML files.
+
+Then add a new HTML file `about-you.html` [in the flow's templates folder](src/main/resources/templates), here is an example using our [live templates for a form screen](#about-intellij-live-templates):
 
 ```html
-<!DOCTYPE html>
-<html th:lang="${#locale.language}">
-<head th:replace="fragments/head :: head(title='About You')"></head>
-<body>
-<div class="page-wrapper">
-    <div th:replace="fragments/toolbar :: toolbar"></div>
-    <section class="slab">
-        <div class="grid">
-            <main id="content" role="main" class="form-card spacing-above-35">
-                <th:block th:replace="'icons' :: 'clipboard'"></th:block>
-                <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')"/>
-                <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')"/>
-                <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')"/>
-                <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')"/>
-                <th:block th:replace="'inputs' :: submitInput()"/>
-            </main>
-        </div>
-    </section>
-</div>
-<th:block th:replace="fragments/footer :: footer"/>
-</body>
-</html>
+<th:block th:replace="'fragments/form' :: form(action=${formAction}, content=~{::formContent})">
+  <th:block th:ref="formContent">
+    <div class="form-card__content">
+      <th:block th:replace="'icons' :: 'clipboard'"></th:block>
+      <th:block th:replace="'content' :: cardHeader(header='Tell us about yourself')"/>
+      <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your first name?')"/>
+      <th:block th:replace="'inputs' :: textInput(name='firstName', label='What's your last name?')"/>
+      <th:block th:replace="'inputs' :: textInput(name='emailAddress', label='What's your email address?')"/>
+    </div>
+    <div class="form-card__footer">
+      <th:block th:replace="'fragments/continueButton' :: continue" />
+    </div>
+  </th:block>
+</th:block>
 ```
 
 ## About Submissions ##
@@ -468,7 +477,7 @@ settings. So we're going to use a copy/paste approach.
 
 ### Using Live Templates ###
 
-Once you have Live Templates installed on your IntelliJ IDE, in `.html` files you can use our
+Once you have Live Templates installed on your IntelliJ IDE, in (`.html`, `.java`) files you can use our
 Live Templates by typing `cfa:` and a list of templates to autofill will show itself.
 
 ### Contribute new Live Templates ###
