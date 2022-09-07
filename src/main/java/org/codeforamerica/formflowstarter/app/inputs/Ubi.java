@@ -1,4 +1,4 @@
-package org.codeforamerica.formflowstarter.app.flows;
+package org.codeforamerica.formflowstarter.app.inputs;
 
 import java.util.ArrayList;
 import javax.validation.constraints.DecimalMin;

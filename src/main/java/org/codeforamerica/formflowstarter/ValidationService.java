@@ -20,7 +20,7 @@ public class ValidationService {
     Class<?> clazz = null;
     try {
       clazz = Class.forName(
-          "org.codeforamerica.formflowstarter.app.flows." + StringUtils.capitalize(flowName));
+          "org.codeforamerica.formflowstarter.app.inputs." + StringUtils.capitalize(flowName));
     } catch (ReflectiveOperationException e) {
       throw new RuntimeException(e);
     }
