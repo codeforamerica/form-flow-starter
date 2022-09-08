@@ -462,13 +462,6 @@ jenv add /Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/
 
 `brew install gradle`
 
-### Setup IntelliJ for the project: ###
-
-- Enable annotation processing in `Preferences -> Build, Execution, Deployment -> Compiler -> Annotation Processor`
-- Set the Gradle JVM version to 17 in `Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle`
-- Set the Project SDK to Java 17 in `File > Project Structure`
-- Run the application using the `FormflowstarterApplication` configuration
-
 ### Start the local databases: ###
 
 - Install PostgreSQL 14 via an [official download](https://www.postgresql.org/download/)
@@ -477,6 +470,13 @@ jenv add /Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/
 - Create the database using the command line:
     - `$ createuser -s formflow`
     - `$ createdb formflow`
+
+### Setup IntelliJ for the project: ###
+
+- Enable annotation processing in `Preferences -> Build, Execution, Deployment -> Compiler -> Annotation Processor`
+- Set the Gradle JVM version to 17 in `Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle`
+- Set the Project SDK to Java 17 in `File > Project Structure`
+- Run the application using the `FormflowstarterApplication` configuration
 
 ### Test: ###
 
