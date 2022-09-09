@@ -275,7 +275,7 @@ public class Page {
   }
 
   public List<WebElement> findElementsByClass(String className) {
-    return driver.findElementsByClassName(className);
+    return driver.findElements(By.className(className));
   }
 
   public boolean elementDoesNotExistById(String id) {
