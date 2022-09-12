@@ -32,7 +32,6 @@ flow:
   income:
     nextScreens:
       - name: householdMemberIncome
-        condition: hasHousehold
   householdMemberIncome:
     subflow: income
     nextScreens:
