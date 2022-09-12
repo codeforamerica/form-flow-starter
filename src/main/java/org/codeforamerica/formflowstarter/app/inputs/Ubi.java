@@ -45,6 +45,7 @@ public class Ubi {
   String householdMemberRecentlyMovedToUS;
 
   // Household Member Income Screen
+  @NotBlank(message= "{household-member-income.failed-to-make-selection}")
   String householdMember;
 
   // Income Types Screen

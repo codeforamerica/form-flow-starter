@@ -32,7 +32,6 @@ flow:
   income:
     nextScreens:
       - name: householdMemberIncome
-        condition: hasHousehold
   householdMemberIncome:
     subflow: income
     nextScreens:
@@ -81,3 +80,4 @@ flow:
       - name: cardPage
   cardPage:
     nextScreens: null
+

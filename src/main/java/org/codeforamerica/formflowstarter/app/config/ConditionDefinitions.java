@@ -53,6 +53,8 @@ public class ConditionDefinitions {
 
       // household members + applicant
       return (householdArr.size() + 1) == incomeArr.size();
+    } else if (!submission.getInputData().containsKey("household") && submission.getInputData().containsKey("income")){
+      return true;
     }
     return false;
   }
