@@ -27,7 +27,7 @@ jobs:
       - name: Push to Aptible remote branch and deploy
         run: git push --force git@beta.aptible.com:form-flow-staging/app.git ${GITHUB_SHA}:master
       - name: Announce on Slack
-        uses: ravsamhq/notify-slack-action@v1
+        uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ job.status }}
         env:
