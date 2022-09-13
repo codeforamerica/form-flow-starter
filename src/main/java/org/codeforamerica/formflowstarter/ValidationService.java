@@ -34,8 +34,9 @@ public class ValidationService {
   /**
    * Validates client inputs with java bean validation based on input definition.
    *
-   * @param flowName           The name of the current flow
-   * @param formDataSubmission The input data from a form as a map of field name to field value(s)
+   * @param flowName           The name of the current flow, not null
+   * @param formDataSubmission The input data from a form as a map of field name to field value(s),
+   *                           not null
    * @return a HashMap of field to list of error messages, will be empty if no field violations
    */
   public HashMap<String, ArrayList<String>> validate(String flowName,

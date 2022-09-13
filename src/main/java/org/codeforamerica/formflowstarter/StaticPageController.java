@@ -14,7 +14,7 @@ public class StaticPageController {
   /**
    * Renders the website index page.
    *
-   * @param httpSession The current HTTP session
+   * @param httpSession The current HTTP session, not null
    * @return the static page template
    */
   @GetMapping("/")
