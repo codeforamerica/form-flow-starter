@@ -139,8 +139,9 @@ public class ScreenController {
 				submission.getInputData().put(subflowName, new ArrayList<Map<String, Object>>());
 			}
 			ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
+			Boolean iterationIsComplete = !isNextScreenInSubflow(flow, httpSession, currentScreen);
+			formDataSubmission.put("iterationIsComplete", iterationIsComplete);
 			subflow.add(formDataSubmission);
-
 			saveToRepository(submission, subflowName);
 		} else {
 			submission.setFlow(flow);
@@ -193,6 +194,8 @@ public class ScreenController {
 			Submission submission = submissionOptional.get();
 			var iterationToEdit = Submission.getSubflowEntryByUuid(subflowName, uuid, submission);
 			if (iterationToEdit != null) {
+				Boolean iterationIsComplete = !isNextScreenInSubflow(flow, httpSession, currentScreen);
+				formDataSubmission.put("iterationIsComplete", iterationIsComplete);
 				var updatedSubmission = Submission.mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
 				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
 				saveToRepository(updatedSubmission, subflowName);
