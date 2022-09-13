@@ -7,16 +7,39 @@ import javax.validation.Validator;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * A service that validates flow inputs based on input definition.
+ *
+ * <p>
+ * Flow inputs come from screen POST submissions to the server.
+ * </p>
+ * <p>
+ * Input definitions are located in <code>formflowstarter/app/inputs/<flow-name></code>.
+ * </p>
+ */
 @Service
 public class ValidationService {
 
   private final Validator validator;
 
+  /**
+   * Autoconfigured constructor.
+   *
+   * @param validator Validator from javax package.
+   */
   public ValidationService(Validator validator) {
     this.validator = validator;
   }
 
-  public HashMap<String, ArrayList<String>> validate(String flowName, Map<String, Object> formDataSubmission) {
+  /**
+   * Validates client inputs with java bean validation based on input definition.
+   *
+   * @param flowName           The name of the current flow
+   * @param formDataSubmission The input data from a form as a map of field name to field value(s)
+   * @return a HashMap of field to list of error messages, will be empty if no field violations
+   */
+  public HashMap<String, ArrayList<String>> validate(String flowName,
+      Map<String, Object> formDataSubmission) {
     Class<?> clazz = null;
     try {
       clazz = Class.forName(

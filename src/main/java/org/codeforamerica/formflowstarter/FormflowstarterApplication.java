@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Our main application class that auto-configures the spring boot app
+ * Our main application class that autoconfigures the spring boot app
  */
 @SpringBootApplication
 public class FormflowstarterApplication {
