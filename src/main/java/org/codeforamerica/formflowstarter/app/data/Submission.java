@@ -88,15 +88,16 @@ public class Submission {
     return submission;
   }
 
-  public static void removeIncompleteIterations(Submission submission, String subflowName) {
+  public static void removeIncompleteIterations(Submission submission, String subflowName, String uuid) {
     List<Map<String, Object>> toRemove = new ArrayList<>();
     ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData()
         .get(subflowName);
-    for (int i = 0; i < subflow.size() - 1; i++) {
-      if (subflow.get(i).get("iterationIsComplete").equals(false)) {
-        toRemove.add(subflow.get(i));
+    subflow.forEach(iteration -> {
+      if (iteration.get("iterationIsComplete").equals(false) && !iteration.get("uuid")
+          .equals(uuid)) {
+        toRemove.add(iteration);
       }
-    }
+    });
     subflow.removeAll(toRemove);
   }
 }

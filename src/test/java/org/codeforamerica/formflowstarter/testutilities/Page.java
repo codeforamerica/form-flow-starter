@@ -91,6 +91,7 @@ public class Page {
   public void enter(String inputName, List<String> value) {
     checkForBadMessageKeys();
     List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+    formInputElements.removeIf(webElement -> !webElement.isDisplayed());
     WebElement firstElement = formInputElements.get(0);
     FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
     if (formInputHtmlTag == FormInputHtmlTag.input) {
@@ -123,8 +124,7 @@ public class Page {
 
   private void selectEnumeratedInput(List<WebElement> webElements, String optionText) {
     WebElement inputToSelect = webElements.stream()
-        .map(input -> input.findElement(By.xpath("./..")))
-        .filter(label -> label.getText().contains(optionText))
+        .filter(input -> input.getAttribute("value").equals(optionText))
         .findFirst()
         .orElseThrow(
             () -> new RuntimeException(String.format("Cannot find value \"%s\"", optionText)));

@@ -197,7 +197,7 @@ public class ScreenController {
 				Boolean iterationIsComplete = !isNextScreenInSubflow(flow, httpSession, currentScreen);
 				formDataSubmission.put("iterationIsComplete", iterationIsComplete);
 				var updatedSubmission = Submission.mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
-				Submission.removeIncompleteIterations(updatedSubmission, subflowName);
+				Submission.removeIncompleteIterations(updatedSubmission, subflowName, uuid);
 				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
 				saveToRepository(updatedSubmission, subflowName);
 			}

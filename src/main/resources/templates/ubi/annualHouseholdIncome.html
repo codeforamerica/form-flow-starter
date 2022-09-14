@@ -27,6 +27,7 @@
                                 </span>
                                 <span
                                     class="grid__item width-one-third text--right padding-right-10"
+                                    th:id="${personsIncome.householdMember.replace(' ', '-').toLowerCase()} + '-amount'"
                                     th:with="personsTotalIncome=${T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).getIndividualsTotalIncome(submission, personsIncome.uuid)}"
                                     th:text="${'$' + personsTotalIncome}"></span>
                                 <span
@@ -49,6 +50,7 @@
               <strong class="grid__item width-one-third text--left padding-left-25"
                       th:text="#{annual-household-income.total}"></strong>
               <strong class="grid__item width-one-third text--right"
+                      id="household-total-income"
                       th:text="${'$' + T(org.codeforamerica.formflowstarter.app.config.ViewUtilities).getHouseholdTotalIncome(submission)}"></strong>
             </div>
             <a th:href="'/' + ${flow} + '/' + ${iterationStartScreen}"

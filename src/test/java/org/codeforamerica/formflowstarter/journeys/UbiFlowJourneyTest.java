@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.formflowstarter.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.formflowstarter.testutilities.YesNoAnswer.YES;
 
+import java.util.List;
 import org.codeforamerica.formflowstarter.testutilities.PercyTestPage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -88,31 +89,61 @@ public class UbiFlowJourneyTest extends JourneyTest {
     assertThat(testPage.getCssSelectorText(".form-card__content")).doesNotContain("John Doe");
     testPage.clickButton("Yes, this is everyone");
 
-    //click on No I already no....
+    //click on No I already know....
     assertThat(testPage.getTitle()).isEqualTo("Income");
     testPage.clickLink("No, I already know my annual household pre-tax income - I prefer to enter it directly.");
-
+    // Reported Annual Household Income screen
     assertThat(testPage.getTitle()).isEqualTo("Reported Annual Household Pre-Tax Income");
-
-    testPage.clickContinue();
-    assertThat(testPage.hasErrorText("Please enter a value"));
-    assertThat(testPage.hasErrorText("Please enter a valid amount"));
-
-    testPage.enter("reportedTotalAnnualHouseholdIncome", "a");
-    testPage.clickContinue();
-    assertThat(testPage.hasErrorText("Please enter a valid amount"));
-
     testPage.enter("reportedTotalAnnualHouseholdIncome", "125");
     testPage.clickContinue();
+    // Income Complete Screen
     assertThat(testPage.getTitle()).isEqualTo("Income Complete");
+    // Go Back and Add Income for Household
     testPage.goBack();
     testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-
-
     assertThat(testPage.getTitle()).isEqualTo("Income");
-
+    // Add income screen
+    testPage.clickButton("Add income");
+    // Household Member Income screen
+    testPage.clickElementById("householdMember-applicant");
+    testPage.clickContinue();
+    // Income Types screen
+    testPage.enter("incomeTypes", List.of("incomeSelf", "incomeJob", "incomeInvestment"));
+    testPage.clickContinue();
+    // Income Amounts screen
+    testPage.enter("incomeSelfAmount", "10");
+    testPage.enter("incomeJobAmount", "50");
+    testPage.enter("incomeInvestmentAmount", "20");
+    testPage.clickContinue();
+    // Annual Household Income screen
+    assertThat(testPage.findElementById("applicant-amount").getText()).isEqualTo("$80.00");
+    testPage.clickLink("+ Add income for another household member");
+    testPage.clickElementById("householdMember-Anthony Dee");
+    testPage.clickContinue();
+    // Income Types screen
+    testPage.enter("incomeTypes", List.of("incomeSelf", "incomeJob", "incomeInvestment"));
+    testPage.clickContinue();
+    // Income Amounts screen
+    testPage.enter("incomeSelfAmount", "20");
+    testPage.enter("incomeJobAmount", "30");
+    testPage.enter("incomeInvestmentAmount", "10");
+    testPage.clickContinue();
+    // Annual Household Income screen
+    assertThat(testPage.findElementById("anthony-dee-amount").getText()).isEqualTo("$60.00");
+    testPage.clickLink("+ Add income for another household member");
+    testPage.clickElementById("householdMember-Jane Doe");
+    testPage.clickContinue();
+    // Income Types screen
+    testPage.enter("incomeTypes", List.of("incomeSelf", "incomeJob", "incomeInvestment"));
+    testPage.clickContinue();
+    // Income Amounts screen
+    testPage.enter("incomeSelfAmount", "10");
+    testPage.enter("incomeJobAmount", "20");
+    testPage.enter("incomeInvestmentAmount", "30");
+    testPage.clickContinue();
+    // Annual Household Income screen
+    assertThat(testPage.findElementById("anthony-dee-amount").getText()).isEqualTo("$60.00");
+    assertThat(testPage.findElementById("household-total-income").getText()).isEqualTo("$200.00");
   }
 
 // Assert intercom button is present on landing page
