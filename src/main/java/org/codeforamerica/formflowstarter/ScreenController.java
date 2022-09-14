@@ -197,6 +197,7 @@ public class ScreenController {
 				Boolean iterationIsComplete = !isNextScreenInSubflow(flow, httpSession, currentScreen);
 				formDataSubmission.put("iterationIsComplete", iterationIsComplete);
 				var updatedSubmission = Submission.mergeFormDataWithSubflowIterationData(submission, subflowName, iterationToEdit, formDataSubmission);
+				Submission.removeIncompleteIterations(updatedSubmission, subflowName);
 				handleBeforeSaveAction(currentScreen, updatedSubmission, uuid);
 				saveToRepository(updatedSubmission, subflowName);
 			}
@@ -433,22 +434,10 @@ public class ScreenController {
 		}).toList();
 	}
 
-	/**
-	 * [] is before action defined
-	 * call submissionhandler with the before action
-	 * [] if beforeaction has been called
-	 * @param currentScreen
-	 * @return
-	 */
 	private void handleBeforeSaveAction(ScreenNavigationConfiguration currentScreen, Submission submission, String uuid) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-
-		if (currentScreen.getBeforeSave() != null){
-			// [x] go and get name of before action
-			// take he name of the before action and call the method assigned to that name
-			//that will call the submissionhandler that will invoke the submission action if the method is found
+		if (currentScreen.getBeforeSave() != null) {
 			var beforeSaveAction = currentScreen.getBeforeSave();
 			submissionHandler.handleSubmission(beforeSaveAction, submission, uuid);
-
 		}
 	}
 

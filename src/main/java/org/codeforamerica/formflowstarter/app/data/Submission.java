@@ -6,6 +6,7 @@ import com.vladmihalcea.hibernate.type.json.JsonType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -72,16 +73,12 @@ public class Submission {
 
   public static void mergeFormDataWithSubmissionData(Submission submission, Map<String, Object> formDataSubmission) {
     Map<String, Object> inputData = submission.getInputData();
-    inputData.forEach((key, value) -> {
-      formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue);
-    });
+    inputData.forEach((key, value) -> formDataSubmission.merge(key, value, (newValue, oldValue) -> newValue));
     submission.setInputData(formDataSubmission);
   }
 
   public static Submission mergeFormDataWithSubflowIterationData(Submission submission, String subflowName, Map<String, Object> iterationToUpdate, Map<String, Object> formDataSubmission) {
-    iterationToUpdate.forEach((key, value) -> {
-      formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue);
-    });
+    iterationToUpdate.forEach((key, value) -> formDataSubmission.merge(key, value, (newValue, OldValue) -> newValue));
     var subflowArr = (ArrayList<Map<String, Object>>) submission.getInputData().get(subflowName);
     var existingInputData = submission.getInputData();
     int indexToUpdate = subflowArr.indexOf(iterationToUpdate);
@@ -89,5 +86,17 @@ public class Submission {
     existingInputData.replace(subflowName, subflowArr);
     submission.setInputData(existingInputData);
     return submission;
+  }
+
+  public static void removeIncompleteIterations(Submission submission, String subflowName) {
+    List<Map<String, Object>> toRemove = new ArrayList<>();
+    ArrayList<Map<String, Object>> subflow = (ArrayList<Map<String, Object>>) submission.getInputData()
+        .get(subflowName);
+    for (int i = 0; i < subflow.size() - 1; i++) {
+      if (subflow.get(i).get("iterationIsComplete").equals(false)) {
+        toRemove.add(subflow.get(i));
+      }
+    }
+    subflow.removeAll(toRemove);
   }
 }

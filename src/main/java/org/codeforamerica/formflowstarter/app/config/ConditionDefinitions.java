@@ -38,10 +38,10 @@ public class ConditionDefinitions {
       String householdMemberName) {
     if (submission.getInputData().containsKey("income")) {
       var incomeArr = (ArrayList<Map<String, Object>>) submission.getInputData().get("income");
-      var memberItationOptional = incomeArr.stream().filter(entry ->
+      var memberIterationOptional = incomeArr.stream().filter(entry ->
               entry.get("householdMember").equals(householdMemberName)).findFirst();
-      if (memberItationOptional.isPresent()) {
-        return (Boolean) memberItationOptional.get().get("isSubflowComplete");
+      if (memberIterationOptional.isPresent()) {
+        return (Boolean) memberIterationOptional.get().get("iterationIsComplete");
       }
     }
     return false;
@@ -56,9 +56,8 @@ public class ConditionDefinitions {
 
       // household members + applicant
       return (householdArr.size() + 1) == incomeArr.size();
-    } else if (!submission.getInputData().containsKey("household") && submission.getInputData().containsKey("income")){
-      return true;
-    }
-    return false;
+    } else
+      return !submission.getInputData().containsKey("household") && submission.getInputData()
+          .containsKey("income");
   }
 }
