@@ -10,43 +10,43 @@ import lombok.Data;
 public class Ubi {
 
   // Needs to be declared since Spring Security inserts _csrf as a hidden field to all forms
-  String _csrf;
+  private String _csrf;
 
   // Language Preferences Screen
-  String languageRead;
-  String languageSpoken;
-  String needInterpreter;
+  private String languageRead;
+  private String languageSpoken;
+  private String needInterpreter;
 
   // Personal Info Screen
   @NotBlank(message = "{personal-info.provide-first-name}")
-  String firstName;
+  private String firstName;
   @NotBlank(message = "{personal-info.provide-last-name}")
-  String lastName;
-  String birthDay;
-  String birthMonth;
-  String birthYear;
-  String genderIdentity;
-  String movedToUSA;
-  String movedToUSADay;
-  String movedToUSAMonth;
+  private String lastName;
+  private String birthDay;
+  private String birthMonth;
+  private String birthYear;
+  private String genderIdentity;
+  private String movedToUSA;
+  private String movedToUSADay;
+  private String movedToUSAMonth;
   // TODO: figure out how to only have day & month for a date fragment
-  String movedToUSAYear;
-  String movedFromCountry;
+  private String movedToUSAYear;
+  private String movedFromCountry;
 
   // Housemates Screen
-  String hasHousehold;
+  private String hasHousehold;
 
   // Housemate Info Screen
   @NotBlank
-  String householdMemberFirstName;
+  private String householdMemberFirstName;
   @NotBlank
-  String householdMemberLastName;
-  String householdMemberRelationship;
-  String householdMemberRecentlyMovedToUS;
+  private String householdMemberLastName;
+  private String householdMemberRelationship;
+  private String householdMemberRecentlyMovedToUS;
 
   // Household Member Income Screen
   @NotBlank(message= "{household-member-income.failed-to-make-selection}")
-  String householdMember;
+  private String householdMember;
 
   // Income Types Screen
   @NotEmpty(message = "{income-types.error}")
@@ -55,61 +55,61 @@ public class Ubi {
   // Income Amounts Screen
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeJobAmount;
+  private String incomeJobAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeSelfAmount;
+  private String incomeSelfAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeUnemploymentAmount;
+  private String incomeUnemploymentAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeSocialSecurityAmount;
+  private String incomeSocialSecurityAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeRetirementAmount;
+  private String incomeRetirementAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeChildOrSpousalSupportAmount;
+  private String incomeChildOrSpousalSupportAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomePensionAmount;
+  private String incomePensionAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeInvestmentAmount;
+  private String incomeInvestmentAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeCapitalGainsAmount;
+  private String incomeCapitalGainsAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeRentalOrRoyaltyAmount;
+  private String incomeRentalOrRoyaltyAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeFarmOrFishAmount;
+  private String incomeFarmOrFishAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeAlimonyAmount;
+  private String incomeAlimonyAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeTaxableScholarshipAmount;
+  private String incomeTaxableScholarshipAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeCancelledDebtAmount;
+  private String incomeCancelledDebtAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeCourtAwardsAmount;
+  private String incomeCourtAwardsAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeGamblingAmount;
+  private String incomeGamblingAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeJuryDutyPayAmount;
+  private String incomeJuryDutyPayAmount;
   @NotBlank(message = "{income-amounts.must-select-one}")
   @DecimalMin(value = "0.0", message = "{income-amounts.must-be-numbers}")
-  String incomeOtherAmount;
+  private String incomeOtherAmount;
 
   // Reported Household Annual Income Screen
   @NotBlank(message = "{household-reported-annual-pre-tax-income.please-enter-a-value}")
   @DecimalMin(value = "0.0", message = "{household-reported-annual-pre-tax-income.must-be-a-valid-amount}")
-  String reportedTotalAnnualHouseholdIncome;
+  private String reportedTotalAnnualHouseholdIncome;
 }
