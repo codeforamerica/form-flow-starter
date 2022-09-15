@@ -139,6 +139,26 @@ public class ScreenController {
     return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
   }
 
+  /**
+   * Processes input data from the first page of a subflow screen.
+   *
+   * <p>
+   * If validation of input data passes this will redirect to move the client to the next screen.
+   * </p>
+   * <p>
+   * If validation of input data fails this will redirect the client to the same subflow screen so they can
+   * fix the data.
+   * </p>
+   * <p>
+   * A newly created UUID will be stored with the entire subflow data as unique id to reference the data by.
+   * </p>
+   *
+   * @param formData    The input data from current screen, can be null
+   * @param flow        The current flow name, not null
+   * @param screen      The current screen name in the flow, not null
+   * @param httpSession The HTTP session if it exists, can be null
+   * @return a redirect to next screen
+   */
   @PostMapping("{flow}/{screen}/new")
   ModelAndView postNewSubflow(
       @RequestParam(required = false) MultiValueMap<String, String> formData,
@@ -187,6 +207,15 @@ public class ScreenController {
     return new ModelAndView(viewString);
   }
 
+  /**
+   * Chooses which screen template and model data to render in a subflow.
+   *
+   * @param flow        The current flow name, not null
+   * @param screen      The current screen name in the subflow, not null
+   * @param uuid        The uuid of a subflow entry, not null
+   * @param httpSession The current httpSession, not null
+   * @return the screen template with model data
+   */
   // 😭 If we could use a method: <string>.replaceFirst("\\{([^}]*)}", "flow:(?!assets).*")
   // We have to put the regex inline because spring boot must have a compile-time available string
   @GetMapping("{flow:(?!assets).*}/{screen}/{uuid}")
@@ -202,6 +231,29 @@ public class ScreenController {
     return new ModelAndView(String.format("/%s/%s", flow, screen), model);
   }
 
+  /**
+   * Processes input data from a page of a subflow screen that is not the first page of the subflow.
+   * The data from the first page of a subflow is processed by {@link #postNewSubflow}, every subsequent
+   * page of the subflow is processed by this method.
+   *
+   * <p>
+   * If validation of input data passes this will redirect to move the client to the next screen.
+   * </p>
+   * <p>
+   * If validation of input data fails this will redirect the client to the same subflow screen so they can
+   * fix the data.
+   * </p>
+   *
+   * @param formData    The input data from current screen, can be null
+   * @param flow        The current flow name, not null
+   * @param screen      The current screen name in the flow, not null
+   * @param uuid        Unique id associated with the subflow's data, not null
+   * @param httpSession The HTTP session if it exists, not null
+   * @return a redirect to next screen
+   * @throws InvocationTargetException
+   * @throws NoSuchMethodException
+   * @throws IllegalAccessException
+   */
   @PostMapping("{flow:(?!assets).*}/{screen}/{uuid}")
   ModelAndView addToIteration(
       @RequestParam(required = false) MultiValueMap<String, String> formData,
@@ -240,7 +292,15 @@ public class ScreenController {
     return new ModelAndView(viewString);
   }
 
-
+  /**
+   * Returns a redirect to delete confirmation screen.
+   *
+   * @param flow        The current flow name, not null
+   * @param subflow     The current subflow name, not null
+   * @param uuid        Unique id associated with the subflow's data, not null
+   * @param httpSession The HTTP session if it exists, not null
+   * @return a redirect to delete confirmation screen for a particular uuid's data
+   */
   @GetMapping("{flow}/{subflow}/{uuid}/deleteConfirmation")
   RedirectView deleteConfirmation(
       @PathVariable String flow,
@@ -269,6 +329,16 @@ public class ScreenController {
         String.format("/%s/" + deleteConfirmationScreen + "?uuid=" + uuid, flow));
   }
 
+  /**
+   * Deletes a subflow's input data set, based on that set's uuid.
+   *
+   * @param flow        The current flow name, not null
+   * @param subflow     The current subflow name, not null
+   * @param uuid        Unique id associated with the subflow's data, not null
+   * @param httpSession The HTTP session if it exists, not null
+   * @return A screen template and model to redirect to either the entry or review page for a flow, depending on if
+   * there is more submission data for a subflow.  If no submission data is found an error template is returned.
+   */
   @PostMapping("{flow}/{subflow}/{uuid}/delete")
   ModelAndView deleteSubflowIteration(
       @PathVariable String flow,
@@ -309,6 +379,15 @@ public class ScreenController {
     return new ModelAndView(String.format("redirect:/%s/" + reviewScreen, flow));
   }
 
+  /**
+   * Returns the template and model for a subflow's screen, filled in with previously supplied values.
+   *
+   * @param flow        The current flow name, not null
+   * @param screen      The current screen name in the flow, not null
+   * @param uuid        Unique id associated with the subflow's data, not null
+   * @param httpSession The HTTP session if it exists, not null
+   * @return the screen template with model data, or error page if data not found
+   */
   @GetMapping("{flow}/{screen}/{uuid}/edit")
   ModelAndView getEditScreen(
       @PathVariable String flow,
@@ -339,6 +418,27 @@ public class ScreenController {
     return new ModelAndView(String.format("%s/%s", flow, screen), model);
   }
 
+  /**
+   * Processes input data from a page of a subflow screen.
+   *
+   * <p>
+   * If validation of input data passes this will redirect to move the client to the next screen.
+   * </p>
+   * <p>
+   * If validation of input data fails this will redirect the client to the same subflow screen so they can
+   * fix the data.
+   * </p>
+   *
+   * @param formData    The input data from current screen, can be null
+   * @param flow        The current flow name, not null
+   * @param screen      The current screen name in the flow, not null
+   * @param uuid        Unique id associated with the subflow's data, not null
+   * @param httpSession The HTTP session if it exists, not null
+   * @return a redirect to next screen
+   * @throws InvocationTargetException
+   * @throws NoSuchMethodException
+   * @throws IllegalAccessException
+   */
   @PostMapping("{flow}/{screen}/{uuid}/edit")
   ModelAndView edit(
       @RequestParam(required = false) MultiValueMap<String, String> formData,
@@ -377,6 +477,14 @@ public class ScreenController {
     return new ModelAndView(viewString);
   }
 
+  /**
+   *  ?? unused as if yet
+   * @param formData
+   * @param flow
+   * @param screen
+   * @param httpSession
+   * @return
+   */
   @PostMapping("{flow}/{screen}/submit")
   ModelAndView submit(
       @RequestParam(required = false) MultiValueMap<String, String> formData,
@@ -399,11 +507,18 @@ public class ScreenController {
     return new ModelAndView(String.format("redirect:/%s/%s/navigation", flow, screen));
   }
 
+  /**
+   * Chooses the next screen template and model to render based on what is next in the flow.
+   *
+   * @param flow        The current flow name, not null
+   * @param screen      The current screen name in the flow, not null
+   * @param httpSession The current httpSession, not null
+   * @return the screen template with model data, returns error page on error
+   */
   @GetMapping("{flow}/{screen}/navigation")
   RedirectView navigation(
       @PathVariable String flow,
       @PathVariable String screen,
-      @RequestParam(required = false, defaultValue = "0") Integer option,
       HttpSession httpSession
   ) {
     var currentScreen = getScreenConfig(flow, screen);
