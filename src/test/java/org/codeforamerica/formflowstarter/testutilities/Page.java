@@ -124,7 +124,8 @@ public class Page {
 
   private void selectEnumeratedInput(List<WebElement> webElements, String optionText) {
     WebElement inputToSelect = webElements.stream()
-        .filter(input -> input.getAttribute("value").equals(optionText))
+        .map(input -> input.findElement(By.xpath("./..")))
+        .filter(label -> label.getText().contains(optionText))
         .findFirst()
         .orElseThrow(
             () -> new RuntimeException(String.format("Cannot find value \"%s\"", optionText)));

@@ -108,12 +108,13 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickElementById("householdMember-applicant");
     testPage.clickContinue();
     // Income Types screen
-    testPage.enter("incomeTypes", List.of("incomeSelf", "incomeJob", "incomeInvestment"));
+    testPage.enter("incomeTypes", List.of("Job (salary, wages, commissions or tips)",
+        "Self-employment", "Unemployment"));
     testPage.clickContinue();
     // Income Amounts screen
     testPage.enter("incomeSelfAmount", "10");
     testPage.enter("incomeJobAmount", "50");
-    testPage.enter("incomeInvestmentAmount", "20");
+    testPage.enter("incomeUnemploymentAmount", "20");
     testPage.clickContinue();
     // Annual Household Income screen
     assertThat(testPage.findElementById("applicant-amount").getText()).isEqualTo("$80.00");
@@ -121,12 +122,13 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickElementById("householdMember-Anthony Dee");
     testPage.clickContinue();
     // Income Types screen
-    testPage.enter("incomeTypes", List.of("incomeSelf", "incomeJob", "incomeInvestment"));
+    testPage.enter("incomeTypes", List.of("Job (salary, wages, commissions or tips)",
+        "Self-employment", "Unemployment"));
     testPage.clickContinue();
     // Income Amounts screen
     testPage.enter("incomeSelfAmount", "20");
     testPage.enter("incomeJobAmount", "30");
-    testPage.enter("incomeInvestmentAmount", "10");
+    testPage.enter("incomeUnemploymentAmount", "10");
     testPage.clickContinue();
     // Annual Household Income screen
     assertThat(testPage.findElementById("anthony-dee-amount").getText()).isEqualTo("$60.00");
@@ -134,12 +136,13 @@ public class UbiFlowJourneyTest extends JourneyTest {
     testPage.clickElementById("householdMember-Jane Doe");
     testPage.clickContinue();
     // Income Types screen
-    testPage.enter("incomeTypes", List.of("incomeSelf", "incomeJob", "incomeInvestment"));
+    testPage.enter("incomeTypes", List.of("Job (salary, wages, commissions or tips)",
+        "Self-employment", "Unemployment"));
     testPage.clickContinue();
     // Income Amounts screen
     testPage.enter("incomeSelfAmount", "10");
     testPage.enter("incomeJobAmount", "20");
-    testPage.enter("incomeInvestmentAmount", "30");
+    testPage.enter("incomeUnemploymentAmount", "30");
     testPage.clickContinue();
     // Annual Household Income screen
     assertThat(testPage.findElementById("anthony-dee-amount").getText()).isEqualTo("$60.00");

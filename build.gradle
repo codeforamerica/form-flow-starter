@@ -35,6 +35,8 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.jetbrains:annotations:23.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'junit:junit:4.13.1'
+	implementation 'junit:junit:4.13.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -49,6 +51,10 @@ dependencies {
 	testImplementation 'io.github.bonigarcia:webdrivermanager:5.3.0'
 	testImplementation 'org.awaitility:awaitility'
 	testImplementation 'io.percy:percy-java-selenium:1.1.0'
+	testImplementation 'org.powermock:powermock-core:2.0.9'
+	testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+	testImplementation 'org.powermock:powermock-api-mockito:1.7.4'
+
 }
 
 tasks.named('test') {

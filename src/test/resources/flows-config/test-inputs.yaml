@@ -7,7 +7,18 @@ flow:
     nextScreens:
       - name: success
   success:
+    nextScreens: null
+  testEntryScreen:
     nextScreens:
+      - name: testIterationStartScreen
+  testIterationStartScreen:
+    nextScreens:
+      - name: middleScreen
+  middleScreen:
+    nextScreens:
+      - name: testReviewScreen
+  testReviewScreen:
+    nextScreens: null
 subflows:
   testSubflow:
     entryScreen: testEntryScreen

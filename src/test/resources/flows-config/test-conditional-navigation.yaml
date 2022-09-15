@@ -13,4 +13,4 @@ flow:
     nextScreens:
       - name: last
   last:
-    nextScreens:
+    nextScreens: null
