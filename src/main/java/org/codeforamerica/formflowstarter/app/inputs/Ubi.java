@@ -50,7 +50,7 @@ public class Ubi {
 
   // Income Types Screen
   @NotEmpty(message = "{income-types.error}")
-  ArrayList<String> incomeTypes;
+  private ArrayList<String> incomeTypes;
 
   // Income Amounts Screen
   @NotBlank(message = "{income-amounts.must-select-one}")
