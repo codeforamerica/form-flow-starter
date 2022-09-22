@@ -1,14 +1,8 @@
 package org.codeforamerica.formflowstarter.app.config;
 
-import org.apache.commons.collections.iterators.EntrySetMapIterator;
-import org.apache.commons.digester.RegexMatcher;
-import org.codeforamerica.formflowstarter.app.data.Submission;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import org.codeforamerica.formflowstarter.app.data.Submission;
 
 public class SubmissionActions {
     public static void clearIncomeAmountsBeforeSaving(Submission submission, String uuid) {
