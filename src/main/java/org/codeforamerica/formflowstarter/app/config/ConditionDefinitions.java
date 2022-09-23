@@ -41,7 +41,7 @@ public class ConditionDefinitions {
       var memberItationOptional = incomeArr.stream().filter(entry ->
               entry.get("householdMember").equals(householdMemberName)).findFirst();
       if (memberItationOptional.isPresent()) {
-        return (Boolean) memberItationOptional.get().get("isSubflowComplete");
+        return (Boolean) memberItationOptional.get().get("iterationIsComplete");
       }
     }
     return false;
