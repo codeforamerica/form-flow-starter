@@ -1,8 +1,7 @@
 package org.codeforamerica.formflowstarter.app.config;
 
-import lombok.Value;
+import org.codeforamerica.formflowstarter.app.data.Submission;
 
-@Value
-public class Condition {
-  private String name;
+public abstract class Condition {
+  public abstract Boolean runCondition(Submission submission);
 }

@@ -18,7 +18,7 @@ flow:
   housemates:
     nextScreens:
       - name: housemateInfo
-        condition: hasHousehold
+        condition: org.codeforamerica.formflowstarter.app.config.conditions.HasHousehold
       - name: income
   housemateInfo:
     subflow: household

@@ -4,20 +4,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 
-public class ConditionDefinitions {
+public interface ConditionDefinitions {
 
   public static Boolean applicantIsFemale(Submission submission) {
     var inputData = submission.getInputData();
     if (inputData.containsKey("gender[]")) {
       return ((ArrayList<String>) inputData.get("gender[]")).contains("FEMALE");
-    }
-    return false;
-  }
-
-  public static Boolean hasHousehold(Submission submission) {
-    var inputData = submission.getInputData();
-    if (inputData.containsKey("hasHousehold")) {
-      return inputData.get("hasHousehold").equals("true");
     }
     return false;
   }

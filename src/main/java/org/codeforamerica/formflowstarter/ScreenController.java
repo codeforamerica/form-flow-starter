@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
+import org.codeforamerica.formflowstarter.app.config.Condition;
 import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
@@ -419,18 +420,9 @@ public class ScreenController {
 				currentScreen.getNextScreens().stream()
 						.filter(nextScreen -> nextScreen.getCondition() != null).toList();
 
-		return screensWithConditionalNavigation.stream().filter(nextScreen -> {
-			String conditionName = nextScreen.getCondition().getName();
-			try {
-				conditionHandler.setSubmission(submission);
-				return conditionHandler.handleCondition(conditionName).equals(true);
-			} catch (NoSuchMethodException | InvocationTargetException e) {
-				System.out.println("No such method could be found in the ConditionDefinitions class.");
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			return false;
-		}).toList();
+		return screensWithConditionalNavigation.stream()
+				.filter(nextScreen -> nextScreen.getConditionObject().runCondition(submission))
+				.toList();
 	}
 
 	/**
