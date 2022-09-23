@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import org.codeforamerica.formflowstarter.app.data.Submission;
 
-public interface ConditionDefinitions {
+public class ConditionDefinitions {
 
   public static Boolean applicantIsFemale(Submission submission) {
     var inputData = submission.getInputData();

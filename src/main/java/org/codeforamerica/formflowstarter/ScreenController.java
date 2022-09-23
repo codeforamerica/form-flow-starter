@@ -12,8 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
-import org.codeforamerica.formflowstarter.app.config.Condition;
-import org.codeforamerica.formflowstarter.app.config.ConditionHandler;
 import org.codeforamerica.formflowstarter.app.config.FlowConfiguration;
 import org.codeforamerica.formflowstarter.app.config.NextScreen;
 import org.codeforamerica.formflowstarter.app.config.ScreenNavigationConfiguration;
@@ -38,7 +36,6 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ScreenController {
 
 	private final List<FlowConfiguration> flowConfigurations;
-	private final ConditionHandler conditionHandler;
 	private final SubmissionRepositoryService submissionRepositoryService;
 	private final ValidationService validationService;
 	private final SubmissionHandler submissionHandler;
@@ -46,12 +43,10 @@ public class ScreenController {
 	public ScreenController(
 			List<FlowConfiguration> flowConfigurations,
 			SubmissionRepositoryService submissionRepositoryService,
-			ConditionHandler conditionHandler,
 			ValidationService validationService,
 			SubmissionHandler submissionHandler) {
 		this.flowConfigurations = flowConfigurations;
 		this.submissionRepositoryService = submissionRepositoryService;
-		this.conditionHandler = conditionHandler;
 		this.validationService = validationService;
 		this.submissionHandler = submissionHandler;
 	}
