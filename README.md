@@ -8,6 +8,8 @@ It's functionality has been split into two other repositories:
 - The library: [from-flow](https://github.com/codeforamerica/form-flow)
 - A starter app that uses the library: [form-flow-starter-app](https://github.com/codeforamerica/form-flow-starter-app)
 
+<img width="374" alt="RIPLimerick" src="https://user-images.githubusercontent.com/7966375/202774390-342e0649-aa42-4732-939a-9a54a29f0b0a.png">
+
 # Form Flow Starter App #
 
 This is a standard Spring Boot application that uses the `form-flows` Java package as a library. It
