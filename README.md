@@ -1,12 +1,12 @@
-Archived Repository
+:warning: Archived Repository
 ======
 
-**:warning: This respository is no longer used or maintained.**
+**This respository is no longer used or maintained.**
 
 It's functionality has been split into two other repositories:
 
-- https://github.com/codeforamerica/form-flow
-- https://github.com/codeforamerica/form-flow-starter-app
+- The library: [from-flow](https://github.com/codeforamerica/form-flow)
+- A starter app that uses the library: [form-flow-starter-app](https://github.com/codeforamerica/form-flow-starter-app)
 
 # Form Flow Starter App #
 
