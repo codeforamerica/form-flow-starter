@@ -1,3 +1,13 @@
+Archived Repository
+======
+
+**:warning: This respository is no longer used or maintained.**
+
+It's functionality has been split into two other repositories:
+
+- https://github.com/codeforamerica/form-flow
+- https://github.com/codeforamerica/form-flow-starter-app
+
 # Form Flow Starter App #
 
 This is a standard Spring Boot application that uses the `form-flows` Java package as a library. It
